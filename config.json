@@ -1,0 +1,16 @@
+{
+    "base_dir": "C:\\Users\\Public\\antigravity",
+    "proyectos": [
+        "TODO1\\03_RAMAS\\verixdespiertatualma",
+        "TODO1\\03_RAMAS\\soul-chat",
+        "TODO1\\03_RAMAS\\vris",
+        "TODO1\\03_RAMAS\\libro",
+        "TODO1\\03_RAMAS\\vris-advisor"
+    ],
+    "documentos_ecosistema": [
+        "ECOSISTEMA_VERIXRICHON.md",
+        ".gitignore"
+    ],
+    "backup_dir": "C:\\Users\\Public\\CAPSULA_ALMAS_VERIXRICHON",
+    "git_repo_url": "https://github.com/antigravityx/verixsoul.git"
+}
