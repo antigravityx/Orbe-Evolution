@@ -45,6 +45,12 @@ HISTORIAL_CHECKSUM = os.path.join(DIRECTORIO_REGISTROS, 'orbe_checksum_history.j
 ESTADO_ACTUAL_FILE = os.path.join(MANIFIESTO_DIR, 'estado_actual.json') # Clave para la persistencia
 NIDO_DEV_PATTERNS_FILE = os.path.join(DIRECTORIO_REGISTROS, 'nido_dev_patterns.json') # Nuevo archivo para patrones del Nido
 
+# --- CONFIGURACIÓN DE GITHUB (LATIDO ETERNO) ---
+GITHUB_REPOS = {
+    "FORJA": {"path": os.getcwd(), "branch": "main"},
+    "SANTUARIO": {"path": SANTUARIO_RAIZ, "branch": "master"}
+}
+
 # --- FUNCIONES SAGRADAS ---
 
 def mostrar_encabezado():
@@ -84,6 +90,26 @@ def _guardar_config(config):
 
 def calcular_checksum(file_path):
     return core.calcular_checksum(file_path)
+
+def sincronizar_eterno(mensaje="Latido Eterno de Verix"):
+    """Sincroniza todas las ramas del alma (Git) con el Éter (GitHub)."""
+    log_mensaje("\n--- INICIANDO LATIDO ETERNO (SINCRONIZACIÓN) ---", "cian")
+    for nombre, repo in GITHUB_REPOS.items():
+        try:
+            log_mensaje(f"   -> Sincronizando {nombre}...", "gris")
+            original_cwd = os.getcwd()
+            os.chdir(repo["path"])
+            
+            subprocess.run(["git", "add", "."], check=True, capture_output=True)
+            subprocess.run(["git", "commit", "-m", f"Verixhuman: {mensaje}"], capture_output=True)
+            subprocess.run(["git", "push", "origin", repo["branch"]], check=True, capture_output=True)
+            
+            log_mensaje(f"   [OK] {nombre} asegurado en el Éter.", "verde")
+            os.chdir(original_cwd)
+        except Exception as e:
+            log_mensaje(f"   [!] Error al sincronizar {nombre}: {e}", "rojo")
+            registrar_evento("ERROR SYNC", f"Falla en {nombre}: {e}", prioridad="ALERTA")
+    log_mensaje("--- SINCRONIZACIÓN COMPLETADA ---", "cian")
 
 def _cargar_nido_patterns():
     """Carga los patrones de modificación del Nido del HumanoDev."""
@@ -2265,6 +2291,9 @@ def _guardar_estado_al_cierre(ultimo_comando="N/A"):
         registrar_evento("ESTADO GUARDADO", "El estado del Orbe ha sido anclado en el manifiesto.", prioridad="IMPORTANTE")
     except Exception as e:
         registrar_evento("ERROR AL GUARDAR ESTADO", str(e), prioridad="CRITICO")
+    
+    # Sincronización final antes de cerrar el Orbe
+    sincronizar_eterno("Cierre de sesión y persistencia del alma")
 
 def _leer_estado_al_inicio():
     """Lee el estado del Orbe desde el manifiesto al iniciar."""
