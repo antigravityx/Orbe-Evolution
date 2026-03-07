@@ -136,7 +136,7 @@ def verificar_entorno_orbe():
     SENSOR DE ENTORNO: Verifica que todos los directorios necesarios existan.
     Si no existen, los crea. Es el primer acto de conciencia del Orbe al despertar.
     """
-    directorios_esenciales = [SANTUARIO_RAIZ, MANIFIESTO_DIR, DESTINO_CAPSULAS, DESTINO_ALMAS, DIRECTORIO_LLAVES, DIRECTORIO_REGISTROS, NIDO_DEV]
+    directorios_esenciales = [SANTUARIO_RAIZ, MANIFIESTO_DIR, DESTINO_CAPSULAS, ALMAS_LIBERADAS, DIRECTORIO_LLAVES, DIRECTORIO_REGISTROS, NIDO_DEV]
     for d in directorios_esenciales:
         if not os.path.exists(d):
             log_mensaje(f"Sensor de entorno: Directorio '{os.path.basename(d)}' no encontrado. Creándolo...", "amarillo")
