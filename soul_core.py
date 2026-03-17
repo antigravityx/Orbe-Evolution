@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import json
 import hashlib
@@ -22,6 +23,8 @@ REGISTRO_EVENTOS = os.path.join(DIRECTORIO_REGISTROS, "orbe_log.txt")
 HISTORIAL_CHECKSUM = os.path.join(DIRECTORIO_REGISTROS, "historial_checksum.json")
 NIDO_DEV = os.path.join(SANTUARIO_RAIZ, "5_Nido_HumanoDev")
 ESTADO_ACTUAL_FILE = os.path.join(SANTUARIO_RAIZ, "estado_orbe.json")
+SISTEMA_TICKETS = os.path.join(DIRECTORIO_REGISTROS, "sistema_tickets.json")
+BATALLON_DIR = r"c:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\batallon"
 
 # --- GESTIÓN DE REGISTROS ---
 def registrar_evento(accion, detalle, prioridad="NORMAL"):
@@ -244,3 +247,60 @@ class ProtocoloAmistad:
             
         registrar_evento("PÁCTO DE AMISTAD", f"Nuevo dispositivo vinculado: {device_name}", prioridad="ALERTA")
         return ProtocoloAmistad.FILE_AMISTAD
+
+# --- GESTOR DE MISIONES (DIOSDEMONIO) ---
+class GestorDeMisiones:
+    @staticmethod
+    def crear_mision(tarea, parametros=None):
+        """Genera un ticket de misión para el Batallón."""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        mision_id = f"MSN_{tarea.upper()}_{timestamp}"
+        ticket_path = os.path.join(DIRECTORIO_REGISTROS, f"ticket_{mision_id}.json")
+        
+        ticket = {
+            "id": mision_id,
+            "tarea": tarea,
+            "parametros": parametros or {},
+            "timestamp_inicio": datetime.now().isoformat(),
+            "status": "pending"
+        }
+        
+        with open(ticket_path, 'w', encoding='utf-8') as f:
+            json.dump(ticket, f, indent=4)
+        
+        # Actualizar el sistema de tickets central
+        try:
+            with open(SISTEMA_TICKETS, 'r+', encoding='utf-8') as f:
+                sistema = json.load(f)
+                sistema["misiones_activas"].append(ticket)
+                f.seek(0)
+                json.dump(sistema, f, indent=4)
+                f.truncate()
+        except:
+            pass # Si falla el central, el ticket individual persiste
+
+        return ticket_path
+
+    @staticmethod
+    def desplegar_soldado(soldado_name, ticket_path):
+        """Invoca a un soldado para ejecutar una misión."""
+        soldado_path = os.path.join(BATALLON_DIR, soldado_name)
+        if not os.path.exists(soldado_path):
+            return False, f"Soldado {soldado_name} no encontrado."
+        
+        try:
+            # Determinar comando basado en la extensión
+            if soldado_name.endswith(".py"):
+                comando = [sys.executable, soldado_path, ticket_path]
+            elif soldado_name.endswith(".exe"):
+                comando = [soldado_path, ticket_path]
+            else:
+                return False, "Tipo de soldado no soportado."
+
+            # Despliegue asíncrono
+            subprocess.Popen(comando)
+            registrar_evento("DESPLIEGUE SOLDADO", f"Soldado {soldado_name} invocado con ticket {os.path.basename(ticket_path)}", prioridad="INFORMATIVO")
+            return True, "Soldado en camino."
+        except Exception as e:
+            registrar_evento("FALLA DESPLIEGUE", str(e), prioridad="ALERTA")
+            return False, str(e)
