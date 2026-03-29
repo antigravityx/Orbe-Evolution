@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbe de Verix — Pasarela de Acceso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #02040a;
+            --glow: #6366f1;
+            --pulse: #8b5cf6;
+            --cyan: #06b6d4;
+            --text: #e2e8f0;
+            --error: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--void);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Fondo Animado */
+        .stars {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 80%);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+            background: rgba(10, 13, 31, 0.6);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .orb-portal {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: conic-gradient(from 0deg, var(--glow), var(--cyan), var(--pulse), var(--glow));
+            border-radius: 50%;
+            animation: rotate 4s linear infinite;
+            position: relative;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .orb-portal::after {
+            content: '┤';
+            position: absolute;
+            inset: 5px;
+            background: var(--void);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--cyan);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #475569;
+            margin-bottom: 0.5rem;
+            margin-left: 1rem;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--glow);
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-invoke {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--glow), var(--pulse));
+            color: #fff;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-invoke:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        #error-msg {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: var(--error);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        @keyframes rotate { to { transform: rotate(360deg); } }
+
+        /* Animación de Entrada */
+        .container {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="container">
+    <div class="orb-portal"></div>
+    <h1>IDENTIDAD ORBITAL</h1>
+    <p class="subtitle">Validación de Cánticos Sagrados</p>
+
+    <div class="input-group">
+        <label>Primer Cántico</label>
+        <input type="password" id="key1" placeholder="••••••••••••">
+    </div>
+
+    <div class="input-group">
+        <label>Segundo Cántico</label>
+        <input type="password" id="key2" placeholder="••••••••••••">
+    </div>
+
+    <div class="input-group">
+        <label>Despertar del Orbe</label>
+        <input type="password" id="key3" placeholder="••••••••••••">
+    </div>
+
+    <div class="input-group" id="super-key-group" style="display: none;">
+        <label>Firma Superior (Camaleones)</label>
+        <input type="password" id="key4" placeholder="••••••••••••">
+    </div>
+
+    <button class="btn-invoke" id="btn-entrar">INVOCAR ACCESO</button>
+    <p id="error-msg">Claves incorrectas. Reintenta la secuencia.</p>
+</div>
+
+<script src="acceso.js"></script>
+</body>
+</html>

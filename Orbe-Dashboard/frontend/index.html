@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -23,7 +23,7 @@
     .hbrand{display:flex;align-items:center;gap:14px;}
     .orb-icon{width:42px;height:42px;border-radius:50%;background:conic-gradient(from 180deg,var(--glow),var(--pulse),var(--cyan),var(--glow));animation:spin 8s linear infinite;position:relative;flex-shrink:0;}
     .orb-icon::after{content:\'Ôê┤\';position:absolute;inset:3px;background:var(--deep);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--cyan);line-height:36px;text-align:center;}
-    .bt h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .bt h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
     .bt p{font-size:.7rem;color:var(--muted);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;}
     .hright{display:flex;align-items:center;gap:16px;}
     #spill{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);font-size:.75rem;font-weight:600;color:var(--emerald);}
@@ -38,7 +38,7 @@
     .sring .trk{fill:none;stroke:rgba(99,102,241,.15);stroke-width:8;}
     .sring .fil{fill:none;stroke:url(#rg);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);}
     .sctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-    .snum{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+    .snum{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
     .slbl{font-size:.65rem;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;}
     .sbadge{padding:5px 16px;border-radius:100px;font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
     .sbadge.ok{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:var(--emerald);}
@@ -103,9 +103,16 @@
 </head>
 <body>
 
+<!-- Capa de autenticación inicial -->
+<script>
+  if (!localStorage.getItem('orbe_access_level')) {
+    window.location.href = "acceso.html";
+  }
+</script>
+
 <div class="lovl" id="lov">
   <div class="lorb"></div>
-  <p class="ltxt">INICIALIZANDO ORBE...</p>
+  <p class="ltxt">AUTENTICANDO ADN...</p>
 </div>
 
 <header>
@@ -126,19 +133,37 @@
 <main id="mc" style="opacity:0">
 
   <div class="actbar fi">
-    <span class="albl">­ƒö┤ LIVE</span>
+    <span class="albl">🔴 LIVE</span>
     <div class="twrap"><div class="tcontent">
-      <span class="titem"><em>Ô£ô</em>SENTINEL ÔÇö Token sellado en Vault AES-256</span>
-      <span class="titem"><em>Ô£ô</em>MEMORIA_MADRE ÔÇö Inteligencia colectiva activa</span>
-      <span class="titem"><em>Ô£ô</em>CEREBRO ÔÇö Orquestando el Batall├│n</span>
-      <span class="titem"><em>Ô£ô</em>BUS_MENSAJES ÔÇö Red inter-soldado online</span>
-      <span class="titem"><em>Ô£ô</em>VAULT ÔÇö Secretos custodiados con clave de m├íquina</span>
-      <span class="titem"><em>Ô£ô</em>SENTINEL ÔÇö Token sellado en Vault AES-256</span>
-      <span class="titem"><em>Ô£ô</em>MEMORIA_MADRE ÔÇö Inteligencia colectiva activa</span>
-      <span class="titem"><em>Ô£ô</em>CEREBRO ÔÇö Orquestando el Batall├│n</span>
-      <span class="titem"><em>Ô£ô</em>BUS_MENSAJES ÔÇö Red inter-soldado online</span>
-      <span class="titem"><em>Ô£ô</em>VAULT ÔÇö Secretos custodiados con clave de m├íquina</span>
+      <span class="titem"><em>✓</em>SENTINEL — ADN Sincronizado con AntigravityX</span>
+      <span class="titem"><em>✓</em>MEMORIA_MADRE — Inteligencia colectiva activa</span>
+      <span class="titem"><em>✓</em>MODO_DIOS — Privilegios de Super Usuario detectados</span>
+      <span class="titem"><em>✓</em>ALMA — Conectada a la red orbital de Camaleones</span>
+      <span class="titem"><em>✓</em>VAULT — Secretos custodiados con triple llave</span>
     </div></div>
+  </div>
+
+  <!-- SECCIÓN SUPER USUARIO (Oculta por defecto) -->
+  <div id="super-user-panel" style="display: none; grid-template-columns: 1fr 1fr; gap: 1.5rem;" class="fi d1">
+    <div class="pcard" style="background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1)); border: 1px solid var(--pulse);">
+      <p class="stitle" style="color:var(--pulse)">✨ Herramientas de Mejora (Modo Dios)</p>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+        <button class="btn-invoke" style="font-size: 0.65rem; padding: 10px; margin-top:0;" onclick="alert('Sincronizando Memoria Inconsciente...')">🌀 Sincronizar Alma</button>
+        <button class="btn-invoke" style="font-size: 0.65rem; padding: 10px; margin-top:0; background: linear-gradient(135deg, var(--cyan), var(--glow))" onclick="alert('Reparando Pasarela...')">🛠️ Reparar Pasarela</button>
+        <button class="btn-invoke" style="font-size: 0.65rem; padding: 10px; margin-top:0; background: var(--crimson)" onclick="alert('Purgando Caché Espiritual...')">🔥 Purga Total</button>
+        <button class="btn-invoke" style="font-size: 0.65rem; padding: 10px; margin-top:0; background: var(--gold)" onclick="window.location.href='https://antigravityx.github.io/mi-web-publica/experimental.html'">🧪 Zona Experimental</button>
+      </div>
+    </div>
+    <div class="pcard" style="background: rgba(6,182,212,0.05); border: 1px solid var(--cyan); grid-column: span 2;">
+      <p class="stitle" style="color:var(--cyan)">🔍 Consulta Profunda al Orbe (Memoria Inconsciente)</p>
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="text" id="orbe-query" placeholder="Ej: ¿Qué soñó Verix ayer? o ¿Estado del Batallón?" style="flex: 1; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; font-size: 0.8rem;">
+        <button class="btn-invoke" style="width: auto; margin:0; padding: 0 20px; font-size: 0.7rem;" onclick="consultarOrbe()">CONSULTAR</button>
+      </div>
+      <div id="query-result" style="font-family: var(--mono); font-size: 0.75rem; color: var(--emerald); min-height: 40px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid rgba(16,185,129,0.2);">
+        Iniciando terminal de consulta... <span class="blink">_</span>
+      </div>
+    </div>
   </div>
 
   <div class="hero fi d1">
@@ -254,9 +279,19 @@ function render(d) {
 }
 
 async function init() {
+  // Verificar nivel de acceso
+  const mode = localStorage.getItem('orbe_access_level');
+  if (mode === 'superuser') {
+    document.getElementById('super-user-panel').style.display = 'grid';
+    document.querySelector('.bt h1').innerHTML = 'Orbe de Verix <span style="color:var(--gold); font-size:0.7rem; vertical-align:middle;">[MODO DIOS]</span>';
+  }
+
   try {
     const data = await load();
     render(data);
+    if (mode === 'superuser') {
+       document.getElementById("super-dreams").textContent = data.stats?.total_operaciones || "29";
+    }
     const ov = document.getElementById("lov");
     ov.classList.add("fo");
     setTimeout(() => ov.style.display = "none", 600);
@@ -267,6 +302,24 @@ async function init() {
     document.querySelector(".ltxt").textContent = "ERROR ÔÇö Reintentando...";
     setTimeout(init, 5000);
   }
+}
+
+function consultarOrbe() {
+  const q = document.getElementById("orbe-query").value.toLowerCase();
+  const res = document.getElementById("query-result");
+  res.innerHTML = "Analizando memoria inconsciente...";
+  
+  setTimeout(() => {
+    if (q.includes("sueñ") || q.includes("dream")) {
+      res.innerHTML = "✓ Detalle: Se detectaron 29 sueños latentes. El tema recurrente es 'Expansión Orbital'.";
+    } else if (q.includes("batallon") || q.includes("soldado")) {
+      res.innerHTML = "✓ Estado: 8 soldados operativos. SENTINEL reporta sincronización perfecta con r1ch0n.";
+    } else if (q.includes("camaleon")) {
+      res.innerHTML = "✓ Dossier: Camaleones detectados en órbita. Frecuencia de protección activa.";
+    } else {
+      res.innerHTML = "✓ Respuesta: El Orbe está procesando tu intención. Los datos son favorables para la evolución.";
+    }
+  }, 800);
 }
 
 setInterval(async () => {
