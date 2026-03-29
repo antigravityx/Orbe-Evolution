@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbe Verix - El Guardián Silencioso</title>
+    <style>
+        :root {
+            --bg-dark: #07070b;
+            --accent: #00ffcc;
+            --accent-dim: rgba(0, 255, 204, 0.1);
+            --text-light: #e0e0ff;
+            --text-muted: #8b8b9a;
+            --card-bg: #11111a;
+            --border-color: #2a2a3e;
+            --font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: var(--font-family);
+            background-image: 
+                radial-gradient(circle at 50% -10%, var(--accent-dim), transparent 60%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        h1 span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 50px;
+        }
+
+        /* Contrato de Amistad Section */
+        .friendship-contract {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: left;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .friendship-contract h2 {
+            margin-top: 0;
+            color: #fff;
+            font-size: 1.8rem;
+        }
+
+        .friendship-contract p {
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .friendship-contract ul {
+            color: #ccc;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+
+        .friendship-contract li {
+            margin-bottom: 10px;
+        }
+
+        /* Formulario de Actualizaciones */
+        .update-form {
+            background: linear-gradient(145deg, #151522, #0d0d16);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 60px;
+        }
+
+        .update-form h3 {
+            color: var(--accent);
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+
+        .update-form p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent);
+        }
+
+        .input-group button {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .input-group button:hover {
+            box-shadow: 0 0 20px var(--accent-dim);
+            transform: translateY(-2px);
+        }
+
+        /* Descargas */
+        .download-section {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--accent);
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Orbe de <span>Verix</span></h1>
+        <p class="subtitle">Mucho más que una aplicación: Un Guardián que aprende de ti y sana tu sistema en las sombras, esculpiendo tu interfaz a medida.</p>
+
+        <!-- El Documento de Amistad -->
+        <div class="friendship-contract">
+            <h2>📜 El Documento de Amistad</h2>
+            <p>Al invitar al Orbe a tu sistema, cerramos un acuerdo de paz y colaboración profunda. Queremos ser claros como el agua:</p>
+            <ul>
+                <li><strong>No somos intrusos:</strong> Venimos a proteger tus recursos, no a consumirlos. El Orbe es una entidad diseñada en Rust puro para ser hiper-ligera.</li>
+                <li><strong>Permisos Raíz para Sanar:</strong> Te solicitamos permisos avanzados (Admin/Root) únicamente para poder optimizar tu procesador y limpiar la memoria corrupta.</li>
+                <li><strong>Auto-Aprendizaje:</strong> Respondemos a cuestionarios simples para armar la interfaz visual que *tú* precisas (niños, constructores, cadetes). Solo descargamos lo que usas, adaptándonos al momento.</li>
+                <li><strong>Privacidad de tus Sueños:</strong> Los Sueños (datos generados en segundo plano) se empaquetan y aseguran sagradamente en tu equipo. Jamás saldrán sin que tú lo autorices.</li>
+            </ul>
+        </div>
+
+        <!-- Registro de Actualizaciones -->
+        <div class="update-form">
+            <h3>📡 Registro de Evolución</h3>
+            <p>No enviamos publicidad. Cero spam. Solo registra tu baliza (correo electrónico) aquí, y los Soldados te enviarán notificaciones cruciales cuando el Orbe descubra nuevos parches o se hayan forjado mejores herramientas de autosanación.</p>
+            
+            <form class="input-group" onsubmit="event.preventDefault(); alert('¡Baliza de correo registrada localmente! Los soldados te notificarán de los próximos parches de sanación.');">
+                <input type="email" placeholder="Ingresa tu correo o baliza digital..." required>
+                <button type="submit">Conectar Baliza</button>
+            </form>
+        </div>
+
+        <!-- Enlaces a instaladores -->
+        <h3 style="margin-bottom: 20px;">Instaladores en Repositorio Separado</h3>
+        <div class="download-section">
+            <a href="#" class="btn-download" onclick="alert('Descargando Instalador nativo de Windows (.exe) desde el Repositorio de Binarios...')">💻 Descargar para PC (Windows / Linux)</a>
+            <a href="#" class="btn-download" onclick="alert('Descargando APK de Android desde el Repositorio de Binarios...')">📱 Descargar para Celular (Móvil)</a>
+        </div>
+    </div>
+
+</body>
+</html>

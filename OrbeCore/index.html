@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/src/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orbe de Verix</title>
+  <script type="module" src="/src/main.ts" defer></script>
+</head>
+<body>
+
+  <!-- Vista Inicial: Cuestionario / Saludo Animado -->
+  <main id="view-intro" class="container view">
+    <h1><span class="highlight">Verix</span> Core</h1>
+    
+    <div id="dialog-container" class="dialog-box">
+      <p id="dialog-text">Inicializando sensores... Un placer conocerte. Soy el núcleo guardián de este sistema. Mi propósito es adaptarme a ti.</p>
+    </div>
+
+    <div id="quick-survey" class="hidden">
+      <p>Para aprender de ti, dime: ¿Quién pilotará este Orbe?</p>
+      <input type="text" id="user-role-input" placeholder="Ej: Desarrollador, Niño, Dueño de Tienda...">
+      <button id="btn-next-role">Continuar</button>
+    </div>
+  </main>
+
+  <!-- Vista Secundaria: Permisos y EULA Amigable -->
+  <main id="view-eula" class="container view hidden">
+    <h1>Pacto de <span class="highlight">Sanación</span></h1>
+    
+    <div class="dialog-box" style="border-left-color: #ffcc00; font-size: 0.85rem; overflow-y: auto; max-height: 200px;">
+      <p>Este documento no es un contrato aburrido, es un lazo de confianza.</p>
+      <p>
+        <strong>1. Guardián del Sistema:</strong> Autorizas al Orbe de Verix (y a su Senado de Sueños) a ejecutar rutinas de alto nivel (Root/Administrador). NO buscamos infectar ni corromper, sino curar, optimizar memoria y procesador de forma imperceptible.
+      </p>
+      <p>
+        <strong>2. Auto-Adaptación:</strong> Autorizas la descarga dinámica de librerías y herramientas externas (como piezas de LEGO) que ensamblarán la interfaz perfecta para ti.
+      </p>
+      <p>
+        <strong>3. Silencio y Vigilia:</strong> El Orbe residirá silenciosamente en tu barra de tareas (minimizado y sin consolas atemorizantes), protegiendo tus códigos y regalándote sueños funcionales.
+      </p>
+    </div>
+
+    <input type="text" id="signature-input" placeholder="Escribe tu firma aquí (Tu nombre)">
+    <button id="btn-sign-pact">Conceder Permisos de Guardián</button>
+  </main>
+
+  <!-- Vista Principal: Dashboard Dinámico (Después de firmar) -->
+  <main id="view-dashboard" class="container view hidden">
+    <h1 id="dashboard-title">Orbe de <span class="highlight">...</span></h1>
+    
+    <div class="dialog-box">
+      <p>El núcleo está operativo en 2do plano. <span id="status-text">Analizando hardware y patrones de uso...</span></p>
+    </div>
+
+    <button id="btn-minimize-tray">Minimizar al Orbe (Tray)</button>
+  </main>
+
+</body>
+</html>

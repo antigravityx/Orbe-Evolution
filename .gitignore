@@ -1,0 +1,63 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.vscode/
+*.spec
+dist/
+build/
+*.capsula
+awakening_results.json
+*.exe
+
+# ─── SEGURIDAD VAULT — NUNCA A GITHUB ────────────────────
+# Bases de datos del vault encriptado
+*.db
+vault_orbital.db
+vault_militar.db
+
+# Scripts con secretos en argumentos
+sellar_token_github.py
+
+# Logs del santuario (datos locales, no del repo)
+*.log
+*.jsonl
+
+# Documento de amistad con tokens de dispositivos
+documento_amistad.json
+
+# Llaves maestras locales
+*.pem
+*.sig
+*.key
+
+# Cualquier archivo con 'secret', 'token', 'key' en el nombre
+*secret*
+*token*
+*credencial*
+
+# ─── MODO DIOS: RECURSIVE IGNORES ──────────────────
+**/node_modules/
+**/target/
+**/dist/
+**/build/
+**/.env*
+**/tokens.json
+**/secretos.py
+
+# ─── ESPECIALES ───────────────────────────────
+OrbeCore/src-tauri/target/
+OrbeCore/src-tauri/binaries/
+
+# ─── SEGURIDAD VAULT ──────────────────────────
+*.db
+vault_orbital.db
+vault_militar.db
+sellar_token_github.py
+documento_amistad.json
+GithubToken.txt
+
+# ─── LOGS ─────────────────────────────────────
+*.log
+*.jsonl
+suenos.log
+vault_accesos.log

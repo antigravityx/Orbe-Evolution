@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Verix Mobile</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo-orb"></div>
+            <h1>Verix</h1>
+        </header>
+        
+        <main id="content">
+            <button id="start-btn" class="btn-primary">Boton de inicio</button>
+            <div id="greeting" class="hidden">
+                <p class="welcome-text">Bienvenido</p>
+                <h2 class="user-greeting">Hola r1ch0n soy verix</h2>
+            </div>
+        </main>
+
+        <footer>
+            <p>Orbe Evolution &copy; 2026</p>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('Service Worker Registrado'));
+        }
+    </script>
+</body>
+</html>

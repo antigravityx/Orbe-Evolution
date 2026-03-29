@@ -1,0 +1,160 @@
+:root {
+  --color-bg: #05050a;
+  --color-text: #e0e0ff;
+  --color-accent: #00ffcc;
+  --color-accent-dim: rgba(0, 255, 204, 0.2);
+  --color-card: #0a0a14;
+  --color-border: #1a1a2e;
+  --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --transition-speed: 0.3s;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none; /* Prevent accidental text selection like a real app */
+}
+
+/* Background grid effect */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center center;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.container {
+  max-width: 600px;
+  width: 90%;
+  padding: 40px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--color-accent-dim);
+  text-align: center;
+  animation: fadeIn 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative top bar */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #b0b0c0;
+}
+
+.highlight {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+/* Chat/Dialog Bubbles */
+.dialog-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--color-accent);
+  padding: 15px;
+  margin-bottom: 25px;
+  text-align: left;
+  font-size: 0.95rem;
+  animation: slideUp 0.5s ease-out;
+}
+
+/* Buttons */
+button {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  font-family: var(--font-main);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  box-shadow: 0 0 15px var(--color-accent-dim);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Minimal Input */
+input {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--color-border);
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  width: calc(100% - 24px);
+  margin-bottom: 20px;
+  font-family: var(--font-main);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: var(--color-accent);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dynamic Hidden Sections */
+.hidden {
+  display: none !important;
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

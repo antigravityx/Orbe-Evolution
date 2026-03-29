@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORBE | Hub de Evolución</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030303;
+            --accent: #00f2ff;
+            --accent-glow: rgba(0, 242, 255, 0.3);
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --text-dim: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 50%);
+        }
+
+        .hub-container {
+            width: 90%;
+            max-width: 500px;
+            padding: 3rem;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            animation: emerge 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes emerge {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to bottom, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(1.5);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .download-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            padding: 1.2rem;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.4s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+            border: 1px solid var(--border);
+        }
+
+        .btn span {
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+
+        .btn-apk {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        .btn-apk:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--accent-glow);
+        }
+
+        .btn-exe {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .btn-exe:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .footer {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .footer code {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hub-container">
+        <h1>Portal del Orbe</h1>
+        <div class="status">Resonancia Activa</div>
+
+        <div class="download-grid">
+            <!-- Los enlaces se actualizarán con los artefactos de GitHub Actions -->
+            <a href="#" class="btn btn-apk">
+                DESCARGAR APK
+                <span>Android Vessel</span>
+            </a>
+            <a href="#" class="btn btn-exe">
+                DESCARGAR EXE
+                <span>Windows Vessel</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Protocolo de Amistad v2.0</p>
+            <p>Requiere <code>documento_amistad.json</code> en el santuario raíz para sincronización total.</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+{
+  "version": "2.0",
+  "orbe": "Orbe de Verix",
+  "guardian": "r1ch0n",
+  "ultima_actualizacion": "2026-03-28T22:45:00",
+  "score_salud": 100.0,
+  "estado_global": "OPTIMO",
+  "soldados": {
+    "SENTINEL": { "estado": "ACTIVO", "critico": true, "rol": "Nexo GitHub" },
+    "OIDO": { "estado": "ACTIVO", "critico": false, "rol": "Reconocimiento de Voz" },
+    "VISION": { "estado": "ACTIVO", "critico": false, "rol": "Reconocimiento Facial" },
+    "ENCAPSULADOR": { "estado": "ACTIVO", "critico": false, "rol": "Bóveda AES-256" },
+    "VAULT": { "estado": "ACTIVO", "critico": true, "rol": "Custodia de Secretos" },
+    "MEMORIA_MADRE": { "estado": "ACTIVO", "critico": true, "rol": "Inteligencia Colectiva" },
+    "BUS_MENSAJES": { "estado": "ACTIVO", "critico": false, "rol": "Red Inter-Soldado" },
+    "CEREBRO": { "estado": "ACTIVO", "critico": true, "rol": "Orquestador Maestro" }
+  },
+  "stats": {
+    "total_soldados": 8,
+    "soldados_activos": 8,
+    "soldados_falla": 0,
+    "total_operaciones": 0,
+    "tasa_exito": 100.0,
+    "commits_hoy": 5,
+    "repo": "antigravityx/Orbe-Evolution"
+  },
+  "github": {
+    "usuario": "antigravityx",
+    "repo": "Orbe-Evolution",
+    "repos_totales": 38,
+    "rama": "main"
+  },
+  "agenda": [
+    { "nombre": "sync_diario", "intervalo": "24h", "accion": "sync_github" },
+    { "nombre": "diagnostico_6h", "intervalo": "6h", "accion": "diagnosticar" },
+    { "nombre": "compactar_7d", "intervalo": "7d", "accion": "compactar_memoria" }
+  ]
+}
