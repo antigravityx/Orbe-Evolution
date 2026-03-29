@@ -48,7 +48,7 @@ def parse_json_dreams():
     try:
         with open(COLCHON_PATH, "r", encoding="utf-8") as f:
             data = json.load(f)
-            for d in data: d["aprobado"] = false # Descartados
+            for d in data: d["aprobado"] = False # Descartados
             return data
     except:
         return []
