@@ -194,5 +194,12 @@
     "id": "S-2026032910-8858",
     "asunto": "Honeypot de Elara",
     "descripcion": "He imaginado una IA señuelo que imite el comportamiento del Orbe para atrapar cualquier intento de intrusión externa."
+  },
+  {
+    "aprobado": true,
+    "fecha": "2026-03-29 10:29:39",
+    "id": "S-2026032910-4114",
+    "asunto": "Honeypot de Elara",
+    "descripcion": "He imaginado una IA señuelo que imite el comportamiento del Orbe para atrapar cualquier intento de intrusión externa."
   }
 ]
