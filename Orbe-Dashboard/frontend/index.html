@@ -1,46 +1,283 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verix - Senado de Sueños</title>
-    <link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orbe de Verix ÔÇö Panel de Control</title>
+  <meta name="description" content="Panel de control del ecosistema inteligente Orbe de Verix ÔÇö monitorea soldados, inteligencia colectiva y sincronizaci├│n GitHub en tiempo real." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void:#050712;--deep:#0a0d1f;--surface:#0f1330;--card:#141840;
+      --border:rgba(99,102,241,0.15);--glow:#6366f1;--pulse:#8b5cf6;
+      --cyan:#06b6d4;--emerald:#10b981;--amber:#f59e0b;--crimson:#ef4444;
+      --text:#e2e8f0;--muted:#64748b;--gold:#fbbf24;
+      --f:\'Outfit\',sans-serif;--mono:\'JetBrains Mono\',monospace;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--f);background:var(--void);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    body::before{content:\'\';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(99,102,241,.08) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 80% 80%,rgba(139,92,246,.06) 0%,transparent 60%);pointer-events:none;z-index:0;}
+    header{position:sticky;top:0;z-index:10;padding:0 2rem;height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,13,31,.85);backdrop-filter:blur(20px);}
+    .hbrand{display:flex;align-items:center;gap:14px;}
+    .orb-icon{width:42px;height:42px;border-radius:50%;background:conic-gradient(from 180deg,var(--glow),var(--pulse),var(--cyan),var(--glow));animation:spin 8s linear infinite;position:relative;flex-shrink:0;}
+    .orb-icon::after{content:\'Ôê┤\';position:absolute;inset:3px;background:var(--deep);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--cyan);line-height:36px;text-align:center;}
+    .bt h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .bt p{font-size:.7rem;color:var(--muted);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;}
+    .hright{display:flex;align-items:center;gap:16px;}
+    #spill{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);font-size:.75rem;font-weight:600;color:var(--emerald);}
+    #spill .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);animation:pdot 2s infinite;}
+    #lupd{font-family:var(--mono);font-size:.68rem;color:var(--muted);}
+    main{position:relative;z-index:1;padding:2rem;max-width:1400px;margin:0 auto;display:grid;gap:1.5rem;}
+    .hero{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;}
+    .scard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:1rem;position:relative;overflow:hidden;}
+    .scard::before{content:\'\';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(99,102,241,.12) 0%,transparent 70%);}
+    .sring{position:relative;width:160px;height:160px;}
+    .sring svg{width:100%;height:100%;transform:rotate(-90deg);}
+    .sring .trk{fill:none;stroke:rgba(99,102,241,.15);stroke-width:8;}
+    .sring .fil{fill:none;stroke:url(#rg);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);}
+    .sctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .snum{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+    .slbl{font-size:.65rem;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;}
+    .sbadge{padding:5px 16px;border-radius:100px;font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+    .sbadge.ok{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:var(--emerald);}
+    .sbadge.warn{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--amber);}
+    .sbadge.err{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--crimson);}
+    .qstats{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+    .qcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
+    .qcard:hover{transform:translateY(-2px);border-color:rgba(99,102,241,.35);}
+    .qcard::before{content:\'\';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;opacity:.06;transform:translate(20px,-20px);}
+    .qcard.g::before{background:var(--emerald);} .qcard.p::before{background:var(--pulse);} .qcard.c::before{background:var(--cyan);} .qcard.a::before{background:var(--gold);}
+    .qico{font-size:1.5rem;margin-bottom:.75rem;}
+    .qval{font-size:2.2rem;font-weight:800;line-height:1;margin-bottom:.25rem;}
+    .qtitle{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+    .qcard.g .qval{color:var(--emerald);} .qcard.p .qval{color:var(--pulse);} .qcard.c .qval{color:var(--cyan);} .qcard.a .qval{color:var(--gold);}
+    .stitle{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+    .stitle::after{content:\'\';flex:1;height:1px;background:var(--border);}
+    .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;}
+    .soldcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;transition:all .3s;}
+    .soldcard:hover{border-color:rgba(99,102,241,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(99,102,241,.1);}
+    .sh{display:flex;align-items:center;justify-content:space-between;}
+    .sav{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);}
+    .sav.crit{background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.2);}
+    .sstatus{display:flex;align-items:center;gap:5px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+    .sstatus .dot{width:6px;height:6px;border-radius:50%;}
+    .sstatus.activo{color:var(--emerald);} .sstatus.activo .dot{background:var(--emerald);animation:pdot 2s infinite;}
+    .sstatus.degradado{color:var(--amber);} .sstatus.degradado .dot{background:var(--amber);}
+    .sstatus.ausente{color:var(--crimson);} .sstatus.ausente .dot{background:var(--crimson);}
+    .sname{font-size:.9rem;font-weight:700;font-family:var(--mono);color:#fff;}
+    .srole{font-size:.72rem;color:var(--muted);}
+    .critbadge{font-size:.58rem;padding:2px 7px;border-radius:100px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25);color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+    .bgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+    .pcard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;}
+    .ghrow{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.05);margin-bottom:.6rem;}
+    .ghrow .lbl{font-size:.78rem;color:var(--muted);}
+    .ghrow .val{font-family:var(--mono);font-size:.8rem;font-weight:600;color:var(--text);}
+    .ghrow .val.g{color:var(--emerald);} .ghrow .val.c{color:var(--cyan);}
+    .agitem{display:flex;align-items:center;gap:12px;padding:.75rem 1rem;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.05);margin-bottom:.6rem;}
+    .agico{width:32px;height:32px;border-radius:8px;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+    .agname{font-size:.8rem;font-weight:600;font-family:var(--mono);}
+    .agint{font-size:.68rem;color:var(--muted);}
+    .actbar{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;overflow:hidden;}
+    .albl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+    .twrap{flex:1;overflow:hidden;}
+    .tcontent{display:flex;gap:3rem;animation:ticker 30s linear infinite;white-space:nowrap;}
+    .titem{font-family:var(--mono);font-size:.72rem;color:var(--cyan);}
+    .titem em{color:var(--emerald);font-style:normal;margin-right:.5rem;}
+    .lovl{position:fixed;inset:0;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;z-index:1000;transition:opacity .5s;}
+    .lovl.fo{opacity:0;pointer-events:none;}
+    .lorb{width:80px;height:80px;border-radius:50%;background:conic-gradient(from 0deg,transparent,var(--glow),var(--pulse));animation:spin 1.2s linear infinite;position:relative;}
+    .lorb::after{content:\'Ôê┤\';position:absolute;inset:4px;background:var(--void);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--cyan);line-height:72px;text-align:center;}
+    .ltxt{font-family:var(--mono);font-size:.8rem;color:var(--muted);letter-spacing:2px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @keyframes pdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
+    @keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+    @keyframes fiu{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .fi{animation:fiu .6s ease both;}
+    .d1{animation-delay:.1s;} .d2{animation-delay:.2s;} .d3{animation-delay:.3s;} .d4{animation-delay:.4s;}
+    footer{text-align:center;padding:1.5rem 0;color:var(--muted);font-size:.72rem;font-family:var(--mono);}
+    @media(max-width:900px){.hero{grid-template-columns:1fr;}.bgrid{grid-template-columns:1fr;}}
+    @media(max-width:480px){main{padding:1rem;}header{padding:0 1rem;}#lupd{display:none;}}
+  </style>
 </head>
 <body>
-    <div id="app">
-        <header>
-            <h1>🌌 Senado de Sueños</h1>
-            <div class="status-container">
-                <span id="backend-status" class="status-dot offline"></span>
-                <span id="status-text">Desconectado</span>
-            </div>
-        </header>
 
-        <main>
-            <section id="stats">
-                <div class="stat-card">
-                    <span class="stat-label">Ciclos REM</span>
-                    <span id="rem-count" class="stat-value">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Sueños Latentes</span>
-                    <span id="dream-count" class="stat-value">0</span>
-                </div>
-            </section>
+<div class="lovl" id="lov">
+  <div class="lorb"></div>
+  <p class="ltxt">INICIALIZANDO ORBE...</p>
+</div>
 
-            <section id="dreams-list">
-                <h2>Historial de Realidad Latente</h2>
-                <div id="dreams-container">
-                    <!-- Los sueños se cargarán aquí -->
-                    <div class="loading">Sincronizando con el subconsciente...</div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <p>Orbe de Verix © 2026 | Subconsciente Activo</p>
-        </footer>
+<header>
+  <div class="hbrand">
+    <div class="orb-icon"></div>
+    <div class="bt">
+      <h1>Orbe de Verix</h1>
+      <p>Panel de Control ÔÇö r1ch0n</p>
     </div>
-    <script type="module" src="./main.js"></script>
+  </div>
+  <div class="hright">
+    <div id="spill"><div class="dot"></div><span id="stxt">Cargando...</span></div>
+    <a href="suenos.html" style="text-decoration:none; padding:8px 16px; border-radius:10px; background:linear-gradient(135deg,var(--glow),var(--pulse)); color:white; font-size:0.8rem; font-weight:700; box-shadow:0 0 15px rgba(99,102,241,0.4); transition:all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 25px rgba(99,102,241,0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 15px rgba(99,102,241,0.4)'">🌌 SENADO</a>
+    <span id="lupd">ÔÇö</span>
+  </div>
+</header>
+
+<main id="mc" style="opacity:0">
+
+  <div class="actbar fi">
+    <span class="albl">­ƒö┤ LIVE</span>
+    <div class="twrap"><div class="tcontent">
+      <span class="titem"><em>Ô£ô</em>SENTINEL ÔÇö Token sellado en Vault AES-256</span>
+      <span class="titem"><em>Ô£ô</em>MEMORIA_MADRE ÔÇö Inteligencia colectiva activa</span>
+      <span class="titem"><em>Ô£ô</em>CEREBRO ÔÇö Orquestando el Batall├│n</span>
+      <span class="titem"><em>Ô£ô</em>BUS_MENSAJES ÔÇö Red inter-soldado online</span>
+      <span class="titem"><em>Ô£ô</em>VAULT ÔÇö Secretos custodiados con clave de m├íquina</span>
+      <span class="titem"><em>Ô£ô</em>SENTINEL ÔÇö Token sellado en Vault AES-256</span>
+      <span class="titem"><em>Ô£ô</em>MEMORIA_MADRE ÔÇö Inteligencia colectiva activa</span>
+      <span class="titem"><em>Ô£ô</em>CEREBRO ÔÇö Orquestando el Batall├│n</span>
+      <span class="titem"><em>Ô£ô</em>BUS_MENSAJES ÔÇö Red inter-soldado online</span>
+      <span class="titem"><em>Ô£ô</em>VAULT ÔÇö Secretos custodiados con clave de m├íquina</span>
+    </div></div>
+  </div>
+
+  <div class="hero fi d1">
+    <div class="scard">
+      <svg width="0" height="0"><defs>
+        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="100%" stop-color="#06b6d4"/>
+        </linearGradient>
+      </defs></svg>
+      <div class="sring">
+        <svg viewBox="0 0 160 160">
+          <circle class="trk" cx="80" cy="80" r="68"/>
+          <circle class="fil" id="sarc" cx="80" cy="80" r="68" stroke-dasharray="427" stroke-dashoffset="427"/>
+        </svg>
+        <div class="sctr">
+          <span class="snum" id="snum">ÔÇö</span>
+          <span class="slbl">Salud</span>
+        </div>
+      </div>
+      <div class="sbadge ok" id="sbadge">CARGANDO</div>
+      <div style="font-size:.72rem;color:var(--muted);text-align:center;">Diagn├│stico continuo del Batall├│n</div>
+    </div>
+
+    <div class="qstats">
+      <div class="qcard g fi d1"><div class="qico">ÔÜö´©Å</div><div class="qval" id="qa">ÔÇö</div><div class="qtitle">Soldados Activos</div></div>
+      <div class="qcard p fi d2"><div class="qico">­ƒº¼</div><div class="qval" id="qo">ÔÇö</div><div class="qtitle">Operaciones Totales</div></div>
+      <div class="qcard c fi d3"><div class="qico">­ƒôñ</div><div class="qval" id="qc">ÔÇö</div><div class="qtitle">Commits Hoy</div></div>
+      <div class="qcard a fi d4"><div class="qico">­ƒÄ»</div><div class="qval" id="qe">ÔÇö</div><div class="qtitle">Tasa de ├ëxito</div></div>
+    </div>
+  </div>
+
+  <div class="fi d2">
+    <p class="stitle">ÔÜö´©Å Batall├│n ÔÇö Estado de los Soldados</p>
+    <div class="sgrid" id="sg"></div>
+  </div>
+
+  <div class="bgrid fi d3">
+    <div class="pcard">
+      <p class="stitle">­ƒÉÖ Nexo GitHub</p>
+      <div id="ghi">
+        <div class="ghrow"><span class="lbl">Usuario</span><span class="val c" id="ghu">ÔÇö</span></div>
+        <div class="ghrow"><span class="lbl">Repositorio</span><span class="val c" id="ghr">ÔÇö</span></div>
+        <div class="ghrow"><span class="lbl">Repos totales</span><span class="val" id="ght">ÔÇö</span></div>
+        <div class="ghrow"><span class="lbl">Rama activa</span><span class="val g" id="ghb">ÔÇö</span></div>
+      </div>
+    </div>
+    <div class="pcard">
+      <p class="stitle">­ƒôà Agenda Autom├ítica</p>
+      <div id="ags"></div>
+    </div>
+  </div>
+
+  <footer>Ôê┤ ORBE DE VERIX ÔÇö Sistema de Inteligencia Distribuida ÔÇö r1ch0n &amp; Verix ┬® 2026</footer>
+</main>
+
+<script>
+const DATA_URL = "https://raw.githubusercontent.com/antigravityx/Orbe-Evolution/main/orbe_estado.json";
+const ICONS = {SENTINEL:"ÔÜí",OIDO:"­ƒæé",VISION:"­ƒæü´©Å",ENCAPSULADOR:"­ƒôª",VAULT:"­ƒöÉ",MEMORIA_MADRE:"­ƒº¼",BUS_MENSAJES:"­ƒô¿",CEREBRO:"­ƒºá"};
+const AGICONS = {sync_github:"­ƒôñ",diagnosticar:"­ƒöì",compactar_memoria:"­ƒù£´©Å"};
+
+async function load() {
+  const r = await fetch(DATA_URL + "?t=" + Date.now());
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+function render(d) {
+  const s = d.stats || {}, g = d.github || {}, ag = d.agenda || [], sol = d.soldados || {};
+  const score = d.score_salud ?? 100;
+
+  document.getElementById("snum").textContent = score + "%";
+  const arc = document.getElementById("sarc");
+  arc.style.strokeDashoffset = 427 - (score / 100) * 427;
+
+  const badge = document.getElementById("sbadge");
+  badge.className = "sbadge";
+  if (score >= 85) { badge.textContent = "├ôPTIMO"; badge.classList.add("ok"); }
+  else if (score >= 60) { badge.textContent = "ESTABLE"; badge.classList.add("warn"); }
+  else { badge.textContent = "CR├ìTICO"; badge.classList.add("err"); }
+
+  document.getElementById("qa").textContent = (s.soldados_activos ?? "ÔÇö") + "/" + (s.total_soldados ?? "ÔÇö");
+  document.getElementById("qo").textContent = s.total_operaciones !== undefined ? s.total_operaciones.toLocaleString() : "ÔÇö";
+  document.getElementById("qc").textContent = s.commits_hoy ?? "ÔÇö";
+  document.getElementById("qe").textContent = s.tasa_exito !== undefined ? s.tasa_exito + "%" : "ÔÇö";
+
+  document.getElementById("ghu").textContent = g.usuario ?? "ÔÇö";
+  document.getElementById("ghr").textContent = g.repo ?? "ÔÇö";
+  document.getElementById("ght").textContent = g.repos_totales ?? "ÔÇö";
+  document.getElementById("ghb").textContent = g.rama ?? "ÔÇö";
+
+  document.getElementById("stxt").textContent = d.estado_global ?? "ACTIVO";
+  document.getElementById("lupd").textContent = "Actualizado: " + (d.ultima_actualizacion || "").replace("T"," ").substring(0,16);
+
+  const sg = document.getElementById("sg");
+  sg.innerHTML = "";
+  for (const [n, i] of Object.entries(sol)) {
+    const est = (i.estado || "DESCONOCIDO").toLowerCase();
+    const c = document.createElement("div");
+    c.className = "soldcard";
+    c.innerHTML = `<div class="sh"><div class="sav ${i.critico ? "crit" : ""}">${ICONS[n] || "ÔÜö´©Å"}</div><div class="sstatus ${est}"><div class="dot"></div><span>${i.estado || "?"}</span></div></div><div><div class="sname">${n}</div><div class="srole">${i.rol || "ÔÇö"}</div></div>${i.critico ? "<span class=\"critbadge\">CR├ìTICO</span>" : ""}`;
+    sg.appendChild(c);
+  }
+
+  const ags = document.getElementById("ags");
+  ags.innerHTML = "";
+  for (const a of ag) {
+    const el = document.createElement("div");
+    el.className = "agitem";
+    el.innerHTML = `<div class="agico">${AGICONS[a.accion] || "ÔÅ░"}</div><div><div class="agname">${a.nombre}</div><div class="agint">Cada ${a.intervalo} ÔÇö ${a.accion}</div></div>`;
+    ags.appendChild(el);
+  }
+}
+
+async function init() {
+  try {
+    const data = await load();
+    render(data);
+    const ov = document.getElementById("lov");
+    ov.classList.add("fo");
+    setTimeout(() => ov.style.display = "none", 600);
+    const mc = document.getElementById("mc");
+    mc.style.transition = "opacity .6s";
+    mc.style.opacity = "1";
+  } catch (e) {
+    document.querySelector(".ltxt").textContent = "ERROR ÔÇö Reintentando...";
+    setTimeout(init, 5000);
+  }
+}
+
+setInterval(async () => {
+  try {
+    render(await load());
+    document.getElementById("lupd").textContent = "Actualizado: " + new Date().toLocaleTimeString("es-AR");
+  } catch(e) {}
+}, 60000);
+
+init();
+</script>
 </body>
 </html>
+

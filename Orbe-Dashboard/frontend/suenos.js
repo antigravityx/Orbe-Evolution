@@ -9,14 +9,20 @@ const DREAM_COUNT = document.getElementById('dream-count');
 let prevDreams = [];
 
 async function fetchDreams() {
+    const isLive = window.location.hostname.includes('github.io');
+    
     try {
-        // Intentar primero API Local para tiempo real
-        let response = await fetch(API_URL).catch(() => null);
+        let response = null;
         
-        // Si falla la API local, intentar el archivo estático (modo Live / Offline)
+        // Solo intentar API Local si no estamos en modo Live o si queremos forzarlo
+        if (!isLive) {
+            response = await fetch(API_URL).catch(() => null);
+        }
+        
+        // Si estamos en Live o falló la API local, usar el JSON estático
         if (!response || !response.ok) {
-            response = await fetch(LOCAL_JSON);
-            updateStatus(true, "Modo Live (Sincronizado)");
+            response = await fetch(LOCAL_JSON + "?t=" + Date.now());
+            updateStatus(true, isLive ? "MODO DIOS (Live)" : "Modo Offline");
         } else {
             updateStatus(true, "Conectado al Alma (Local)");
         }

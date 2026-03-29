@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verix - Senado de Sueños</title>
+    <link rel="stylesheet" href="./suenos.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="nav-header">
+                <a href="index.html" class="nav-back">🛡️ VOLVER AL PANEL</a>
+                <h1>🌌 Senado de Sueños</h1>
+            </div>
+            <div class="status-container">
+                <span id="backend-status" class="status-dot offline"></span>
+                <span id="status-text">Desconectado</span>
+            </div>
+        </header>
+
+        <main>
+            <section id="stats">
+                <div class="stat-card">
+                    <span class="stat-label">Ciclos REM</span>
+                    <span id="rem-count" class="stat-value">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Sueños Latentes</span>
+                    <span id="dream-count" class="stat-value">0</span>
+                </div>
+            </section>
+
+            <section id="dreams-list">
+                <h2>Historial de Realidad Latente</h2>
+                <div id="dreams-container">
+                    <!-- Los sueños se cargarán aquí -->
+                    <div class="loading">Sincronizando con el subconsciente...</div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Orbe de Verix © 2026 | Subconsciente Activo</p>
+        </footer>
+    </div>
+    <script type="module" src="./suenos.js"></script>
+</body>
+</html>
