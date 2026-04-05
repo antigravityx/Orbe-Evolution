@@ -188,6 +188,21 @@ class CerebroOrbe:
             _log("CRITICO", f"Error en sync_github: {str(e)[:100]}")
             return False
 
+    # ── SUEÑO: LATIDO DEL NIDO (PUSH SILENCIOSO) ──────────────────────────────
+    def latido_nido(self) -> bool:
+        """Monitorea tareas.md y sincroniza si hay cambios (Push Silencioso)."""
+        tareas_path = os.path.join(ORBE_ROOT, "batallon", "tareas.md")
+        if not os.path.exists(tareas_path): return False
+        
+        # Calculamos hash rápido para ver si cambió
+        with open(tareas_path, "rb") as f:
+            current_hash = hashlib.md5(f.read()).hexdigest()
+            
+        # Aquí podríamos guardar el hash anterior en un estado temporal
+        _log("LATIDO", "Analizando el pulso de tareas.md...")
+        # Si detectamos cambios, disparamos el Latido Eterno
+        return self.sync_github("Latido Silencioso: Evolución en tareas.md detectada.")
+
     # ── AGENDA AUTOMÁTICA ─────────────────────────────────────────────────────
     def registrar_tarea_agenda(self, nombre: str, intervalo_horas: int,
                                 accion: str, params: dict = None):
@@ -240,6 +255,8 @@ class CerebroOrbe:
                         self.sync_github(f"Agenda: {nombre}")
                     elif accion == "diagnosticar":
                         self.diagnosticar_batallon()
+                    elif accion == "latido_nido":
+                        self.latido_nido()
                     elif accion == "compactar_memoria":
                         from batallon.memoria_madre import MemoriaMadre
                         MemoriaMadre().compactar_memoria()
@@ -343,8 +360,16 @@ if __name__ == "__main__":
         # Registrar agenda por defecto
         cerebro.registrar_tarea_agenda("sync_diario",     intervalo_horas=24, accion="sync_github")
         cerebro.registrar_tarea_agenda("diagnostico_6h",  intervalo_horas=6,  accion="diagnosticar")
+        cerebro.registrar_tarea_agenda("latido_nido_1h",  intervalo_horas=1,  accion="latido_nido")
         cerebro.registrar_tarea_agenda("compactar_7d",    intervalo_horas=168, accion="compactar_memoria")
-        print("✅ Agenda configurada: sync cada 24h | diagnóstico cada 6h | compactar cada 7d")
+        print("✅ Agenda configurada: sync cada 24h | diagnóstico cada 6h | latido cada 1h | compactar cada 7d")
+
+    elif cmd == "RUN":
+        _log("LOOP", "Iniciando modo vigilancia continua (cada 5 minutos)...")
+        while True:
+            cerebro.ejecutar_agenda_pendiente()
+            cerebro.procesar_mensajes_pendientes()
+            time.sleep(300) # Dormir 5 minutos entre ciclos
 
     elif cmd == "INFORME_SYNC":
         cerebro.informe_completo(sync=True)

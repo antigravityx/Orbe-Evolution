@@ -53,24 +53,43 @@ def _log(mensaje, prioridad="INFO"):
     except Exception:
         pass
 
+# ─── CONFIGURACIÓN DE FRAGMENTACIÓN ──────────────────────────────────────────
+MAX_SHARD_SIZE = 1024 * 1024  # 1MB por fragmento (Sueño del Senado)
+
 # ─── NÚCLEO: ENCRIPTACIÓN AES-256 ─────────────────────────────────────────────
-def _encriptar_archivo(src_path, dest_path, key_bytes):
+def _encriptar_archivo(src_path, dest_base_path, key_bytes):
     """
     Encripta un archivo con AES-256-CFB.
-    NUNCA lee el contenido en texto visible — es binario puro.
+    Implementa Fragmentación Etérea si el archivo excede el tamaño máximo.
     """
     iv = os.urandom(16)
     cipher = Cipher(algorithms.AES(key_bytes), modes.CFB(iv), backend=default_backend())
     encryptor = cipher.encryptor()
+    
+    file_size = os.path.getsize(src_path)
+    shard_count = 0
+    bytes_written_to_current_shard = 0
 
-    with open(src_path, "rb") as f_in, open(dest_path, "wb") as f_out:
-        f_out.write(iv)  # IV al inicio del archivo
+    f_out = open(f"{dest_base_path}.{shard_count:03d}", "wb")
+    f_out.write(iv)
+
+    with open(src_path, "rb") as f_in:
         while True:
             chunk = f_in.read(64 * 1024)  # 64KB por chunk — liviano
             if not chunk:
                 break
             f_out.write(encryptor.update(chunk))
+            bytes_written_to_current_shard += len(chunk)
+            
+            if bytes_written_to_current_shard >= MAX_SHARD_SIZE:
+                f_out.close()
+                shard_count += 1
+                f_out = open(f"{dest_base_path}.{shard_count:03d}", "wb")
+                bytes_written_to_current_shard = 0
+
         f_out.write(encryptor.finalize())
+    f_out.close()
+    return shard_count + 1
 
 # ─── MISIÓN PRINCIPAL ─────────────────────────────────────────────────────────
 def ejecutar_mision(ticket_path):

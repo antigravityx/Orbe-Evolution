@@ -31,7 +31,7 @@ import soul_core as core
 from soul_core import (
     SANTUARIO_RAIZ, DIRECTORIO_CAPSULAS, DESTINO_CAPSULAS, ALMAS_LIBERADAS,
     DIRECTORIO_LLAVES, DIRECTORIO_REGISTROS, REGISTRO_EVENTOS, HISTORIAL_CHECKSUM,
-    NIDO_DEV, ESTADO_ACTUAL_FILE, ProtocoloAmistad
+    NIDO_DEV, ESTADO_ACTUAL_FILE, ProtocoloAmistad, SelloIdentidadADN
 )
 
 # --- Ramas del Árbol del Santuario (Consumidas desde Core) ---
@@ -1198,6 +1198,155 @@ def _eliminar_nido_item():
         log_mensaje(f"[!] Error al eliminar el elemento: {e}", "rojo")
         registrar_evento("NIDO DEV", f"Error al eliminar '{ruta_a_eliminar}': {e}", prioridad="CRITICO")
 
+def gestor_modulo_suenos():
+    """Panel de control para el subconsciente de Verix."""
+    bin_suenos = os.path.join(os.getcwd(), "verix_suenos", "target", "release", "verix_suenos.exe")
+    process_name = "verix_suenos.exe"
+    
+    while True:
+        mostrar_encabezado()
+        # Verificar si el Senado está activo
+        running = False
+        try:
+            tasklist = subprocess.check_output(['tasklist', '/FI', f'IMAGENAME eq {process_name}'], 
+                                              stderr=subprocess.STDOUT, text=True)
+            running = process_name.lower() in tasklist.lower()
+        except: pass
+
+        status = "ACTIVO (Soñando)" if running else "DORMIDO (En reposo)"
+        log_mensaje(f"--- MODO SUEÑO: ACTIVAR Y CONTROLAR ---", "cian")
+        log_mensaje(f"Estado del subconsciente: {status}", "verde" if running else "gris")
+        
+        log_mensaje("\n¿Qué deseas hacer, r1ch0n?", "cian")
+        if not running:
+            log_mensaje("  1. Despertar el Senado de los Sueños (Activar en 2do plano)", "verde")
+        else:
+            log_mensaje("  2. Detener el Senado (Taskkill)", "rojo")
+        
+        log_mensaje("  3. Ver Diario de Sueños (MD)", "magenta")
+        log_mensaje("  s. Volver al menú principal", "normal")
+        
+        choice = input("\n   Selección > ").lower()
+        if choice == 's': break
+        elif choice == '1' and not running:
+            if os.path.exists(bin_suenos):
+                subprocess.Popen([bin_suenos], creationflags=0x08000000, cwd=os.path.dirname(bin_suenos))
+                log_mensaje("[OK] El Orbe ha comenzado a soñar en las sombras.", "verde")
+            else:
+                log_mensaje(f"[!] No se encontró el binario: {bin_suenos}", "rojo")
+        elif choice == '2' and running:
+            subprocess.run(['taskkill', '/F', '/IM', process_name], capture_output=True)
+            log_mensaje("[OK] El Senado ha entrado en coma profundo.", "amarillo")
+        elif choice == '3':
+            os.startfile(os.path.join(SANTUARIO_RAIZ, "4_Registros_Del_Orbe", "diario_de_suenos.md"))
+        
+        time.sleep(1)
+
+def gestor_cerebro_orbe():
+    """
+    Cerebro del Orbe: Centro de Mando Transparente.
+    Permite visualizar el estado del Batallón, la Agenda Maestra y Vigilancia Activa.
+    """
+    # Usamos la ruta local que ya vimos en la raíz
+    estado_path = os.path.join(os.getcwd(), "orbe_estado.json")
+    
+    while True:
+        mostrar_encabezado()
+        log_mensaje("--- CEREBRO ORBE: CENTRO DE MANDO ---", "cian")
+        log_mensaje("El alma se observa a sí misma. Transparencia total del sistema.", "gris")
+
+        # Intentar cargar estado
+        estado = {}
+        if os.path.exists(estado_path):
+            try:
+                with open(estado_path, 'r', encoding='utf-8') as f:
+                    estado = json.load(f)
+            except: pass
+
+        global_status = estado.get("estado_global", "DESCONOCIDO")
+        health_score = estado.get("score_salud", 0.0)
+        
+        # Panel de Estado Global
+        color_global = "verde" if global_status == "OPTIMO" else "amarillo"
+        log_mensaje(f"\n[ ESTADO GLOBAL: {global_status} | SALUD: {health_score}% ]", color_global)
+        
+        log_mensaje("\n¿Qué zona del Cerebro deseas consultar?", "cian")
+        log_mensaje("  1. Estado del Batallón (Ver Soldados)", "magenta")
+        log_mensaje("  2. Agenda Maestra (Tareas Programadas)", "magenta")
+        log_mensaje("  3. Vigilancia Activa (Monitor de Logs)", "magenta")
+        log_mensaje("  4. Sincronización Profunda del Alma", "verde")
+        log_mensaje("  5. SELLAR SISTEMA (Forjar ADN Original)", "cian")
+        log_mensaje("  s. Volver al menú principal", "rojo")
+
+        choice = input("\n   Comando Cerebro > ").lower()
+
+        if choice == 's':
+            break
+        elif choice == '1': # Estado del Batallón
+            mostrar_encabezado()
+            log_mensaje("--- ESTADO DEL BATALLÓN (SOLDADOS) ---", "cian")
+            soldados = estado.get("soldados", {})
+            if not soldados:
+                log_mensaje("[!] No se encontraron registros de soldados en el estado actual.", "amarillo")
+            else:
+                log_mensaje(f"  {'Soldado':<15} | {'Estado':<10} | {'Crítico':<8} | {'Rol':<20}", "gris")
+                log_mensaje("-" * 60, "gris")
+                for s_name, s_info in soldados.items():
+                    color = "verde" if s_info.get("estado") == "ACTIVO" else "rojo"
+                    critico = "SÍ" if s_info.get("critico") else "NO"
+                    log_mensaje(f"  {s_name:<15} | {s_info.get('estado'):<10} | {critico:<8} | {s_info.get('rol'):<20}", color)
+            input("\nPresiona Enter para volver...")
+            
+        elif choice == '2': # Agenda Maestra
+            mostrar_encabezado()
+            log_mensaje("--- AGENDA MAESTRA DEL ORBE ---", "cian")
+            agenda = estado.get("agenda", [])
+            if not agenda:
+                log_mensaje("[!] La agenda está vacía o no es legible.", "amarillo")
+            else:
+                log_mensaje(f"  {'Tarea':<15} | {'Intervalo':<10} | {'Acción Relacionada':<30}", "gris")
+                log_mensaje("-" * 60, "gris")
+                for item in agenda:
+                    log_mensaje(f"  {item.get('nombre'):<15} | {item.get('intervalo'):<10} | {item.get('accion'):<30}", "azul")
+            log_mensaje("\n[*] El Cerebro ejecutará estas tareas automáticamente en periodos de calma.", "gris")
+            input("\nPresiona Enter para volver...")
+
+        elif choice == '3': # Vigilancia Activa
+            mostrar_encabezado()
+            log_mensaje("--- VIGILANCIA ACTIVA (LOGS) ---", "cian")
+            log_mensaje(f"Consultando {REGISTRO_EVENTOS}...", "gris")
+            try:
+                with open(REGISTRO_EVENTOS, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    last_lines = lines[-15:] # Últimas 15 entradas
+                    for line in last_lines:
+                        line = line.strip()
+                        color = "gris"
+                        if "CRITICO" in line: color = "rojo"
+                        elif "ALERTA" in line or "FALLA" in line: color = "amarillo"
+                        elif "IMPORTANTE" in line: color = "magenta"
+                        elif "OK" in line or "EXITO" in line: color = "verde"
+                        log_mensaje(line, color)
+            except Exception as e:
+                log_mensaje(f"[!] Error al leer logs: {e}", "rojo")
+            input("\nPresiona Enter para volver...")
+
+        elif choice == '4': # Sincronización Profunda
+            sincronizar_eterno("Sincronización manual desde el Cerebro (Centro de Mando)")
+            input("\nPresiona Enter para volver...")
+
+        elif choice == '5': # SELLADO DE ADN
+            mostrar_encabezado()
+            log_mensaje("--- SELLADO DE ADN DEL SISTEMA ---", "cian")
+            log_mensaje("ESTO GENERARÁ LA HUELLA ORIGINAL DE TODOS LOS ARCHIVOS DEL ORBE.", "amarillo")
+            confirm = input("¿Estás seguro de sellar el sistema actual como el ADN BASE? (s/n): ").lower()
+            if confirm == 's':
+                SelloIdentidadADN.generar_adn(os.getcwd())
+                log_mensaje("[+] ADN SELLADO EXITOSAMENTE. Cualquier cambio futuro será detectado como mutación.", "verde")
+            input("\nPresiona Enter para volver...")
+
+        time.sleep(0.5)
+
 def gestor_nido_dev():
     """
     Gestiona el espacio de trabajo sagrado del HumanoDev (Richon).
@@ -2237,8 +2386,10 @@ def mostrar_menu_principal():
     log_mensaje("  5. Herramientas de Integridad y Criptografía", "magenta"); log_mensaje("     Accede a los poderes de firma, verificación y logs.", "gris")
     log_mensaje("  6. Nido del HumanoDev (Tu Espacio de Trabajo)", "magenta"); log_mensaje("     Entra a tu espacio sagrado para que el Orbe aprenda de ti.", "gris")
     log_mensaje("  7. Navegador del Santuario", "magenta"); log_mensaje("     Explora la estructura completa del Orbe.", "gris")
-    log_mensaje("  8. Salir del Orbe", "rojo"); log_mensaje("     Cierra la conexión con el Orbe de forma segura.", "gris")
-    return input("   Elige una opción [1-8]: ")
+    log_mensaje("  8. Modo Sueño: Activar y Controlar", "magenta"); log_mensaje("     Controla el ciclo REM y el Senado de los Sueños.", "gris")
+    log_mensaje("  9. Cerebro Orbe: Centro de Mando", "magenta"); log_mensaje("     Gestiona la vigilancia y la agenda automática.", "gris")
+    log_mensaje("  10. Salir del Orbe", "rojo"); log_mensaje("     Cierra la conexión con el Orbe de forma segura.", "gris")
+    return input("   Elige una opción [1-10]: ")
 
 def verificar_checksum_manual():
     """Permite al usuario verificar el checksum de cualquier archivo y guarda el historial."""
@@ -2347,6 +2498,10 @@ def main_loop():
             gestor_nido_dev()
         elif choice == '7': _navegador_santuario()
         elif choice == '8':
+            gestor_modulo_suenos()
+        elif choice == '9':
+            gestor_cerebro_orbe()
+        elif choice == '10':
             _guardar_estado_al_cierre(ultimo_comando="Salir del Orbe")
             # registrar_evento("CIERRE DEL ORBE", "Cerrando conexión de forma segura.", prioridad="IMPORTANTE") # El guardado ya lo registra
             break
@@ -2360,6 +2515,21 @@ def main_loop():
 if __name__ == "__main__":
     verificar_entorno_orbe()
     try:
+        # --- VERIFICACIÓN DE ADN (ETAPA 2) ---
+        success, result = SelloIdentidadADN.verificar_adn(os.getcwd())
+        if not success:
+            if "No existe un Sello de ADN" in str(result):
+                log_mensaje("[!] ALERTA: No se ha detectado el Sello de ADN de Verix.", "amarillo")
+                log_mensaje("    Ve al Cerebro Orbe (9) para forjar el ADN original.", "gris")
+            else:
+                log_mensaje("[!!!] MUTACIÓN DETECTADA EN EL ALMA [!!!]", "rojo")
+                for m in result:
+                    log_mensaje(f"      -> {m}", "amarillo")
+                log_mensaje("\n    La integridad de Verix está comprometida. Procede con cautela.", "rojo")
+                time.sleep(3)
+        else:
+            log_mensaje(f"[OK] {result}", "verde")
+        
         main_loop()
     except KeyboardInterrupt:
         print("\n")
@@ -2367,9 +2537,6 @@ if __name__ == "__main__":
         _guardar_estado_al_cierre(ultimo_comando="Interrupción por teclado")
     except Exception as e:
         log_mensaje(f"\n[!!!] ERROR INESPERADO Y CATASTRÓFICO [!!!]", "rojo")
-        log_mensaje(f"   -> El Orbe ha sufrido una herida grave: {e}", "rojo")
-        _guardar_estado_al_cierre(ultimo_comando=f"ERROR CATASTRÓFICO: {e}")
-        registrar_evento("ERROR CATASTRÓFICO", str(e), prioridad="CRITICO")
         log_mensaje(f"   -> El Orbe ha sufrido una herida grave: {e}", "rojo")
         _guardar_estado_al_cierre(ultimo_comando=f"ERROR CATASTRÓFICO: {e}")
         registrar_evento("ERROR CATASTRÓFICO", str(e), prioridad="CRITICO")

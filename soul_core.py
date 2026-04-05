@@ -304,3 +304,67 @@ class GestorDeMisiones:
         except Exception as e:
             registrar_evento("FALLA DESPLIEGUE", str(e), prioridad="ALERTA")
             return False, str(e)
+
+# --- SELLO DE ADN (INTEGRIDAD TOTAL) ---
+class SelloIdentidadADN:
+    MANIFEST_ADN = os.path.join(DIRECTORIO_REGISTROS, "adn_manifest.json")
+    
+    @staticmethod
+    def generar_adn(raiz_proyecto):
+        """Escanea archivos críticos y genera sus huellas dactilares (ADN)."""
+        adn = {
+            "timestamp": datetime.now().isoformat(),
+            "creador": "r1ch0n",
+            "version_adn": "1.0",
+            "huellas": {}
+        }
+        
+        # Extensiones críticas
+        extensiones = ('.py', '.ps1', '.bat', '.json', '.exe', '.rust', '.md')
+        
+        for root, dirs, files in os.walk(raiz_proyecto):
+            # Ignorar carpetas no esenciales
+            if any(x in root for x in [".git", "__pycache__", "venv", ".tmp"]):
+                continue
+                
+            for file in files:
+                if file.endswith(extensiones):
+                    file_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(file_path, raiz_proyecto)
+                    adn["huellas"][rel_path] = calcular_checksum(file_path)
+        
+        with open(SelloIdentidadADN.MANIFEST_ADN, 'w', encoding='utf-8') as f:
+            json.dump(adn, f, indent=4)
+        
+        registrar_evento("ADN GENERADO", f"Se han sellado {len(adn['huellas'])} huellas en el proyecto.", prioridad="IMPORTANTE")
+        return adn
+
+    @staticmethod
+    def verificar_adn(raiz_proyecto):
+        """Compara el estado actual con el manifiesto ADN para detectar mutaciones."""
+        if not os.path.exists(SelloIdentidadADN.MANIFEST_ADN):
+            return False, "No existe un Sello de ADN previo. ¿Deseas forjar uno?"
+            
+        with open(SelloIdentidadADN.MANIFEST_ADN, 'r', encoding='utf-8') as f:
+            manifest = json.load(f)
+            
+        mutaciones = []
+        huellas = manifest.get("huellas", {})
+        
+        for rel_path, checksum_original in huellas.items():
+            full_path = os.path.join(raiz_proyecto, rel_path)
+            if not os.path.exists(full_path):
+                mutaciones.append(f"Archivo desaparecido: {rel_path}")
+                continue
+                
+            checksum_actual = calcular_checksum(full_path)
+            if checksum_actual != checksum_original:
+                mutaciones.append(f"Mutación detectada: {rel_path}")
+                
+        # Buscar archivos nuevos no registrados (Opcional, pero recomendado)
+        # ... por ahora solo detectamos cambios en los existentes.
+
+        if not mutaciones:
+            return True, "Integridad confirmada. El ADN de Verix es puro."
+        else:
+            return False, mutaciones

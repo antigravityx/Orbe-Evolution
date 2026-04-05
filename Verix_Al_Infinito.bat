@@ -30,6 +30,10 @@ if exist "Orbe-Dashboard\backend\target\release\backend.exe" (
 echo [3/3] Enviando al Heraldo a sincronizar con GitHub...
 start /B "" python "batallon\soldado_dashboard_sync.py"
 
+:: 4. Cerebro Vigilante
+echo [4/4] Despertando el Cerebro (Agenda y Latido)...
+start /B "" python "batallon\cerebro_orbe.py" RUN
+
 echo.
 echo ==============================================================
 echo   ✅ VERIX ESTA ONLINE Y SOÑANDO.
