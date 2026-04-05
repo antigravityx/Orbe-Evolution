@@ -368,3 +368,25 @@ class SelloIdentidadADN:
             return True, "Integridad confirmada. El ADN de Verix es puro."
         else:
             return False, mutaciones
+
+    @staticmethod
+    def restaurar_desde_github(rel_path, branch="main"):
+        """Intenta sanar un archivo descargando su versión pura desde el Éter (GitHub)."""
+        # Obtenemos la URL base desde la configuración (asumiendo Orbe-Evolution)
+        repo_url = "https://raw.githubusercontent.com/antigravityx/Orbe-Evolution"
+        url = f"{repo_url}/{branch}/{rel_path.replace(os.sep, '/')}"
+        
+        try:
+            registrar_evento("INTENTO DE SANACIÓN", f"Restaurando {rel_path} desde {url}", prioridad="ALERTA")
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                full_path = os.path.join(os.getcwd(), rel_path)
+                os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                with open(full_path, 'wb') as f:
+                    f.write(response.content)
+                registrar_evento("SANACIÓN EXITOSA", f"Archivo {rel_path} restaurado.", prioridad="IMPORTANTE")
+                return True, f"Verix ha sanado {rel_path}."
+            else:
+                return False, f"El Éter no respondió (Status: {response.status_code})."
+        except Exception as e:
+            return False, str(e)

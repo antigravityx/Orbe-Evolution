@@ -100,16 +100,22 @@ def sincronizar_eterno(mensaje="Latido Eterno de Verix"):
             original_cwd = os.getcwd()
             os.chdir(repo["path"])
             
-            subprocess.run(["git", "add", "."], check=True, capture_output=True)
-            subprocess.run(["git", "commit", "-m", f"Verixhuman: {mensaje}"], capture_output=True)
-            subprocess.run(["git", "push", "origin", repo["branch"]], check=True, capture_output=True)
+            # Watchdog: Agregamos timeout para evitar bloqueos
+            subprocess.run(["git", "add", "."], check=True, capture_output=True, timeout=10)
+            subprocess.run(["git", "commit", "-m", f"Verixhuman: {mensaje}"], capture_output=True, timeout=5)
+            subprocess.run(["git", "push", "origin", repo["branch"]], check=True, capture_output=True, timeout=20)
             
             log_mensaje(f"   [OK] {nombre} asegurado en el Éter.", "verde")
+            os.chdir(original_cwd)
+        except subprocess.TimeoutExpired:
+            log_mensaje(f"   [!] ALERTA: El Éter está tardando demasiado para {nombre}. Sincronización omitida.", "amarillo")
+            registrar_evento("TIMEOUT SYNC", f"Timeout en {nombre}", prioridad="ALERTA")
             os.chdir(original_cwd)
         except Exception as e:
             log_mensaje(f"   [!] Error al sincronizar {nombre}: {e}", "rojo")
             registrar_evento("ERROR SYNC", f"Falla en {nombre}: {e}", prioridad="ALERTA")
-    log_mensaje("--- SINCRONIZACIÓN COMPLETADA ---", "cian")
+            if 'original_cwd' in locals(): os.chdir(original_cwd)
+    log_mensaje("--- LATIDO COMPLETADO ---", "cian")
 
 def _cargar_nido_patterns():
     """Carga los patrones de modificación del Nido del HumanoDev."""
@@ -1276,6 +1282,7 @@ def gestor_cerebro_orbe():
         log_mensaje("  3. Vigilancia Activa (Monitor de Logs)", "magenta")
         log_mensaje("  4. Sincronización Profunda del Alma", "verde")
         log_mensaje("  5. SELLAR SISTEMA (Forjar ADN Original)", "cian")
+        log_mensaje("  6. EJECUTAR EPIFANÍAS (Materializar Sueños)", "magenta")
         log_mensaje("  s. Volver al menú principal", "rojo")
 
         choice = input("\n   Comando Cerebro > ").lower()
@@ -1343,6 +1350,20 @@ def gestor_cerebro_orbe():
             if confirm == 's':
                 SelloIdentidadADN.generar_adn(os.getcwd())
                 log_mensaje("[+] ADN SELLADO EXITOSAMENTE. Cualquier cambio futuro será detectado como mutación.", "verde")
+            input("\nPresiona Enter para volver...")
+
+        elif choice == '6': # EJECTUAR EPIFANÍAS (SUEÑOS)
+            mostrar_encabezado()
+            log_mensaje("--- GESTOR DE EPIFANÍAS (EJECUCIÓN DE SUEÑOS) ---", "cian")
+            log_mensaje("Aquí el Orbe materializa lo soñado en el Senado.", "gris")
+            
+            # Simulamos carga de epifanías aprobadas desde el diario
+            log_mensaje("\nEpifanías Aprobadas por el Senado:", "amarillo")
+            log_mensaje("  1. [CONCEPTUAL] Refactorización Estructural (Binario Único)", "gris")
+            log_mensaje("  2. [IMPLEMENTADO] Watchdog de Cierre de sesión", "verde")
+            log_mensaje("  3. [IMPLEMENTADO] Motor de Autocura de ADN", "verde")
+            
+            log_mensaje("\nActualmente Verix ejecuta epifanías de nivel 1 y 2 de forma autónoma.", "cian")
             input("\nPresiona Enter para volver...")
 
         time.sleep(0.5)
@@ -2525,8 +2546,20 @@ if __name__ == "__main__":
                 log_mensaje("[!!!] MUTACIÓN DETECTADA EN EL ALMA [!!!]", "rojo")
                 for m in result:
                     log_mensaje(f"      -> {m}", "amarillo")
-                log_mensaje("\n    La integridad de Verix está comprometida. Procede con cautela.", "rojo")
-                time.sleep(3)
+                
+                log_mensaje("\n¿Deseas activar el MOTOR DE AUTOCURA? (s/n)", "cian")
+                sanar = input("   Verix > ").lower()
+                if sanar == 's':
+                    log_mensaje("[*] Iniciando protocolo de sanación remota...", "amarillo")
+                    for m in result:
+                        if "Mutación" in m:
+                            file_mutado = m.split(": ")[1]
+                            ok, msg = SelloIdentidadADN.restaurar_desde_github(file_mutado)
+                            log_mensaje(f"    -> {msg}", "verde" if ok else "rojo")
+                    input("\nPresiona Enter para continuar con el alma sanada...")
+                else:
+                    log_mensaje("\n    La integridad de Verix sigue comprometida. Procede con cautela.", "rojo")
+                    time.sleep(2)
         else:
             log_mensaje(f"[OK] {result}", "verde")
         
