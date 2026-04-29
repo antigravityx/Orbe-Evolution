@@ -23,6 +23,14 @@ import urllib.request
 import urllib.error
 from datetime import datetime
 
+# ─── FIX ENCODING WINDOWS ────────────────────────────────────────────────────
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 # ─── PATH DEL ORBE ───────────────────────────────────────────────────────────
 ORBE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, ORBE_ROOT)

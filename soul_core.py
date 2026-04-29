@@ -305,6 +305,43 @@ class GestorDeMisiones:
             registrar_evento("FALLA DESPLIEGUE", str(e), prioridad="ALERTA")
             return False, str(e)
 
+    @staticmethod
+    def despachar_mision_2fa(sub_comando="INFORME"):
+        """Invoca al Soldado Guardián 2FA para operaciones de seguridad."""
+        soldado_path = os.path.join(BATALLON_DIR, "soldado_guardian_2fa.py")
+        if not os.path.exists(soldado_path):
+            registrar_evento("FALLA 2FA", "Soldado Guardián 2FA no encontrado", prioridad="CRITICO")
+            return False, "Soldado Guardián 2FA no encontrado en el batallón."
+
+        try:
+            comando = [sys.executable, soldado_path, sub_comando]
+            result = subprocess.run(comando, capture_output=True, text=True, encoding='utf-8', timeout=30)
+            registrar_evento("MISIÓN 2FA", f"Comando: {sub_comando} | Exit: {result.returncode}", prioridad="INFORMATIVO")
+            return result.returncode == 0, result.stdout
+        except Exception as e:
+            registrar_evento("FALLA 2FA", str(e), prioridad="ALERTA")
+            return False, str(e)
+
+    @staticmethod
+    def despachar_mision_despliegue(proyecto="NAUFRAGO"):
+        """Invoca al Soldado Ministro de Despliegue para subir proyectos a la nube."""
+        soldado_path = os.path.join(BATALLON_DIR, "soldado_elite_despliegue.py")
+        if not os.path.exists(soldado_path):
+            registrar_evento("FALLA DESPLIEGUE", "Soldado Elite de Despliegue no encontrado", prioridad="CRITICO")
+            return False, "Soldado Elite de Despliegue no encontrado."
+
+        sub_comando = "DESPLEGAR_NAUFRAGO" if proyecto == "NAUFRAGO" else "INFORME"
+        
+        try:
+            comando = [sys.executable, soldado_path, sub_comando]
+            # Despacho asíncrono para despliegues pesados
+            subprocess.Popen(comando)
+            registrar_evento("MISIÓN DESPLIEGUE", f"Misión {proyecto} despachada al Soldado Elite.", prioridad="ALTA")
+            return True, f"Soldado de élite en misión de despliegue para {proyecto}."
+        except Exception as e:
+            registrar_evento("FALLA DESPLIEGUE", str(e), prioridad="ALERTA")
+            return False, str(e)
+
 # --- SELLO DE ADN (INTEGRIDAD TOTAL) ---
 class SelloIdentidadADN:
     MANIFEST_ADN = os.path.join(DIRECTORIO_REGISTROS, "adn_manifest.json")

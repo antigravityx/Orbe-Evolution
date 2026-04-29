@@ -13,11 +13,13 @@
     "VAULT": { "estado": "ACTIVO", "critico": true, "rol": "Custodia de Secretos" },
     "MEMORIA_MADRE": { "estado": "ACTIVO", "critico": true, "rol": "Inteligencia Colectiva" },
     "BUS_MENSAJES": { "estado": "ACTIVO", "critico": false, "rol": "Red Inter-Soldado" },
-    "CEREBRO": { "estado": "ACTIVO", "critico": true, "rol": "Orquestador Maestro" }
+    "CEREBRO": { "estado": "ACTIVO", "critico": true, "rol": "Orquestador Maestro" },
+    "GUARDIAN_2FA": { "estado": "ACTIVO", "critico": true, "rol": "Guardián 2FA GitHub" },
+    "ELITE_DEPLOY_MINISTER": { "estado": "ACTIVO", "critico": true, "rol": "Ministro de Despliegue Cloud" }
   },
   "stats": {
-    "total_soldados": 8,
-    "soldados_activos": 8,
+    "total_soldados": 10,
+    "soldados_activos": 10,
     "soldados_falla": 0,
     "total_operaciones": 0,
     "tasa_exito": 100.0,

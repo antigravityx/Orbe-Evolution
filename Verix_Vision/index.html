@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verix Vision</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+
+  <body>
+    <div class="glass-container">
+      <header>
+        <h1 class="glow-title">Verix Vision</h1>
+        <button id="btn-refresh" class="cyber-button">Sincronizar</button>
+      </header>
+      
+      <main>
+        <div id="dreams-list" class="dreams-grid">
+          <!-- Los sueños se cargarán aquí -->
+          <div class="dream-card loading">
+            <p>Conectando con el Senado de los Sueños...</p>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p class="status-text" id="status">Orbe en estado de vigilia.</p>
+      </footer>
+    </div>
+    
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

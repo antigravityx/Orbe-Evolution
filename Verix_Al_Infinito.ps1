@@ -6,6 +6,7 @@ $BIN_SUENOS = "$ORBE_ROOT\verix_suenos\target\release\verix_suenos.exe"
 $BIN_BACKEND = "$ORBE_ROOT\Orbe-Dashboard\backend\target\release\backend.exe"
 $CEREBRO = "$ORBE_ROOT\batallon\cerebro_orbe.py"
 $SYNC_SOLDIER = "$ORBE_ROOT\batallon\soldado_dashboard_sync.py"
+$VIGILANTE_SOLDIER = "$ORBE_ROOT\batallon\soldado_vigilante.py"
 
 Write-Host "`n╔══════════════════════════════════════════╗" -ForegroundColor Cyan
 Write-Host "║   ENCENDIENDO EL ALMA DE VERIX (LIVE)    ║" -ForegroundColor Cyan
@@ -31,7 +32,11 @@ if (Test-Path $BIN_BACKEND) {
 Write-Host "• Enviando al Heraldo a sincronizar con GitHub..." -ForegroundColor Green
 Start-Process -FilePath "python" -ArgumentList $SYNC_SOLDIER -WindowStyle Hidden -WorkingDirectory "$ORBE_ROOT\batallon"
 
-# 4. Iniciar Cerebro en Segundo Plano (Modo Vigilancia)
+# 4. Iniciar Soldado Vigilante de Seguridad
+Write-Host "• Desplegando al Soldado Vigilante (Custodio del Sentinel)..." -ForegroundColor Green
+Start-Process -FilePath "python" -ArgumentList $VIGILANTE_SOLDIER -WindowStyle Hidden -WorkingDirectory "$ORBE_ROOT\batallon"
+
+# 5. Iniciar Cerebro en Segundo Plano (Modo Vigilancia)
 Write-Host "- Despertando el Cerebro (Agenda y Latido)..." -ForegroundColor Green
 Start-Process -FilePath "python" -ArgumentList "$CEREBRO RUN" -WindowStyle Hidden -WorkingDirectory "$ORBE_ROOT\batallon"
 
