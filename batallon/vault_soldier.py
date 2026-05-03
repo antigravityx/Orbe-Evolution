@@ -21,6 +21,7 @@ import hashlib
 import hmac
 import socket
 import getpass
+import threading
 from datetime import datetime
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
@@ -47,9 +48,11 @@ class VaultOrbe:
     Bóveda blindada del Orbe.
     La clave se deriva en tiempo de ejecución — nunca se persiste.
     """
+    _lock = threading.RLock()
 
     def __init__(self):
-        self._key = _derivar_clave_maquina()
+        with self._lock:
+            self._key = _derivar_clave_maquina()
         os.makedirs(os.path.dirname(VAULT_PATH), exist_ok=True)
         os.makedirs(os.path.dirname(VAULT_LOG_PATH), exist_ok=True)
 
@@ -96,42 +99,46 @@ class VaultOrbe:
     # ── API pública ──────────────────────────────────────────────────────────
     def guardar(self, nombre: str, valor: str, categoria: str = "GENERAL") -> bool:
         """Guarda un secreto en el vault. El valor nunca se loguea."""
-        try:
-            vault = self._leer_vault()
-            vault[nombre] = {
-                "valor": valor,
-                "categoria": categoria,
-                "sellado_en": datetime.now().isoformat(),
-                "checksum": hashlib.sha256(valor.encode()).hexdigest()[:12]  # solo huella
-            }
-            self._escribir_vault(vault)
-            self._log("GUARDAR", nombre, f"checksum={vault[nombre]['checksum']}")
-            return True
-        except Exception as e:
-            self._log("GUARDAR", nombre, f"ERROR:{str(e)[:50]}")
-            return False
+        with self._lock:
+            try:
+                vault = self._leer_vault()
+                vault[nombre] = {
+                    "valor": valor,
+                    "categoria": categoria,
+                    "sellado_en": datetime.now().isoformat(),
+                    "checksum": hashlib.sha256(valor.encode()).hexdigest()[:12]
+                }
+                self._escribir_vault(vault)
+                self._log("GUARDAR", nombre, f"checksum={vault[nombre]['checksum']}")
+                return True
+            except Exception as e:
+                self._log("GUARDAR", nombre, f"ERROR:{str(e)[:50]}")
+                return False
 
     def recuperar(self, nombre: str) -> str | None:
         """Recupera un secreto del vault. Solo retorna el valor, nada más."""
-        try:
-            vault = self._leer_vault()
-            entry = vault.get(nombre)
-            if entry:
-                self._log("RECUPERAR", nombre, "CONCEDIDO")
-                return entry["valor"]
-            self._log("RECUPERAR", nombre, "NO_ENCONTRADO")
-            return None
-        except Exception as e:
-            self._log("RECUPERAR", nombre, f"ERROR:{str(e)[:50]}")
-            return None
+        with self._lock:
+            try:
+                vault = self._leer_vault()
+                entry = vault.get(nombre)
+                if entry:
+                    self._log("RECUPERAR", nombre, "CONCEDIDO")
+                    return entry["valor"]
+                self._log("RECUPERAR", nombre, "NO_ENCONTRADO")
+                return None
+            except Exception as e:
+                self._log("RECUPERAR", nombre, f"ERROR:{str(e)[:50]}")
+                return None
 
     def existe(self, nombre: str) -> bool:
-        vault = self._leer_vault()
-        return nombre in vault
+        with self._lock:
+            vault = self._leer_vault()
+            return nombre in vault
 
     def listar_entradas(self) -> list:
         """Lista los nombres de entradas y sus checksums — NUNCA los valores."""
-        vault = self._leer_vault()
+        with self._lock:
+            vault = self._leer_vault()
         resultado = []
         for nombre, meta in vault.items():
             resultado.append({
@@ -139,21 +146,22 @@ class VaultOrbe:
                 "categoria": meta.get("categoria", "?"),
                 "sellado_en": meta.get("sellado_en", "?"),
                 "checksum": meta.get("checksum", "?")
-            })
-        return resultado
+                })
+            return resultado
 
     def eliminar(self, nombre: str) -> bool:
-        try:
-            vault = self._leer_vault()
-            if nombre in vault:
-                del vault[nombre]
-                self._escribir_vault(vault)
-                self._log("ELIMINAR", nombre, "BORRADO")
-                return True
-            return False
-        except Exception as e:
-            self._log("ELIMINAR", nombre, f"ERROR:{str(e)[:50]}")
-            return False
+        with self._lock:
+            try:
+                vault = self._leer_vault()
+                if nombre in vault:
+                    del vault[nombre]
+                    self._escribir_vault(vault)
+                    self._log("ELIMINAR", nombre, "BORRADO")
+                    return True
+                return False
+            except Exception as e:
+                self._log("ELIMINAR", nombre, f"ERROR:{str(e)[:50]}")
+                return False
 
 
 # ─── EJECUCIÓN DIRECTA — SELLADO INICIAL ────────────────────────────────────

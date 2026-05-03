@@ -132,5 +132,5 @@ def sync_live():
 if __name__ == "__main__":
     while True:
         sync_live()
-        # Verificamos cada 2 minutos (ciclo REM aproximado)
-        time.sleep(120)
+        # Verificamos cada 12 horas (43200 segundos) para no saturar
+        time.sleep(43200)

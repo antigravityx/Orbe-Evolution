@@ -48,6 +48,7 @@ SOLDADOS_REGISTRO = {
     "VAULT":         {"archivo": "vault_soldier.py",           "critico": True},
     "MEMORIA_MADRE": {"archivo": "memoria_madre.py",           "critico": True},
     "BUS_MENSAJES":  {"archivo": "bus_mensajes.py",            "critico": False},
+    "ESCUDO":        {"archivo": "soldado_escudo.py",          "critico": False},
 }
 
 # ─── LOGGER ──────────────────────────────────────────────────────────────────
@@ -260,6 +261,9 @@ class CerebroOrbe:
                     elif accion == "compactar_memoria":
                         from batallon.memoria_madre import MemoriaMadre
                         MemoriaMadre().compactar_memoria()
+                    elif accion == "limpiar_santuario":
+                        from batallon.soldado_escudo import EscudoSantuario
+                        EscudoSantuario().ejecutar_limpieza()
 
                     # Reagendar
                     tarea["ultima_ejecucion"] = ahora.isoformat()
@@ -358,18 +362,50 @@ if __name__ == "__main__":
 
     elif cmd == "AGENDA":
         # Registrar agenda por defecto
-        cerebro.registrar_tarea_agenda("sync_diario",     intervalo_horas=24, accion="sync_github")
-        cerebro.registrar_tarea_agenda("diagnostico_6h",  intervalo_horas=6,  accion="diagnosticar")
-        cerebro.registrar_tarea_agenda("latido_nido_1h",  intervalo_horas=1,  accion="latido_nido")
-        cerebro.registrar_tarea_agenda("compactar_7d",    intervalo_horas=168, accion="compactar_memoria")
-        print("✅ Agenda configurada: sync cada 24h | diagnóstico cada 6h | latido cada 1h | compactar cada 7d")
+        cerebro.registrar_tarea_agenda("sync_diario",           intervalo_horas=24,  accion="sync_github")
+        cerebro.registrar_tarea_agenda("diagnostico_6h",        intervalo_horas=6,   accion="diagnosticar")
+        cerebro.registrar_tarea_agenda("latido_nido_1h",        intervalo_horas=1,   accion="latido_nido")
+        cerebro.registrar_tarea_agenda("compactar_7d",          intervalo_horas=168, accion="compactar_memoria")
+        cerebro.registrar_tarea_agenda("limpieza_santuario_24h",intervalo_horas=24,  accion="limpiar_santuario")
+        print("✅ Agenda configurada: sync cada 24h | diagnóstico cada 6h | latido cada 1h | compactar cada 7d | limpieza cada 24h")
 
     elif cmd == "RUN":
-        _log("LOOP", "Iniciando modo vigilancia continua (cada 5 minutos)...")
-        while True:
-            cerebro.ejecutar_agenda_pendiente()
-            cerebro.procesar_mensajes_pendientes()
-            time.sleep(300) # Dormir 5 minutos entre ciclos
+        from concurrent.futures import ThreadPoolExecutor
+        import traceback
+        
+        _log("LOOP", "Iniciando modo Comandante Multihilo (vigilancia y despacho)...")
+        # El pool mantiene vivos hasta 4 soldados a la vez, compartiendo memoria
+        with ThreadPoolExecutor(max_workers=4, thread_name_prefix="Soldado_") as executor:
+            while True:
+                try:
+                    cerebro.ejecutar_agenda_pendiente()
+                    mensajes = cerebro.procesar_mensajes_pendientes()
+                    
+                    # Despachar misiones asíncronas desde el Bus
+                    for msg in mensajes:
+                        if msg.get("tipo") == "ORDEN":
+                            dest = msg.get("destinatario", "")
+                            
+                            if "OIDO" in dest:
+                                from batallon import soldado_oido
+                                _log("DESPACHO", f"Asignando misión a OIDO en segundo plano (Ticket: {msg.get('contenido')})")
+                                executor.submit(soldado_oido.ejecutar_mision, msg.get("contenido"))
+                                
+                            elif "VAULT" in dest:
+                                from batallon import vault_soldier
+                                _log("DESPACHO", "Asignando tarea al VAULT en segundo plano")
+                                # Ejemplo: listar y loguear
+                                v = vault_soldier.VaultOrbe()
+                                executor.submit(v.listar_entradas)
+                                
+                    # Ciclo más corto para ser reactivos sin asfixiar la CPU
+                    time.sleep(30)
+                except KeyboardInterrupt:
+                    _log("SHUTDOWN", "Cerebro apagándose por interrupción manual...")
+                    break
+                except Exception as e:
+                    _log("CRITICO", f"Error en loop principal: {e}\n{traceback.format_exc()}")
+                    time.sleep(60)
 
     elif cmd == "INFORME_SYNC":
         cerebro.informe_completo(sync=True)

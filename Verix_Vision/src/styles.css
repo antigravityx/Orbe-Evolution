@@ -177,3 +177,192 @@ footer {
   50% { opacity: 1; }
   100% { opacity: 0.5; }
 }
+
+/* ─── PANEL DE TELEMETRÍA ─── */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin: 15px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dashboard-grid {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  justify-content: space-around;
+}
+
+.telemetry-card {
+  background: rgba(10, 10, 10, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+}
+
+.health-card {
+  background: rgba(0, 240, 255, 0.03);
+  border-color: rgba(0, 240, 255, 0.1);
+}
+
+.telemetry-label {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.telemetry-sub {
+  font-size: 0.65rem;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* ─── ANILLOS DE PROGRESO (SVG) ─── */
+.ring-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.ring-container svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 8;
+}
+
+.ring-fg {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
+}
+
+.cpu-ring { stroke: var(--accent-magenta); }
+.ram-ring { stroke: var(--accent-cyan); }
+.health-ring { stroke: var(--accent-cyan); } /* Cambiará dinámicamente con TS */
+
+.ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  font-family: monospace;
+}
+
+/* ─── CONTROLES DE VENTANA ─── */
+.window-controls {
+  display: flex;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+.control-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.close-btn:hover {
+  background: var(--accent-magenta);
+  color: #fff;
+}
+
+.control-btn.active {
+  color: var(--accent-cyan);
+  background: rgba(0, 240, 255, 0.1);
+}
+
+/* ─── FORMULARIO DE SUEÑOS ─── */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.dream-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid var(--accent-cyan);
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  max-height: 300px;
+  opacity: 1;
+}
+
+.dream-form.collapsed {
+  max-height: 0;
+  padding: 0 15px;
+  border-width: 0;
+  margin-bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cyber-input, .cyber-textarea {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.cyber-input:focus, .cyber-textarea:focus {
+  border-color: var(--accent-cyan);
+}
+
+.cyber-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.submit-btn {
+  background: rgba(0, 240, 255, 0.1);
+}

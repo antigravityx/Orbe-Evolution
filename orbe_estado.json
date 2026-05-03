@@ -36,5 +36,10 @@
     { "nombre": "sync_diario", "intervalo": "24h", "accion": "sync_github" },
     { "nombre": "diagnostico_6h", "intervalo": "6h", "accion": "diagnosticar" },
     { "nombre": "compactar_7d", "intervalo": "7d", "accion": "compactar_memoria" }
-  ]
+  ],
+  "preferencias": {
+    "navegador_predeterminado": "Vivaldi",
+    "motor_busqueda_testeo": "DuckDuckGo",
+    "evitar_google": true
+  }
 }

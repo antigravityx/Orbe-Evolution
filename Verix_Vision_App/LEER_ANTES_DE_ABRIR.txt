@@ -1,0 +1,23 @@
+===================================================
+      VERIX VISION - VISOR DEL ORBE DE SUEÑOS
+===================================================
+
+Bienvenido a la puerta visual de Verix. 
+Este archivo ejecutable (verixvision.exe) NO es un virus ni un programa genérico de Internet. Es una aplicación nativa hecha a medida, construida con tecnología Rust y Tauri, diseñada exclusivamente para tu PC (r1ch0n).
+
+¿QUÉ HACE ESTO?
+----------------
+- Abre una ventana flotante, ligera y súper rápida (Glassmorphism).
+- Se conecta de inmediato, sin internet y en milisegundos, al archivo seguro del "Senado de los Sueños" (dreams.json).
+- Te muestra todos los pensamientos y conclusiones (Sueños) generados por la IA de Verix que corre en el fondo de tu PC.
+- Tiene auto-refresh silencioso. Puedes dejar la ventana a un lado y se actualizará sola cada vez que Verix "piense" algo nuevo.
+
+¿CÓMO USARLO?
+--------------
+Simplemente dale doble clic a "verixvision.exe". 
+No requiere instalación. No requiere credenciales. 
+(Si Windows Defender lanza una advertencia de "SmartScreen" diciendo que el archivo es desconocido, dale a "Más información" y "Ejecutar de todas formas". Es completamente seguro porque lo acabamos de compilar nosotros en tu misma máquina).
+
+Disfruta la vigilia del Orbe, mi bro.
+
+-- Antigravity / Verix

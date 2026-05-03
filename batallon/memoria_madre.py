@@ -22,6 +22,7 @@ Autor: Verix — bajo el mandato de r1ch0n
 import os
 import json
 import hashlib
+import threading
 from datetime import datetime
 from typing import Optional
 
@@ -59,9 +60,11 @@ class MemoriaMadre:
     El cerebro colectivo del Batallón.
     Todos los soldados depositan aquí su sabiduría.
     """
+    _lock = threading.RLock()
 
     def __init__(self):
-        self._memoria = self._cargar()
+        with self._lock:
+            self._memoria = self._cargar()
 
     def _log(self, msg: str):
         ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -108,156 +111,162 @@ class MemoriaMadre:
         Un soldado deposita un aprendizaje en la memoria colectiva.
         resultado: "OK" | "FALLA" | "ADVERTENCIA"
         """
-        ts = datetime.now().isoformat()
-        evento = {
-            "ts": ts,
-            "operacion": operacion,
-            "resultado": resultado,
-            "datos": datos or {},
-            "es_falla": es_falla
-        }
-
-        # Registro por soldado
-        soldado_data = self._memoria["soldados"].setdefault(soldado, {
-            "primera_activacion": ts,
-            "eventos": [],
-            "stats": {"ops": 0, "ok": 0, "fallas": 0},
-            "fallas_conocidas": {},
-            "parches_aplicados": []
-        })
-
-        soldado_data["eventos"].append(evento)
-        soldado_data["ultima_actividad"] = ts
-        soldado_data["stats"]["ops"] += 1
-
-        if resultado == "OK":
-            soldado_data["stats"]["ok"] += 1
-        elif es_falla or resultado == "FALLA":
-            soldado_data["stats"]["fallas"] += 1
-            # Indexar la falla para consulta futura
-            falla_hash = hashlib.sha256(operacion.encode()).hexdigest()[:12]
-            soldado_data["fallas_conocidas"][falla_hash] = {
+        with self._lock:
+            ts = datetime.now().isoformat()
+            evento = {
+                "ts": ts,
                 "operacion": operacion,
-                "ultima_vez": ts,
-                "datos": datos or {}
+                "resultado": resultado,
+                "datos": datos or {},
+                "es_falla": es_falla
             }
 
-        # Límite de eventos por soldado (auto-compactación suave)
-        if len(soldado_data["eventos"]) > MAX_EVENTOS_POR_SOLDADO:
-            soldado_data["eventos"] = soldado_data["eventos"][-MAX_EVENTOS_POR_SOLDADO:]
+            # Registro por soldado
+            soldado_data = self._memoria["soldados"].setdefault(soldado, {
+                "primera_activacion": ts,
+                "eventos": [],
+                "stats": {"ops": 0, "ok": 0, "fallas": 0},
+                "fallas_conocidas": {},
+                "parches_aplicados": []
+            })
 
-        # Stats globales
-        stats = self._memoria["stats_globales"]
-        stats["total_operaciones"] += 1
-        if resultado == "OK":
-            stats["total_exitosas"] += 1
-        elif es_falla:
-            stats["total_fallas"] += 1
-        if soldado not in stats["soldados_activos"]:
-            stats["soldados_activos"].append(soldado)
+            soldado_data["eventos"].append(evento)
+            soldado_data["ultima_actividad"] = ts
+            soldado_data["stats"]["ops"] += 1
 
-        self._guardar()
-        self._log(f"{soldado} | {operacion} | {resultado}")
-        return evento
+            if resultado == "OK":
+                soldado_data["stats"]["ok"] += 1
+            elif es_falla or resultado == "FALLA":
+                soldado_data["stats"]["fallas"] += 1
+                # Indexar la falla para consulta futura
+                falla_hash = hashlib.sha256(operacion.encode()).hexdigest()[:12]
+                soldado_data["fallas_conocidas"][falla_hash] = {
+                    "operacion": operacion,
+                    "ultima_vez": ts,
+                    "datos": datos or {}
+                }
+
+            # Límite de eventos por soldado (auto-compactación suave)
+            if len(soldado_data["eventos"]) > MAX_EVENTOS_POR_SOLDADO:
+                soldado_data["eventos"] = soldado_data["eventos"][-MAX_EVENTOS_POR_SOLDADO:]
+
+            # Stats globales
+            stats = self._memoria["stats_globales"]
+            stats["total_operaciones"] += 1
+            if resultado == "OK":
+                stats["total_exitosas"] += 1
+            elif es_falla:
+                stats["total_fallas"] += 1
+            if soldado not in stats["soldados_activos"]:
+                stats["soldados_activos"].append(soldado)
+
+            self._guardar()
+            self._log(f"{soldado} | {operacion} | {resultado}")
+            return evento
 
     def consultar_fallas_conocidas(self, operacion: str = None) -> dict:
         """
         Todos los soldados comparten sus fallas.
         Si operacion es None, retorna TODAS las fallas conocidas del batallón.
         """
-        todas_las_fallas = {}
-        for soldado, data in self._memoria["soldados"].items():
-            for fid, falla in data.get("fallas_conocidas", {}).items():
-                if operacion is None or operacion.lower() in falla["operacion"].lower():
-                    todas_las_fallas[fid] = {
-                        "soldado": soldado,
-                        **falla
-                    }
-        return todas_las_fallas
+        with self._lock:
+            todas_las_fallas = {}
+            for soldado, data in self._memoria["soldados"].items():
+                for fid, falla in data.get("fallas_conocidas", {}).items():
+                    if operacion is None or operacion.lower() in falla["operacion"].lower():
+                        todas_las_fallas[fid] = {
+                            "soldado": soldado,
+                            **falla
+                        }
+            return todas_las_fallas
 
     def registrar_parche(self, soldado: str, falla_id: str,
                           descripcion: str, codigo_parche: str = ""):
         """Un soldado crea un parche — queda disponible para todos."""
-        parche = {
-            "falla_id": falla_id,
-            "descripcion": descripcion,
-            "codigo_parche": codigo_parche,
-            "creado_por": soldado,
-            "ts": datetime.now().isoformat(),
-            "adoptado_por": [soldado]
-        }
+        with self._lock:
+            parche = {
+                "falla_id": falla_id,
+                "descripcion": descripcion,
+                "codigo_parche": codigo_parche,
+                "creado_por": soldado,
+                "ts": datetime.now().isoformat(),
+                "adoptado_por": [soldado]
+            }
 
-        soldado_data = self._memoria["soldados"].get(soldado, {})
-        soldado_data.setdefault("parches_aplicados", []).append(parche)
-        self._guardar()
+            soldado_data = self._memoria["soldados"].get(soldado, {})
+            soldado_data.setdefault("parches_aplicados", []).append(parche)
+            self._guardar()
 
-        # Indexar en sabiduría colectiva
-        sabiduria = {}
-        if os.path.exists(SABIDURÍA_PATH):
-            try:
-                with open(SABIDURÍA_PATH, "r", encoding="utf-8") as f:
-                    sabiduria = json.load(f)
-            except:
-                pass
+            # Indexar en sabiduría colectiva
+            sabiduria = {}
+            if os.path.exists(SABIDURÍA_PATH):
+                try:
+                    with open(SABIDURÍA_PATH, "r", encoding="utf-8") as f:
+                        sabiduria = json.load(f)
+                except:
+                    pass
 
-        sabiduria[falla_id] = parche
-        with open(SABIDURÍA_PATH, "w", encoding="utf-8") as f:
-            json.dump(sabiduria, f, indent=2, ensure_ascii=False)
+            sabiduria[falla_id] = parche
+            with open(SABIDURÍA_PATH, "w", encoding="utf-8") as f:
+                json.dump(sabiduria, f, indent=2, ensure_ascii=False)
 
-        self._log(f"PARCHE CREADO por {soldado}: {descripcion}")
-        return parche
+            self._log(f"PARCHE CREADO por {soldado}: {descripcion}")
+            return parche
 
     def obtener_sabiduria_colectiva(self) -> dict:
         """Todos los parches disponibles para cualquier soldado."""
-        if os.path.exists(SABIDURÍA_PATH):
-            try:
-                with open(SABIDURÍA_PATH, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except:
-                pass
-        return {}
+        with self._lock:
+            if os.path.exists(SABIDURÍA_PATH):
+                try:
+                    with open(SABIDURÍA_PATH, "r", encoding="utf-8") as f:
+                        return json.load(f)
+                except:
+                    pass
+            return {}
 
     def informe_batallón(self) -> dict:
         """Estado completo de toda la inteligencia acumulada."""
-        stats = self._memoria["stats_globales"]
-        informe = {
-            "total_operaciones": stats["total_operaciones"],
-            "tasa_exito": round(
-                stats["total_exitosas"] / max(stats["total_operaciones"], 1) * 100, 1
-            ),
-            "total_fallas": stats["total_fallas"],
-            "soldados_activos": stats["soldados_activos"],
-            "detalle_soldados": {}
-        }
-        for soldado, data in self._memoria["soldados"].items():
-            s = data["stats"]
-            informe["detalle_soldados"][soldado] = {
-                "ops": s["ops"],
-                "ok": s["ok"],
-                "fallas": s["fallas"],
-                "eficiencia": round(s["ok"] / max(s["ops"], 1) * 100, 1),
-                "fallas_catalogadas": len(data.get("fallas_conocidas", {})),
-                "parches_creados": len(data.get("parches_aplicados", [])),
-                "ultima_actividad": data.get("ultima_actividad", "nunca")
+        with self._lock:
+            stats = self._memoria["stats_globales"]
+            informe = {
+                "total_operaciones": stats["total_operaciones"],
+                "tasa_exito": round(
+                    stats["total_exitosas"] / max(stats["total_operaciones"], 1) * 100, 1
+                ),
+                "total_fallas": stats["total_fallas"],
+                "soldados_activos": stats["soldados_activos"],
+                "detalle_soldados": {}
             }
-        return informe
+            for soldado, data in self._memoria["soldados"].items():
+                s = data["stats"]
+                informe["detalle_soldados"][soldado] = {
+                    "ops": s["ops"],
+                    "ok": s["ok"],
+                    "fallas": s["fallas"],
+                    "eficiencia": round(s["ok"] / max(s["ops"], 1) * 100, 1),
+                    "fallas_catalogadas": len(data.get("fallas_conocidas", {})),
+                    "parches_creados": len(data.get("parches_aplicados", [])),
+                    "ultima_actividad": data.get("ultima_actividad", "nunca")
+                }
+            return informe
 
     def compactar_memoria(self):
         """
         Reduce el tamaño descartando eventos viejos exitosos
         y preservando TODAS las fallas y parches.
         """
-        for soldado, data in self._memoria["soldados"].items():
-            eventos = data.get("eventos", [])
-            # Preservar todas las fallas, comprimir los éxitos
-            fallas = [e for e in eventos if e.get("es_falla")]
-            exitos = [e for e in eventos if not e.get("es_falla")]
-            # Mantener últimos 50 éxitos y todas las fallas (max 100)
-            data["eventos"] = exitos[-50:] + fallas[-100:]
+        with self._lock:
+            for soldado, data in self._memoria["soldados"].items():
+                eventos = data.get("eventos", [])
+                # Preservar todas las fallas, comprimir los éxitos
+                fallas = [e for e in eventos if e.get("es_falla")]
+                exitos = [e for e in eventos if not e.get("es_falla")]
+                # Mantener últimos 50 éxitos y todas las fallas (max 100)
+                data["eventos"] = exitos[-50:] + fallas[-100:]
 
-        self._memoria["ultima_compactacion"] = datetime.now().isoformat()
-        self._guardar()
-        self._log("MEMORIA COMPACTADA — fallas preservadas, éxitos podados")
+            self._memoria["ultima_compactacion"] = datetime.now().isoformat()
+            self._guardar()
+            self._log("MEMORIA COMPACTADA — fallas preservadas, éxitos podados")
 
 
 # ─── DECORADOR PARA SOLDADOS ──────────────────────────────────────────────────

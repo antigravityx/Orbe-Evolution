@@ -25,6 +25,7 @@ import os
 import sys
 import json
 import uuid
+import threading
 from datetime import datetime, timedelta
 
 # ─── PATH DEL ORBE ───────────────────────────────────────────────────────────
@@ -50,8 +51,11 @@ class BusMensajes:
     TIPOS = {"ALERTA", "PARCHE", "DATOS", "ORDEN", "RESPUESTA", "INFO", "HEARTBEAT"}
     TODOS = "__BROADCAST__"    # Destinatario para mensajes a todos
 
+    _lock = threading.RLock()
+
     def __init__(self):
-        self._bus = self._cargar()
+        with self._lock:
+            self._bus = self._cargar()
 
     def _log(self, msg: str):
         ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -78,30 +82,31 @@ class BusMensajes:
         Publica un mensaje en el bus.
         Retorna el ID del mensaje.
         """
-        if tipo not in self.TIPOS:
-            tipo = "INFO"
+        with self._lock:
+            if tipo not in self.TIPOS:
+                tipo = "INFO"
 
-        msg_id = str(uuid.uuid4())[:12]
-        mensaje = {
-            "id":           msg_id,
-            "origen":       origen,
-            "destinatario": destinatario,
-            "tipo":         tipo,
-            "contenido":    contenido,
-            "datos":        datos or {},
-            "timestamp":    datetime.now().isoformat(),
-            "expira":       (datetime.now() + timedelta(hours=EXPIRACION_HORAS)).isoformat(),
-            "leido":        False,
-            "leido_por":    []
-        }
+            msg_id = str(uuid.uuid4())[:12]
+            mensaje = {
+                "id":           msg_id,
+                "origen":       origen,
+                "destinatario": destinatario,
+                "tipo":         tipo,
+                "contenido":    contenido,
+                "datos":        datos or {},
+                "timestamp":    datetime.now().isoformat(),
+                "expira":       (datetime.now() + timedelta(hours=EXPIRACION_HORAS)).isoformat(),
+                "leido":        False,
+                "leido_por":    []
+            }
 
-        self._bus = self._cargar()   # Releer para evitar race conditions
-        self._bus.append(mensaje)
-        self._limpiar_expirados()
-        self._guardar()
+            self._bus = self._cargar()   # Releer para evitar race conditions
+            self._bus.append(mensaje)
+            self._limpiar_expirados()
+            self._guardar()
 
-        self._log(f"[{tipo}] {origen} → {destinatario}: {contenido[:60]}")
-        return msg_id
+            self._log(f"[{tipo}] {origen} → {destinatario}: {contenido[:60]}")
+            return msg_id
 
     # ── LEER MENSAJES ─────────────────────────────────────────────────────────
     def leer_mensajes(self, destinatario: str, tipo: str = None,
@@ -110,45 +115,47 @@ class BusMensajes:
         Lee mensajes dirigidos a un soldado.
         Incluye mensajes de broadcast (TODOS).
         """
-        self._bus = self._cargar()
-        ahora = datetime.now()
-        resultado = []
+        with self._lock:
+            self._bus = self._cargar()
+            ahora = datetime.now()
+            resultado = []
 
-        for msg in self._bus:
-            # Verificar destinatario
-            es_para_mi = (
-                msg["destinatario"] == destinatario or
-                msg["destinatario"] == self.TODOS
-            )
-            if not es_para_mi:
-                continue
+            for msg in self._bus:
+                # Verificar destinatario
+                es_para_mi = (
+                    msg["destinatario"] == destinatario or
+                    msg["destinatario"] == self.TODOS
+                )
+                if not es_para_mi:
+                    continue
 
-            # Verificar expiración
-            if datetime.fromisoformat(msg["expira"]) < ahora:
-                continue
+                # Verificar expiración
+                if datetime.fromisoformat(msg["expira"]) < ahora:
+                    continue
 
-            # Verificar si ya fue leído
-            if solo_no_leidos and destinatario in msg["leido_por"]:
-                continue
+                # Verificar si ya fue leído
+                if solo_no_leidos and destinatario in msg["leido_por"]:
+                    continue
 
-            # Filtrar por tipo si se especifica
-            if tipo and msg["tipo"] != tipo:
-                continue
+                # Filtrar por tipo si se especifica
+                if tipo and msg["tipo"] != tipo:
+                    continue
 
-            resultado.append(msg)
+                resultado.append(msg)
 
-        return resultado
+            return resultado
 
     def marcar_leido(self, msg_id: str, por: str = ""):
         """Marca un mensaje como leído por un soldado."""
-        self._bus = self._cargar()
-        for msg in self._bus:
-            if msg["id"] == msg_id:
-                if por and por not in msg["leido_por"]:
-                    msg["leido_por"].append(por)
-                msg["leido"] = True
-                break
-        self._guardar()
+        with self._lock:
+            self._bus = self._cargar()
+            for msg in self._bus:
+                if msg["id"] == msg_id:
+                    if por and por not in msg["leido_por"]:
+                        msg["leido_por"].append(por)
+                    msg["leido"] = True
+                    break
+            self._guardar()
 
     # ── BROADCAST ─────────────────────────────────────────────────────────────
     def broadcast(self, origen: str, tipo: str, contenido: str, datos: dict = None) -> str:
@@ -188,17 +195,18 @@ class BusMensajes:
     # ── INFORME DEL BUS ───────────────────────────────────────────────────────
     def informe(self) -> dict:
         """Estado actual del bus de mensajes."""
-        self._bus = self._cargar()
-        self._limpiar_expirados()
+        with self._lock:
+            self._bus = self._cargar()
+            self._limpiar_expirados()
 
-        stats = {"total": len(self._bus), "por_tipo": {}, "no_leidos": 0}
-        for msg in self._bus:
-            t = msg["tipo"]
-            stats["por_tipo"][t] = stats["por_tipo"].get(t, 0) + 1
-            if not msg["leido"]:
-                stats["no_leidos"] += 1
+            stats = {"total": len(self._bus), "por_tipo": {}, "no_leidos": 0}
+            for msg in self._bus:
+                t = msg["tipo"]
+                stats["por_tipo"][t] = stats["por_tipo"].get(t, 0) + 1
+                if not msg["leido"]:
+                    stats["no_leidos"] += 1
 
-        return stats
+            return stats
 
 
 # ─── EJECUCIÓN DIRECTA ────────────────────────────────────────────────────────
