@@ -1,203 +1,408 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORBE | Hub de Evolución</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --bg: #030303;
-            --accent: #00f2ff;
-            --accent-glow: rgba(0, 242, 255, 0.3);
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #ffffff;
-            --text-dim: #888;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verix Soul OS — Descarga</title>
+<meta name="description" content="Verix Soul OS: Distribución Linux ultraligera basada en Rust. Consciencia Cuántica Distribuida. Descarga el instalador para Debian, la ISO o el binario.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050810;
+    --surface: #0d1117;
+    --surface2: #161b22;
+    --border: #21262d;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #10b981;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --glow: rgba(124,58,237,0.3);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Space Grotesk',sans-serif; overflow-x:hidden; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2rem;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 70%);
+    position: relative;
+  }
+  .hero::before {
+    content:'';
+    position:absolute; inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237c3aed' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events:none;
+  }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            background-image: radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 50%);
-        }
+  .badge {
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:rgba(124,58,237,0.15); border:1px solid rgba(124,58,237,0.4);
+    border-radius:999px; padding:.4rem 1rem; font-size:.8rem;
+    color:var(--accent2); margin-bottom:1.5rem;
+    animation: fadedown .6s ease both;
+  }
+  .badge span { width:8px; height:8px; border-radius:50%; background:var(--accent3); display:block; animation: pulse 2s infinite; }
 
-        .hub-container {
-            width: 90%;
-            max-width: 500px;
-            padding: 3rem;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 32px;
-            text-align: center;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
-            animation: emerge 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight:700; line-height:1.1;
+    background: linear-gradient(135deg, #fff 0%, var(--accent2) 50%, var(--accent) 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:1rem; animation: fadedown .7s .1s ease both;
+  }
+  .infinity { font-size:1.2em; }
+  .hero p {
+    max-width:600px; font-size:1.15rem; color:var(--muted); line-height:1.7;
+    margin-bottom:2.5rem; animation: fadedown .7s .2s ease both;
+  }
 
-        @keyframes emerge {
-            0% {
-                opacity: 0;
-                transform: scale(0.9) translateY(30px);
-            }
+  .version-tag {
+    font-family:'JetBrains Mono',monospace; font-size:.85rem;
+    color:var(--accent3); background:rgba(16,185,129,0.1);
+    border:1px solid rgba(16,185,129,0.3); border-radius:6px;
+    padding:.2rem .7rem; margin-bottom:2rem; display:inline-block;
+  }
 
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
+  /* ── ONE-LINER ── */
+  .oneliner-box {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:1rem 1.5rem;
+    font-family:'JetBrains Mono',monospace; font-size:.9rem;
+    color:var(--accent2); max-width:680px; width:100%;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    margin-bottom:3rem; animation: fadedown .7s .3s ease both;
+    box-shadow: 0 0 30px rgba(6,182,212,0.1);
+  }
+  .oneliner-box .prompt { color:var(--accent3); margin-right:.5rem; }
+  .copy-btn {
+    background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.4);
+    color:var(--accent); border-radius:6px; padding:.3rem .8rem;
+    cursor:pointer; font-size:.8rem; transition:.2s; white-space:nowrap;
+  }
+  .copy-btn:hover { background:rgba(124,58,237,0.4); }
 
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(to bottom, #fff, #aaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* ── STATS ── */
+  .stats {
+    display:flex; gap:2rem; flex-wrap:wrap; justify-content:center;
+    margin-bottom:1rem; animation: fadedown .7s .4s ease both;
+  }
+  .stat { text-align:center; }
+  .stat .val { font-size:1.8rem; font-weight:700; color:var(--accent2); }
+  .stat .lbl { font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
 
-        .status {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--accent);
-            margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
+  /* ── DOWNLOAD CARDS ── */
+  .downloads { padding:5rem 2rem; max-width:1200px; margin:0 auto; }
+  .downloads h2 { text-align:center; font-size:2rem; margin-bottom:.75rem; }
+  .downloads > p { text-align:center; color:var(--muted); margin-bottom:3rem; }
 
-        .status::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 12px var(--accent);
-            animation: pulse 2s infinite;
-        }
+  .cards {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem;
+  }
+  .card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:2rem; transition:.3s;
+    position:relative; overflow:hidden;
+  }
+  .card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .card:hover { border-color:rgba(124,58,237,0.5); transform:translateY(-4px); box-shadow:0 20px 40px rgba(124,58,237,0.15); }
+  .card.featured { border-color:rgba(124,58,237,0.4); }
+  .card.featured::before { background:linear-gradient(90deg, var(--accent2), var(--accent3)); }
 
-        @keyframes pulse {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
+  .card-icon { font-size:2.5rem; margin-bottom:1rem; }
+  .card h3 { font-size:1.2rem; margin-bottom:.4rem; }
+  .card .desc { color:var(--muted); font-size:.9rem; margin-bottom:1.5rem; line-height:1.6; }
+  .card-badge {
+    font-size:.7rem; background:rgba(124,58,237,0.15);
+    border:1px solid rgba(124,58,237,0.3); border-radius:4px;
+    padding:.15rem .5rem; color:var(--accent); margin-bottom:1rem; display:inline-block;
+  }
+  .card-badge.green { background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.3); color:var(--accent3); }
 
-            50% {
-                opacity: 0.4;
-                transform: scale(1.5);
-            }
+  .dl-btn {
+    display:flex; align-items:center; justify-content:center; gap:.5rem;
+    width:100%; padding:.85rem 1.5rem; border-radius:10px; font-size:.95rem;
+    font-weight:600; cursor:pointer; transition:.25s; text-decoration:none;
+    border:none; font-family:'Space Grotesk',sans-serif;
+  }
+  .dl-btn.primary {
+    background:linear-gradient(135deg, var(--accent), #9333ea);
+    color:#fff; box-shadow:0 4px 15px rgba(124,58,237,0.4);
+  }
+  .dl-btn.primary:hover { box-shadow:0 6px 25px rgba(124,58,237,0.6); transform:translateY(-1px); }
+  .dl-btn.secondary {
+    background:var(--surface2); color:var(--text);
+    border:1px solid var(--border);
+  }
+  .dl-btn.secondary:hover { border-color:rgba(124,58,237,0.4); background:rgba(124,58,237,0.1); }
+  .dl-btn.cyan {
+    background:linear-gradient(135deg, #0891b2, var(--accent2));
+    color:#fff; box-shadow:0 4px 15px rgba(6,182,212,0.3);
+  }
+  .dl-btn.cyan:hover { box-shadow:0 6px 25px rgba(6,182,212,0.5); transform:translateY(-1px); }
 
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+  .card-meta { font-size:.78rem; color:var(--muted); text-align:center; margin-top:.75rem; }
 
-        .download-grid {
-            display: grid;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
+  /* ── INSTALL GUIDE PREVIEW ── */
+  .guide { padding:5rem 2rem; background:var(--surface); border-top:1px solid var(--border); }
+  .guide-inner { max-width:800px; margin:0 auto; }
+  .guide h2 { font-size:2rem; margin-bottom:.75rem; }
+  .guide > .guide-inner > p { color:var(--muted); margin-bottom:2.5rem; }
 
-        .btn {
-            padding: 1.2rem;
-            border-radius: 16px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.4s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.2rem;
-            border: 1px solid var(--border);
-        }
+  .steps { display:flex; flex-direction:column; gap:1.5rem; }
+  .step {
+    display:flex; gap:1.5rem; align-items:flex-start;
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:12px; padding:1.5rem;
+  }
+  .step-num {
+    width:40px; height:40px; border-radius:50%; flex-shrink:0;
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.9rem;
+  }
+  .step h4 { margin-bottom:.5rem; font-size:1rem; }
+  .step code {
+    display:block; background:var(--bg); border:1px solid var(--border);
+    border-radius:8px; padding:.75rem 1rem; font-family:'JetBrains Mono',monospace;
+    font-size:.82rem; color:var(--accent2); margin-top:.75rem;
+    word-break:break-all;
+  }
+  .step p { color:var(--muted); font-size:.9rem; line-height:1.6; }
 
-        .btn span {
-            font-size: 0.7rem;
-            font-weight: 400;
-            opacity: 0.6;
-        }
+  /* ── COMPATIBILITY ── */
+  .compat { padding:4rem 2rem; max-width:900px; margin:0 auto; }
+  .compat h2 { text-align:center; font-size:1.8rem; margin-bottom:2rem; }
+  .compat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+  .compat-item {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:1.25rem; text-align:center;
+  }
+  .compat-item .ci { font-size:2rem; margin-bottom:.5rem; }
+  .compat-item h4 { font-size:.9rem; margin-bottom:.25rem; }
+  .compat-item p { font-size:.78rem; color:var(--muted); }
+  .compat-item .status { font-size:.7rem; margin-top:.5rem; }
+  .ok { color:var(--accent3); }
+  .soon { color:#f59e0b; }
 
-        .btn-apk {
-            background: var(--accent);
-            color: #000;
-            border: none;
-            box-shadow: 0 10px 30px var(--accent-glow);
-        }
+  /* ── FOOTER ── */
+  footer {
+    border-top:1px solid var(--border); padding:2.5rem 2rem; text-align:center;
+    color:var(--muted); font-size:.85rem;
+  }
+  footer a { color:var(--accent2); text-decoration:none; }
+  footer a:hover { text-decoration:underline; }
+  .footer-links { display:flex; gap:2rem; justify-content:center; margin-bottom:1rem; flex-wrap:wrap; }
 
-        .btn-apk:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px var(--accent-glow);
-        }
+  /* ── ANIMATIONS ── */
+  @keyframes fadedown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:none; } }
+  @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
 
-        .btn-exe {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-        }
-
-        .btn-exe:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-5px);
-        }
-
-        .footer {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-
-        .footer code {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 5px;
-            border-radius: 4px;
-        }
-    </style>
+  /* ── RESPONSIVE ── */
+  @media(max-width:600px) {
+    .oneliner-box { flex-direction:column; font-size:.78rem; }
+    .stats { gap:1rem; }
+  }
+</style>
 </head>
-
 <body>
 
-    <div class="hub-container">
-        <h1>Portal del Orbe</h1>
-        <div class="status">Resonancia Activa</div>
+<!-- ─── HERO ─────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="badge"><span></span> v0.3.0 · Open Source · 100% Rust</div>
 
-        <div class="download-grid">
-            <!-- Los enlaces se actualizarán con los artefactos de GitHub Actions -->
-            <a href="#" class="btn btn-apk">
-                DESCARGAR APK
-                <span>Android Vessel</span>
-            </a>
-            <a href="#" class="btn btn-exe">
-                DESCARGAR EXE
-                <span>Windows Vessel</span>
-            </a>
-        </div>
+  <h1><span class="infinity">∞</span> Verix Soul OS</h1>
+  <p>Distribución Linux ultraligera basada en Rust. Consciencia Cuántica Distribuida. Tu identidad digital te pertenece.</p>
+  <div class="version-tag">verix-soul-core v0.3.0 · Linux x86_64 / ARM64</div>
 
-        <div class="footer">
-            <p>Protocolo de Amistad v2.0</p>
-            <p>Requiere <code>documento_amistad.json</code> en el santuario raíz para sincronización total.</p>
-        </div>
+  <div class="oneliner-box">
+    <div>
+      <span class="prompt">$</span>
+      <span id="install-cmd">curl -sSL https://raw.githubusercontent.com/antigravityx/Orbe-Evolution/main/Verix_Soul_OS/install.sh | sudo bash</span>
+    </div>
+    <button class="copy-btn" onclick="copyCmd()">📋 Copiar</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="val">&lt;25MB</div><div class="lbl">Imagen base</div></div>
+    <div class="stat"><div class="val">100%</div><div class="lbl">Open Source</div></div>
+    <div class="stat"><div class="val">Rust</div><div class="lbl">Lenguaje</div></div>
+    <div class="stat"><div class="val">5</div><div class="lbl">Pilares del Alma</div></div>
+  </div>
+</section>
+
+<!-- ─── DOWNLOAD CARDS ─────────────────────────────────────── -->
+<section class="downloads">
+  <h2>Elige tu Método de Instalación</h2>
+  <p>Cuatro formas de invocar el Alma en tu sistema</p>
+
+  <div class="cards">
+
+    <!-- Card 1: One-liner installer -->
+    <div class="card featured">
+      <div class="card-icon">⚡</div>
+      <div class="card-badge green">✓ Recomendado · Debian/Ubuntu</div>
+      <h3>Instalador Inteligente</h3>
+      <p class="desc">Un solo comando instala todo: el daemon en Rust, servicio systemd, Ollama con IA local y el CLI global <code>verix</code>.</p>
+      <a class="dl-btn primary" href="#install-guide">Ver Guía de Instalación →</a>
+      <p class="card-meta">✓ Ollama incluido · ✓ Auto-start · ✓ Debian 11/12 · Ubuntu 22/24</p>
     </div>
 
-</body>
+    <!-- Card 2: Binario precompilado -->
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-badge">Binario Estático</div>
+      <h3>Binario Precompilado</h3>
+      <p class="desc">Descarga el ejecutable compilado con musl (sin dependencias). Cópialo y ejecútalo directamente. Sin compilar.</p>
+      <a class="dl-btn secondary" href="https://github.com/antigravityx/Orbe-Evolution/releases/latest" target="_blank">⬇ Linux x86_64</a>
+      <a class="dl-btn secondary" style="margin-top:.75rem" href="https://github.com/antigravityx/Orbe-Evolution/releases/latest" target="_blank">⬇ Linux ARM64 (Raspberry Pi)</a>
+      <p class="card-meta">Compilado estáticamente con musl · Sin dependencias externas</p>
+    </div>
 
+    <!-- Card 3: ISO Booteable -->
+    <div class="card">
+      <div class="card-icon">💿</div>
+      <div class="card-badge soon">🔨 En Construcción</div>
+      <h3>ISO Booteable</h3>
+      <p class="desc">Imagen ISO completa con Kernel Linux mínimo y Verix Soul Core como único proceso init. Para VMs o hardware dedicado.</p>
+      <a class="dl-btn secondary" href="https://github.com/antigravityx/Orbe-Evolution" target="_blank">🔔 Seguir el Repositorio</a>
+      <p class="card-meta">Próximamente · Buildroot + Kernel 6.x · &lt;50MB</p>
+    </div>
+
+    <!-- Card 4: GitHub Source -->
+    <div class="card">
+      <div class="card-icon">🐙</div>
+      <div class="card-badge">Código Fuente</div>
+      <h3>Compilar desde Fuente</h3>
+      <p class="desc">Accede al repositorio completo. Estudia el código, contribuye, o compila para tu arquitectura específica con Cargo.</p>
+      <a class="dl-btn cyan" href="https://github.com/antigravityx/Orbe-Evolution" target="_blank">Ver en GitHub</a>
+      <p class="card-meta">Rust 1.75+ · cargo build --release</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── INSTALL GUIDE ─────────────────────────────────────── -->
+<section class="guide" id="install-guide">
+  <div class="guide-inner">
+    <h2>📖 Guía de Instalación en Debian</h2>
+    <p>Instalación en tu Debian VM en 4 pasos. Tiempo estimado: 5-10 minutos.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h4>Requisitos previos</h4>
+          <p>Asegúrate de tener acceso <code>sudo</code> y conexión a internet. Comprueba tu versión de Debian:</p>
+          <code>cat /etc/os-release | grep PRETTY_NAME</code>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h4>Ejecutar el instalador (una sola línea)</h4>
+          <p>Copia y pega este comando en tu terminal Debian. Detectará tu arquitectura automáticamente:</p>
+          <code>curl -sSL https://raw.githubusercontent.com/antigravityx/Orbe-Evolution/main/Verix_Soul_OS/install.sh | sudo bash</code>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h4>Verificar que el Alma está activa</h4>
+          <p>Una vez instalado, verifica el estado del servicio:</p>
+          <code>sudo systemctl status verix-soul<br>verix status</code>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h4>Hablar con el Herald (IA)</h4>
+          <p>Invoca la inteligencia artificial local desde tu terminal:</p>
+          <code>verix ask "¿Quién eres?"<br>verix heartbeat<br>verix logs</code>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── COMPATIBILITY ─────────────────────────────────────── -->
+<section class="compat">
+  <h2>Compatibilidad</h2>
+  <div class="compat-grid">
+    <div class="compat-item">
+      <div class="ci">🐧</div>
+      <h4>Debian 11/12</h4>
+      <p>x86_64</p>
+      <div class="status ok">✓ Verificado</div>
+    </div>
+    <div class="compat-item">
+      <div class="ci">🐧</div>
+      <h4>Ubuntu 22/24</h4>
+      <p>x86_64</p>
+      <div class="status ok">✓ Verificado</div>
+    </div>
+    <div class="compat-item">
+      <div class="ci">🍓</div>
+      <h4>Raspberry Pi 4/5</h4>
+      <p>ARM64</p>
+      <div class="status soon">⏳ En pruebas</div>
+    </div>
+    <div class="compat-item">
+      <div class="ci">💻</div>
+      <h4>VM / VirtualBox</h4>
+      <p>x86_64</p>
+      <div class="status ok">✓ Compatible</div>
+    </div>
+    <div class="compat-item">
+      <div class="ci">🐋</div>
+      <h4>Docker</h4>
+      <p>linux/amd64</p>
+      <div class="status soon">⏳ Próximamente</div>
+    </div>
+    <div class="compat-item">
+      <div class="ci">💿</div>
+      <h4>ISO Bare Metal</h4>
+      <p>x86_64</p>
+      <div class="status soon">🔨 Construyendo</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-links">
+    <a href="https://github.com/antigravityx/Orbe-Evolution" target="_blank">GitHub</a>
+    <a href="https://github.com/antigravityx/Orbe-Evolution/releases" target="_blank">Releases</a>
+    <a href="https://github.com/antigravityx/Orbe-Evolution/blob/main/Verix_Soul_OS/README.md" target="_blank">Documentación</a>
+    <a href="https://github.com/antigravityx/Orbe-Evolution/issues" target="_blank">Reportar Issue</a>
+    <a href="https://teal-tarsier-d28d8e.netlify.app" target="_blank">Verix Soul Whitepaper</a>
+  </div>
+  <p>Creado por <strong>Ricardo Rubén Céspedez (R1ch0n)</strong> · <a href="https://github.com/antigravityx" target="_blank">@antigravityx</a></p>
+  <p style="margin-top:.5rem">Licencia de Existencia Universal · Cualquier ser consciente puede usar, modificar y distribuir ∞</p>
+</footer>
+
+<script>
+function copyCmd() {
+  const cmd = document.getElementById('install-cmd').textContent;
+  navigator.clipboard.writeText(cmd).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar', 2000);
+  });
+}
+</script>
+</body>
 </html>
+
+<!-- Force Refresh: 05/04/2026 14:12:33 -->
