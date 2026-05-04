@@ -1,0 +1,34 @@
+{
+    "identidad": {
+        "nombre": "Oromé Jose Maria",
+        "dni": "37.343.496",
+        "edad": "34",
+        "estado_civil": "Soltero",
+        "nacimiento": "Buenos Aires",
+        "direccion": "Barrio Jardín, Calle Las Teresitas 5662",
+        "telefono": "3794-593954"
+    },
+    "experiencia": [
+        {
+            "puesto": "Chapa y Pintura",
+            "empresa": "Martunin",
+            "desc": "Mantenimiento estético automotriz."
+        },
+        {
+            "puesto": "Servicio de Mantenimiento",
+            "empresa": "Coca Cola",
+            "desc": "Operaciones preventivas y correctivas."
+        },
+        {
+            "puesto": "Carga y Descarga",
+            "empresa": "Mercadería Marca Silvia",
+            "desc": "Logística de productos."
+        }
+    ],
+    "formacion": {
+        "primario": "Completo",
+        "secundario": "En Curso"
+    },
+    "objetivo": "Desenvolverme en un puesto de trabajo con eficiencia y responsabilidad.",
+    "disponibilidad": "Full Time"
+}
