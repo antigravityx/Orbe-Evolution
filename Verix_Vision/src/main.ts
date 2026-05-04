@@ -7,6 +7,7 @@ interface Dream {
   asunto: string;
   descripcion: string;
   aprobado: boolean;
+  realidad?: boolean;
 }
 
 const dreamsList = document.getElementById("dreams-list");
@@ -69,6 +70,17 @@ async function updateOrbeHealth() {
   }
 }
 
+async function marcarRealidad(id: string) {
+  try {
+    statusText!.textContent = "Sincronizando realidad...";
+    await invoke("marcar_realidad", { id });
+    loadDreams();
+  } catch (e) {
+    alert("Error al marcar realidad: " + e);
+    loadDreams();
+  }
+}
+
 async function loadDreams() {
   if (!dreamsList || !statusText) return;
   
@@ -77,7 +89,7 @@ async function loadDreams() {
     
     // Llamar al comando de Rust
     const jsonStr: string = await invoke("leer_suenos");
-    const dreams: Dream[] = JSON.parse(jsonStr);
+    let dreams: Dream[] = JSON.parse(jsonStr);
     
     dreamsList.innerHTML = "";
     
@@ -86,20 +98,44 @@ async function loadDreams() {
       statusText.textContent = "Orbe en reposo.";
       return;
     }
+
+    // Ordenar: Realidades al final, sueños nuevos arriba
+    dreams.sort((a, b) => {
+      if (a.realidad === b.realidad) return 0;
+      return a.realidad ? 1 : -1;
+    });
     
     dreams.forEach(dream => {
       const card = document.createElement("div");
-      card.className = `dream-card ${dream.aprobado ? 'approved' : ''}`;
+      card.className = `dream-card ${dream.realidad ? 'reality' : (dream.aprobado ? 'approved' : '')}`;
       
-      const badge = dream.aprobado ? '✨ Revelado' : '💭 En Colchón';
+      let badge = '';
+      if (dream.realidad) {
+        badge = '🌍 REALIDAD';
+      } else if (dream.aprobado) {
+        badge = '✨ REVELADO';
+      } else {
+        badge = '💭 EN COLCHÓN';
+      }
       
       card.innerHTML = `
-        <div class="dream-id">${dream.id} - ${badge}</div>
+        <div class="dream-header">
+          <div class="dream-id">${dream.id} - ${badge}</div>
+          ${!dream.realidad ? `<button class="btn-make-reality" data-id="${dream.id}" title="Hacer Realidad">⚡</button>` : ''}
+        </div>
         <div class="dream-title">${dream.asunto}</div>
         <div class="dream-desc">${dream.descripcion}</div>
         <div class="dream-date">${dream.fecha}</div>
       `;
       dreamsList.appendChild(card);
+    });
+
+    // Agregar eventos a los nuevos botones
+    document.querySelectorAll(".btn-make-reality").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = (e.currentTarget as HTMLElement).dataset.id;
+        if (id) marcarRealidad(id);
+      });
     });
     
     statusText.textContent = `Vigilia. ${dreams.length} sueños encontrados.`;

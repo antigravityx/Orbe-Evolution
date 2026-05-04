@@ -6,6 +6,7 @@ import hashlib
 import time
 import subprocess
 from datetime import datetime
+import requests
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -343,6 +344,9 @@ class GestorDeMisiones:
             return False, str(e)
 
 # --- SELLO DE ADN (INTEGRIDAD TOTAL) ---
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+
 class SelloIdentidadADN:
     MANIFEST_ADN = os.path.join(DIRECTORIO_REGISTROS, "adn_manifest.json")
     

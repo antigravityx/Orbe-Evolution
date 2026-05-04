@@ -144,7 +144,7 @@ class VerixApp:
         threading.Thread(target=run_sync).start()
 
     def open_dreams(self):
-        dream_file = os.path.join(SANTSUARIO_RAIZ, "4_Registros_Del_Orbe", "diario_de_suenos.md")
+        dream_file = os.path.join(SANTUARIO_RAIZ, "4_Registros_Del_Orbe", "diario_de_suenos.md")
         if os.path.exists(dream_file):
              os.startfile(dream_file)
 

@@ -33,6 +33,8 @@ from soul_core import (
     DIRECTORIO_LLAVES, DIRECTORIO_REGISTROS, REGISTRO_EVENTOS, HISTORIAL_CHECKSUM,
     NIDO_DEV, ESTADO_ACTUAL_FILE, ProtocoloAmistad, SelloIdentidadADN
 )
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 
 # --- Ramas del Árbol del Santuario (Consumidas desde Core) ---
 # MANIFIESTO_DIR remains local for desktop metadata

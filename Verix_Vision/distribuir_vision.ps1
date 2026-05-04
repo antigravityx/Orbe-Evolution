@@ -1,4 +1,4 @@
-$sourceExe = "c:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\Verix_Vision\src-tauri\target\release\verixvision.exe"
+$sourceExe = "c:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\Verix_Vision\src-tauri\target\release\verix_vision.exe"
 $explanationFile = "c:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\Verix_Vision\LEER_ANTES_DE_ABRIR.txt"
 
 $desktopFolder = "c:\Users\Usuario\Desktop\Verix_Vision_App"
