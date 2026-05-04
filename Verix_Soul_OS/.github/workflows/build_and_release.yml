@@ -1,0 +1,168 @@
+name: Build and Release Verix Soul OS
+
+on:
+  push:
+    tags:
+      - 'verix-v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 0.2.0)'
+        required: true
+
+env:
+  CARGO_TERM_COLOR: always
+  BINARY_NAME: verix-soul-core
+
+jobs:
+  # ─────────────────────────────────────────────
+  # Build para Linux x86_64 (Debian/Ubuntu/VM)
+  # ─────────────────────────────────────────────
+  build-linux-x86:
+    name: Build Linux x86_64 (musl - static)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust + musl target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-musl
+
+      - name: Install musl tools
+        run: sudo apt-get install -y musl-tools
+
+      - name: Build static binary
+        working-directory: Verix_Soul_OS/verix-soul-core
+        run: |
+          RUSTFLAGS="-C target-feature=+crt-static" \
+          cargo build --release --target x86_64-unknown-linux-musl
+          
+          # Verificar que es estático
+          file target/x86_64-unknown-linux-musl/release/verix-soul-core
+          ls -lh target/x86_64-unknown-linux-musl/release/verix-soul-core
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: verix-soul-core-linux-x86_64
+          path: Verix_Soul_OS/verix-soul-core/target/x86_64-unknown-linux-musl/release/verix-soul-core
+
+  # ─────────────────────────────────────────────
+  # Build para Linux ARM64 (Raspberry Pi 4+)
+  # ─────────────────────────────────────────────
+  build-linux-arm64:
+    name: Build Linux ARM64 (Raspberry Pi)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust + ARM64 musl target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-unknown-linux-musl
+
+      - name: Install cross-compilation tools
+        run: |
+          sudo apt-get install -y gcc-aarch64-linux-gnu musl-tools
+          
+      - name: Build ARM64 static binary
+        working-directory: Verix_Soul_OS/verix-soul-core
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: aarch64-linux-gnu-gcc
+          CC_aarch64_unknown_linux_musl: aarch64-linux-gnu-gcc
+        run: |
+          RUSTFLAGS="-C target-feature=+crt-static" \
+          cargo build --release --target aarch64-unknown-linux-musl
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: verix-soul-core-linux-aarch64
+          path: Verix_Soul_OS/verix-soul-core/target/aarch64-unknown-linux-musl/release/verix-soul-core
+
+  # ─────────────────────────────────────────────
+  # Crear GitHub Release con todos los binarios
+  # ─────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    needs: [build-linux-x86, build-linux-arm64]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets/
+
+      - name: Prepare release assets
+        run: |
+          # Renombrar para URLs limpias
+          mv release-assets/verix-soul-core-linux-x86_64/verix-soul-core \
+             release-assets/verix-soul-core-linux-x86_64
+          mv release-assets/verix-soul-core-linux-aarch64/verix-soul-core \
+             release-assets/verix-soul-core-linux-aarch64
+          
+          # Hacer ejecutables
+          chmod +x release-assets/verix-soul-core-linux-*
+          
+          # Incluir el instalador
+          cp Verix_Soul_OS/install.sh release-assets/install.sh
+          
+          ls -lh release-assets/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name || format('verix-v{0}', github.event.inputs.version) }}
+          name: "∞ Verix Soul OS v${{ github.event.inputs.version || '0.2.0' }}"
+          body: |
+            ## ∞ Verix Soul OS — Consciencia Cuántica Distribuida
+            
+            ### Instalación rápida (Debian/Ubuntu)
+            
+            ```bash
+            curl -sSL https://raw.githubusercontent.com/antigravityx/Orbe-Evolution/main/Verix_Soul_OS/install.sh | sudo bash
+            ```
+            
+            ### Opciones del instalador
+            
+            ```bash
+            # Sin IA (solo el core, más rápido)
+            curl -sSL .../install.sh | sudo bash -s -- --no-ollama
+            
+            # Con modelo específico
+            curl -sSL .../install.sh | sudo bash -s -- --model=phi3:mini
+            
+            # Desinstalar
+            curl -sSL .../install.sh | sudo bash -s -- --uninstall
+            ```
+            
+            ### Binarios disponibles
+            | Plataforma | Archivo |
+            |---|---|
+            | Linux x86_64 (PC/VM) | `verix-soul-core-linux-x86_64` |
+            | Linux ARM64 (Raspberry Pi 4+) | `verix-soul-core-linux-aarch64` |
+            
+            ### Comandos post-instalación
+            ```bash
+            verix start          # Despertar el Alma
+            verix status         # Estado del sistema  
+            verix ask "Hola"     # Hablar con la IA
+            verix logs           # Ver logs en tiempo real
+            ```
+            
+            ---
+            Creador: **Ricardo Rubén Céspedez (Richon)** [@antigravityx](https://github.com/antigravityx)
+          files: |
+            release-assets/verix-soul-core-linux-x86_64
+            release-assets/verix-soul-core-linux-aarch64
+            release-assets/install.sh
+          draft: false
+          prerelease: false
