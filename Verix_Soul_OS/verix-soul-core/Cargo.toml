@@ -1,9 +1,9 @@
 [package]
 name = "verix-soul-core"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 authors = ["Ricardo Rubén Céspedez (Richon) <antigravityx>"]
-description = "Verix Soul OS Core Daemon - The Vault, The Herald, The Thread"
+description = "Verix Soul OS Core Daemon - Fase 4: Biometría BLE + Reconocimiento del Alma"
 
 [dependencies]
 # Async Runtime
@@ -13,7 +13,7 @@ tokio = { version = "1.36", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
-# Logging & Telemetría
+# Logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
@@ -21,20 +21,30 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1.0"
 
-# Kernel / POSIX syscalls (PID 1: montaje, señales)
+# Kernel / POSIX syscalls (PID 1)
 nix = { version = "0.29", features = ["signal", "process", "mount"] }
 libc = "0.2"
 
-# HTTP Client (para comunicar con Ollama)
+# HTTP Client (Ollama API)
 reqwest = { version = "0.12", features = ["json"] }
 
-# HTTP Server (Soul API en puerto 7777)
+# HTTP Server (Soul API :7777)
 axum = "0.7"
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "trace"] }
 
+# BLE / Biometría (solo en Linux - habilitado para Raspberry Pi)
+# En VM/simulación el código usa stubs, btleplug se activa con feature "ble"
+[target.'cfg(target_os = "linux")'.dependencies]
+btleplug = { version = "0.11", optional = true }
+
+[features]
+default = []
+# Activar con: cargo build --features ble
+# Requiere: sudo apt-get install libdbus-1-dev pkg-config
+ble = ["btleplug"]
+
 [profile.release]
-# Optimización máxima de tamaño para imagen del OS
 opt-level = "z"
 lto = true
 codegen-units = 1

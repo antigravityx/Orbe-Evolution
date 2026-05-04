@@ -4,10 +4,12 @@ mod thread;
 mod mounter;
 mod reaper;
 mod soul_api;
+mod biometrics;
 
 use vault::Vault;
 use herald::Herald;
 use thread::Thread;
+use biometrics::{BiometricSensor, BiometricMode};
 use soul_api::{SoulApiState, start_soul_api};
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -15,33 +17,32 @@ use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 
 /// =====================================================
-/// VERIX SOUL OS - PROCESO INIT (PID 1) v0.2.0
-/// 
-/// ARQUITECTURA DE LA FASE 3:
-///   - Vault     → Identidad criptográfica (D.I.N.)
-///   - Thread    → Memoria persistente en disco + Git
-///   - Herald    → IA local via Ollama HTTP
-///   - Soul API  → API REST en :7777 para acceso multi-dispositivo
+/// VERIX SOUL OS - PROCESO INIT (PID 1) v0.3.0
+///
+/// ARQUITECTURA FASE 4 - TODOS LOS PILARES ACTIVOS:
+///   - Vault        → Identidad D.I.N. con niveles de seguridad
+///   - Thread       → Memoria persistente + Git sync
+///   - Herald       → IA local via Ollama
+///   - Soul API     → REST API en :7777
+///   - Biometrics   → Sensores BLE + reconocimiento biométrico
+///                    (simulado en VM, real en Raspberry Pi)
 ///
 /// REGLA DE ORO: Este proceso NUNCA puede terminar.
-/// Si main() retorna → Kernel Panic.
 /// =====================================================
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    // Inicializar telemetría
     let subscriber = FmtSubscriber::builder()
         .with_max_level(Level::INFO)
         .finish();
-    tracing::subscriber::set_global_default(subscriber)
-        .expect("Fallo al inicializar el logger");
+    tracing::subscriber::set_global_default(subscriber)?;
 
     info!("=======================================================");
-    info!("∞   VERIX SOUL OS v0.2.0 - FASE 3: PILARES ACTIVOS  ∞");
-    info!("     D.I.N. | Memoria Persistente | IA Local | API     ");
+    info!("∞   VERIX SOUL OS v0.3.0 - FASE 4: BIOSENSORES ∞");
+    info!("    D.I.N. | Memoria | IA | API | Biometría           ");
     info!("=======================================================");
 
     // ===================================================
-    // ETAPA 0: Preparación del entorno del kernel (PID 1)
+    // ETAPA 0: Kernel prep (solo PID 1 en Linux real)
     // ===================================================
     #[cfg(target_os = "linux")]
     {
@@ -50,13 +51,14 @@ async fn main() -> anyhow::Result<()> {
     }
 
     // ===================================================
-    // ETAPA 1: Iniciar los tres pilares del Alma
+    // ETAPA 1: Iniciar los cinco pilares en secuencia
     // ===================================================
-    info!("--- Despertando los Pilares ---");
+    info!("--- Despertando los Cinco Pilares del Alma ---");
 
-    let mut core_vault = Vault::new();
-    let mut core_thread = Thread::new();
-    let mut core_herald = Herald::new();
+    let mut core_vault   = Vault::new();
+    let mut core_thread  = Thread::new();
+    let mut core_herald  = Herald::new();
+    let mut core_bio     = BiometricSensor::new_simulated();
 
     core_vault.initialize().await?;
     core_thread.initialize().await?;
@@ -65,25 +67,41 @@ async fn main() -> anyhow::Result<()> {
     let soul_id = core_vault.get_soul_id().to_string();
 
     // ===================================================
-    // ETAPA 2: El Alma se presenta
+    // ETAPA 2: Calibración biométrica inicial (baseline)
+    // Leer 15 muestras para establecer firma de referencia
+    // ===================================================
+    info!("--- Calibrando sensores biométricos (baseline)... ---");
+    for i in 0..15 {
+        let snap = core_bio.read_sample(&soul_id).await;
+        if i == 7 {
+            info!("  💓 HR referencia: {} BPM", snap.heart_rate_bpm.unwrap_or(0));
+        }
+        tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+    }
+    core_bio.update_baseline(&soul_id);
+
+    // Elevar Vault con la confianza biométrica inicial
+    if let Some(baseline) = &core_bio.baseline_signature {
+        core_vault.elevate_with_biometrics(baseline.confidence_score).await?;
+    }
+
+    // ===================================================
+    // ETAPA 3: El Alma despierta
     // ===================================================
     core_herald.greet_user(&soul_id).await;
     core_thread.record_conversation(&format!(
-        "Sistema iniciado. Soul ID: {}. Pilares activos: Vault, Thread, Herald.",
-        soul_id
+        "Sistema v0.3.0 iniciado. Soul: {}. Nivel seguridad: {:?}. Biometría: activa.",
+        soul_id,
+        core_vault.get_unlock_level()
     )).await;
 
-    info!("-------------------------------------------------------");
-    info!("Todos los pilares activos. Iniciando Soul API...");
-    info!("-------------------------------------------------------");
-
     // ===================================================
-    // ETAPA 3: Iniciar Soul API (en background)
+    // ETAPA 4: Soul API en background
     // ===================================================
     let api_state = Arc::new(Mutex::new(SoulApiState {
         soul_id: soul_id.clone(),
         uptime_ticks: 0,
-        last_memory: "Sistema iniciado".to_string(),
+        last_memory: "Sistema iniciado con biometría".to_string(),
         ia_active: core_herald.is_active,
     }));
 
@@ -92,34 +110,67 @@ async fn main() -> anyhow::Result<()> {
         start_soul_api(api_state_clone).await;
     });
 
-    info!("Soul API lanzada en background en http://0.0.0.0:7777");
+    info!("=======================================================");
+    info!("∞ Verix Soul OS v0.3.0 completamente operativo.");
+    info!("  Soul ID   : {}", soul_id);
+    info!("  Seguridad : {:?}", core_vault.get_unlock_level());
+    info!("  API       : http://0.0.0.0:7777");
+    info!("  Biometría : Modo simulación (→ BLE real con Raspberry Pi)");
+    info!("=======================================================");
 
     // ===================================================
-    // ETAPA 4: Bucle infinito del sistema operativo
+    // ETAPA 5: Bucle principal — Latido del Alma
     // ===================================================
     let mut tick: u64 = 0;
+
     loop {
-        tokio::time::sleep(tokio::time::Duration::from_secs(60)).await;
+        tokio::time::sleep(tokio::time::Duration::from_secs(30)).await;
         tick += 1;
+
+        // Leer muestra biométrica continua
+        let snap = core_bio.read_sample(&soul_id).await;
+
+        // Verificar portador cada 5 ticks (2.5 min)
+        if tick % 5 == 0 {
+            if let Some(result) = core_bio.verify_bearer(&soul_id, 70.0) {
+                if result.recognized {
+                    info!("✅ Portador verificado: {} ({:.1}%)", soul_id, result.confidence);
+                } else {
+                    info!("⚠️ Portador no reconocido. Confianza: {:.1}%", result.confidence);
+                }
+            }
+
+            // Actualizar baseline con nuevas muestras
+            core_bio.update_baseline(&soul_id);
+        }
 
         // Actualizar estado de la API
         {
             let mut state = api_state.lock().await;
             state.uptime_ticks = tick;
-            state.last_memory = format!("Latido #{}", tick);
+            state.last_memory = format!(
+                "Latido #{} | HR: {} BPM",
+                tick,
+                snap.heart_rate_bpm.unwrap_or(0)
+            );
         }
 
-        info!("♾️ Latido #{} | Memorias: {} | IA: {}",
+        info!(
+            "♾️ Latido #{} | HR: {} BPM | Memorias: {} | IA: {}",
             tick,
+            snap.heart_rate_bpm.unwrap_or(0),
             core_thread.get_memory_count(),
             if core_herald.is_active { "activa" } else { "standby" }
         );
 
-        // Guardar latido en memoria
-        core_thread.record_memory(&format!("Latido #{}", tick)).await;
+        core_thread.record_memory(&format!(
+            "Latido #{} | HR:{} BPM",
+            tick,
+            snap.heart_rate_bpm.unwrap_or(0)
+        )).await;
 
-        // Cada 10 latidos (10 minutos), sincronizar con Git
-        if tick % 10 == 0 {
+        // Sync Git cada 20 ticks (10 minutos)
+        if tick % 20 == 0 {
             core_thread.sync_to_git(&soul_id).await;
         }
     }
