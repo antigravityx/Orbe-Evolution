@@ -49,6 +49,7 @@ SOLDADOS_REGISTRO = {
     "MEMORIA_MADRE": {"archivo": "memoria_madre.py",           "critico": True},
     "BUS_MENSAJES":  {"archivo": "bus_mensajes.py",            "critico": False},
     "ESCUDO":        {"archivo": "soldado_escudo.py",          "critico": False},
+    "GOD_MODE":      {"archivo": "god_mode_core.py",           "critico": True},
 }
 
 # ─── LOGGER ──────────────────────────────────────────────────────────────────
@@ -264,6 +265,10 @@ class CerebroOrbe:
                     elif accion == "limpiar_santuario":
                         from batallon.soldado_escudo import EscudoSantuario
                         EscudoSantuario().ejecutar_limpieza()
+                    elif accion == "chequeo_god_mode":
+                        # Llamar al God Mode Core
+                        ruta_god = os.path.join(ORBE_ROOT, "god_mode_core.py")
+                        subprocess.run([sys.executable, ruta_god], capture_output=True)
 
                     # Reagendar
                     tarea["ultima_ejecucion"] = ahora.isoformat()
@@ -367,7 +372,8 @@ if __name__ == "__main__":
         cerebro.registrar_tarea_agenda("latido_nido_1h",        intervalo_horas=1,   accion="latido_nido")
         cerebro.registrar_tarea_agenda("compactar_7d",          intervalo_horas=168, accion="compactar_memoria")
         cerebro.registrar_tarea_agenda("limpieza_santuario_24h",intervalo_horas=24,  accion="limpiar_santuario")
-        print("✅ Agenda configurada: sync cada 24h | diagnóstico cada 6h | latido cada 1h | compactar cada 7d | limpieza cada 24h")
+        cerebro.registrar_tarea_agenda("chequeo_god_mode_1h",   intervalo_horas=1,   accion="chequeo_god_mode")
+        print("✅ Agenda configurada: sync cada 24h | diagnóstico cada 6h | latido cada 1h | compactar cada 7d | limpieza cada 24h | God Mode cada 1h")
 
     elif cmd == "RUN":
         from concurrent.futures import ThreadPoolExecutor

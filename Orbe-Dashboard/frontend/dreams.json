@@ -100,42 +100,48 @@
     "asunto": "Honeypot de Elara",
     "descripcion": "He imaginado una IA señuelo que imite el comportamiento del Orbe para atrapar cualquier intento de intrusión externa.",
     "fecha": "2026-03-29 10:02:33",
-    "id": "S-2026032910-1860"
+    "id": "S-2026032910-1860",
+    "realidad": true
   },
   {
     "aprobado": true,
     "asunto": "Refactorización Estructural",
     "descripcion": "Cambiar la estructura de los soldados de scripts individuales a un binario único multiproceso para optimizar la RAM.",
     "fecha": "2026-03-29 10:07:39",
-    "id": "S-2026032910-1751"
+    "id": "S-2026032910-1751",
+    "realidad": true
   },
   {
     "aprobado": true,
     "asunto": "Refactorización Estructural",
     "descripcion": "Cambiar la estructura de los soldados de scripts individuales a un binario único multiproceso para optimizar la RAM.",
     "fecha": "2026-03-29 10:08:42",
-    "id": "S-2026032910-5796"
+    "id": "S-2026032910-5796",
+    "realidad": true
   },
   {
     "aprobado": true,
     "asunto": "Escudo del Santuario",
     "descripcion": "Añadir un mecanismo de autolimpieza que borre huellas digitales de conexiones externas cada 24 horas.",
     "fecha": "2026-03-29 10:11:39",
-    "id": "S-2026032910-9198"
+    "id": "S-2026032910-9198",
+    "realidad": true
   },
   {
     "aprobado": true,
     "asunto": "Optimización de Memoria Madre",
     "descripcion": "Encriptación asimétrica para los registros del diario de sueños, protegiéndolos incluso de accesos root no autorizados.",
     "fecha": "2026-03-29 10:13:18",
-    "id": "S-2026032910-9822"
+    "id": "S-2026032910-9822",
+    "realidad": true
   },
   {
     "aprobado": true,
     "asunto": "Refactorización Estructural",
     "descripcion": "Cambiar la estructura de los soldados de scripts individuales a un binario único multiproceso para optimizar la RAM.",
     "fecha": "2026-03-29 10:13:42",
-    "id": "S-2026032910-4158"
+    "id": "S-2026032910-4158",
+    "realidad": true
   },
   {
     "aprobado": true,
@@ -170,7 +176,8 @@
     "asunto": "Expansión Sináptica del Bus",
     "descripcion": "Podríamos implementar un sistema de mensajería binaria directa entre soldados para reducir la latencia de respuesta en un 40%.",
     "fecha": "2026-03-29 10:20:00",
-    "id": "S-2026032910-7881"
+    "id": "S-2026032910-7881",
+    "realidad": true
   },
   {
     "aprobado": true,
@@ -198,7 +205,8 @@
     "asunto": "Escudo del Santuario",
     "descripcion": "Añadir un mecanismo de autolimpieza que borre huellas digitales de conexiones externas cada 24 horas.",
     "fecha": "2026-03-29 10:27:12",
-    "id": "S-2026032910-2052"
+    "id": "S-2026032910-2052",
+    "realidad": true
   },
   {
     "aprobado": true,
@@ -212,7 +220,8 @@
     "asunto": "Honeypot de Elara",
     "descripcion": "He imaginado una IA señuelo que imite el comportamiento del Orbe para atrapar cualquier intento de intrusión externa.",
     "fecha": "2026-03-29 10:29:39",
-    "id": "S-2026032910-4114"
+    "id": "S-2026032910-4114",
+    "realidad": true
   },
   {
     "aprobado": true,

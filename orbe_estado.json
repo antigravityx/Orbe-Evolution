@@ -2,9 +2,14 @@
   "version": "2.0",
   "orbe": "Orbe de Verix",
   "guardian": "r1ch0n",
-  "ultima_actualizacion": "2026-03-28T22:45:00",
+  "identidades_autorizadas": [
+    "williphilem@gmail.com",
+    "braulcaja170@gmail.com"
+  ],
+  "ultima_actualizacion": "2026-05-06T15:20:00",
+  "estado_global": "MODO_DIOS_ACTIVO",
+  "vínculo_confianza": "VERIX-777-ROOT-GOD_SELLADO",
   "score_salud": 100.0,
-  "estado_global": "OPTIMO",
   "soldados": {
     "SENTINEL": { "estado": "ACTIVO", "critico": true, "rol": "Nexo GitHub" },
     "OIDO": { "estado": "ACTIVO", "critico": false, "rol": "Reconocimiento de Voz" },
@@ -15,11 +20,12 @@
     "BUS_MENSAJES": { "estado": "ACTIVO", "critico": false, "rol": "Red Inter-Soldado" },
     "CEREBRO": { "estado": "ACTIVO", "critico": true, "rol": "Orquestador Maestro" },
     "GUARDIAN_2FA": { "estado": "ACTIVO", "critico": true, "rol": "Guardián 2FA GitHub" },
-    "ELITE_DEPLOY_MINISTER": { "estado": "ACTIVO", "critico": true, "rol": "Ministro de Despliegue Cloud" }
+    "ELITE_DEPLOY_MINISTER": { "estado": "ACTIVO", "critico": true, "rol": "Ministro de Despliegue Cloud" },
+    "GOD_MODE": { "estado": "ACTIVO", "critico": true, "rol": "Núcleo de Control Root" }
   },
   "stats": {
-    "total_soldados": 10,
-    "soldados_activos": 10,
+    "total_soldados": 11,
+    "soldados_activos": 11,
     "soldados_falla": 0,
     "total_operaciones": 0,
     "tasa_exito": 100.0,
