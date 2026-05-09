@@ -1,0 +1,13 @@
+[package]
+name = "orbe_brain_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.36", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sysinfo = "0.30"
+sha2 = "0.10"
+chrono = "0.4"
+colored = "2.1"

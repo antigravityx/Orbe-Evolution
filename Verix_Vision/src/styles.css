@@ -397,3 +397,307 @@ footer {
 .submit-btn {
   background: rgba(0, 240, 255, 0.1);
 }
+
+.disk-ring { stroke: #00ff88; }
+
+/* ─── PESTAÑAS ─── */
+.tabs-control {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+  -webkit-app-region: no-drag;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tab-btn.active {
+  color: var(--accent-cyan);
+  border-bottom: 2px solid var(--accent-cyan);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SISTEMAS ─── */
+.systems-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.system-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.system-card h3 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: var(--accent-cyan);
+}
+
+.system-card p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.status-indicator {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-indicator.online {
+  background: #00ff88;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+/* ─── BATALLÓN ─── */
+.soldiers-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.soldier-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.soldier-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.soldier-status {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.soldier-status.active { color: #00ff88; border: 1px solid #00ff88; }
+.soldier-status.error { color: var(--accent-magenta); border: 1px solid var(--accent-magenta); }
+
+/* ═══════════════════════════════════════
+   ORBE-CONSOLE
+═══════════════════════════════════════ */
+.tab-terminal { color: #00ff88 !important; }
+.tab-terminal.active {
+  color: #00ff88 !important;
+  border-bottom: 2px solid #00ff88 !important;
+}
+
+#tab-terminal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.console-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(0, 255, 136, 0.04);
+  border: 1px solid rgba(0, 255, 136, 0.15);
+  border-radius: 6px 6px 0 0;
+  margin-bottom: 0;
+}
+
+.console-title {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #00ff88;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.console-version {
+  font-size: 0.65rem;
+  color: rgba(0, 255, 136, 0.5);
+  margin-left: 6px;
+}
+
+.console-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.console-action-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: rgba(0, 255, 136, 0.7);
+  padding: 3px 8px;
+  font-size: 0.7rem;
+  font-family: 'Courier New', monospace;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+
+.console-action-btn:hover {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  border-color: #00ff88;
+}
+
+.console-output {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 255, 136, 0.1);
+  border-top: none;
+  padding: 12px 16px;
+  min-height: 260px;
+  max-height: 320px;
+  overflow-y: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 136, 0.3) transparent;
+}
+
+.console-output::-webkit-scrollbar { width: 4px; }
+.console-output::-webkit-scrollbar-track { background: transparent; }
+.console-output::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.3); border-radius: 2px; }
+
+.console-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+  padding: 1px 0;
+}
+
+.console-cmd {
+  color: #00f0ff;
+}
+
+.console-cmd .console-prompt-label {
+  color: #00ff88;
+  font-weight: 700;
+  user-select: none;
+}
+
+.console-out {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.console-err {
+  color: #ff4466;
+}
+
+.console-sys {
+  color: rgba(0, 255, 136, 0.5);
+  font-style: italic;
+}
+
+.console-welcome {
+  color: #00f0ff;
+  margin-bottom: 8px;
+}
+
+.console-welcome .console-prompt-sym {
+  color: #00ff88;
+  margin-right: 8px;
+}
+
+.console-welcome strong {
+  color: #00ff88;
+}
+
+/* ─── INPUT ROW ─── */
+.console-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-top: 1px solid rgba(0, 255, 136, 0.05);
+  border-radius: 0 0 6px 6px;
+}
+
+.console-prompt-label {
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.console-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.82rem;
+  caret-color: #00ff88;
+}
+
+.console-input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+  font-style: italic;
+}
+
+.console-run-btn {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  color: #00ff88;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.console-run-btn:hover {
+  background: rgba(0, 255, 136, 0.25);
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+}
+
+.console-run-btn:active {
+  transform: scale(0.96);
+}

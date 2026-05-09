@@ -1,0 +1,38 @@
+# ─── ESTACIÓN DE FORJA (BUILD) ──────────────────────────────────────────
+FROM rust:1.75-slim-bookworm as builder
+
+# Instalar dependencias de compilación
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY ./verix-soul-core/Cargo.toml ./verix-soul-core/Cargo.lock ./
+# Truco para cachear dependencias
+RUN mkdir src && echo "fn main() {}" > src/main.rs && cargo build --release || true
+
+COPY ./verix-soul-core .
+RUN cargo build --release
+
+# ─── CONTENEDOR DEL ALMA (RUNTIME) ──────────────────────────────────────
+FROM debian:bookworm-slim
+
+LABEL maintainer="Ricardo Rubén Céspedez (Richon)"
+LABEL version="0.3.0"
+LABEL description="Verix Soul OS - Runtime ultra-ligero para Docker"
+
+# Instalar CA certificates para conexiones seguras
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/lib/verix-soul
+COPY --from=builder /app/target/release/verix-soul-core /usr/local/bin/verix-soul
+
+# Configuración de ejecución
+ENV RUST_LOG=info
+EXPOSE 7777
+
+# El Alma es el único proceso
+ENTRYPOINT ["verix-soul"]

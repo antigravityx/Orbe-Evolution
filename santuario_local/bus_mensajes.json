@@ -1,0 +1,1123 @@
+[
+  {
+    "id": "120f805c-e8d",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "ONLINE",
+    "datos": {
+      "status": "Escaneando constantes"
+    },
+    "timestamp": "2026-05-08T13:57:08.306533",
+    "expira": "2026-05-10T13:57:08.306556",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "b9625d28-398",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 53.3,
+      "ram": 56.5
+    },
+    "timestamp": "2026-05-08T13:57:09.314544",
+    "expira": "2026-05-10T13:57:09.314550",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "5cee3f93-00a",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 37.8,
+      "ram": 57.0
+    },
+    "timestamp": "2026-05-08T13:57:14.322417",
+    "expira": "2026-05-10T13:57:14.322422",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "fa9bc9ed-d16",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 27.2,
+      "ram": 57.3
+    },
+    "timestamp": "2026-05-08T13:57:19.331477",
+    "expira": "2026-05-10T13:57:19.331482",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "b131061b-5c5",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 24.3,
+      "ram": 57.2
+    },
+    "timestamp": "2026-05-08T13:57:24.337312",
+    "expira": "2026-05-10T13:57:24.337318",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "ced479b5-91e",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 30.4,
+      "ram": 57.3
+    },
+    "timestamp": "2026-05-08T13:57:29.342318",
+    "expira": "2026-05-10T13:57:29.342323",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "32b7c4bc-c23",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 22.8,
+      "ram": 57.5
+    },
+    "timestamp": "2026-05-08T13:57:34.348929",
+    "expira": "2026-05-10T13:57:34.348934",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "e042bd76-776",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 29.7,
+      "ram": 57.7
+    },
+    "timestamp": "2026-05-08T13:57:39.356312",
+    "expira": "2026-05-10T13:57:39.356323",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "e3b93c85-35b",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 12.1,
+      "ram": 58.0
+    },
+    "timestamp": "2026-05-08T13:57:44.366755",
+    "expira": "2026-05-10T13:57:44.366759",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "1ca76d9e-92d",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 47.7,
+      "ram": 58.3
+    },
+    "timestamp": "2026-05-08T13:57:49.373200",
+    "expira": "2026-05-10T13:57:49.373205",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "5f418098-ebe",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 21.3,
+      "ram": 58.2
+    },
+    "timestamp": "2026-05-08T13:57:54.381835",
+    "expira": "2026-05-10T13:57:54.381840",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "4ce5af4e-7a1",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 24.0,
+      "ram": 58.1
+    },
+    "timestamp": "2026-05-08T13:57:59.387692",
+    "expira": "2026-05-10T13:57:59.387697",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "e7867869-6f8",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 28.5,
+      "ram": 58.5
+    },
+    "timestamp": "2026-05-08T13:58:04.398936",
+    "expira": "2026-05-10T13:58:04.398946",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "edb9636b-558",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 38.1,
+      "ram": 58.6
+    },
+    "timestamp": "2026-05-08T13:58:09.405985",
+    "expira": "2026-05-10T13:58:09.405991",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "9bfa92b1-5e3",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 63.6,
+      "ram": 58.5
+    },
+    "timestamp": "2026-05-08T13:58:14.414669",
+    "expira": "2026-05-10T13:58:14.414674",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "bd31a930-10c",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 28.2,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:58:19.419931",
+    "expira": "2026-05-10T13:58:19.419936",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "252a2ad7-4aa",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 38.5,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:58:24.437813",
+    "expira": "2026-05-10T13:58:24.437820",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "2fcb6f92-47a",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 13.6,
+      "ram": 58.6
+    },
+    "timestamp": "2026-05-08T13:58:29.443700",
+    "expira": "2026-05-10T13:58:29.443706",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "b97d8927-1f3",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 24.1,
+      "ram": 58.0
+    },
+    "timestamp": "2026-05-08T13:58:34.452644",
+    "expira": "2026-05-10T13:58:34.452651",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "f4bf107d-ba1",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 39.5,
+      "ram": 58.2
+    },
+    "timestamp": "2026-05-08T13:58:39.458471",
+    "expira": "2026-05-10T13:58:39.458476",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "984aad8f-6d2",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 27.4,
+      "ram": 58.2
+    },
+    "timestamp": "2026-05-08T13:58:44.465276",
+    "expira": "2026-05-10T13:58:44.465281",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "98192200-23a",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 20.3,
+      "ram": 58.1
+    },
+    "timestamp": "2026-05-08T13:58:49.471380",
+    "expira": "2026-05-10T13:58:49.471385",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "2fc7f00f-6d2",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 28.2,
+      "ram": 58.6
+    },
+    "timestamp": "2026-05-08T13:58:54.484429",
+    "expira": "2026-05-10T13:58:54.484445",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "04f83c13-0e1",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 23.3,
+      "ram": 58.5
+    },
+    "timestamp": "2026-05-08T13:58:59.498083",
+    "expira": "2026-05-10T13:58:59.498094",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "4de45bf0-615",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 20.9,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:59:04.505506",
+    "expira": "2026-05-10T13:59:04.505511",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "89e10718-d27",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 42.7,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:59:09.512665",
+    "expira": "2026-05-10T13:59:09.512670",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "487e6b75-381",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 28.6,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:59:14.605866",
+    "expira": "2026-05-10T13:59:14.605871",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "d4690c64-74f",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 74.8,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:59:19.634808",
+    "expira": "2026-05-10T13:59:19.634814",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "bd4318ed-a70",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 62.8,
+      "ram": 59.0
+    },
+    "timestamp": "2026-05-08T13:59:24.641488",
+    "expira": "2026-05-10T13:59:24.641495",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "d0192df5-486",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 38.2,
+      "ram": 59.0
+    },
+    "timestamp": "2026-05-08T13:59:29.649716",
+    "expira": "2026-05-10T13:59:29.649721",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "13d0cc19-9fb",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 57.0,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:59:34.656018",
+    "expira": "2026-05-10T13:59:34.656023",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "8b432241-833",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 53.7,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T13:59:39.665101",
+    "expira": "2026-05-10T13:59:39.665107",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "1434d080-258",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 31.5,
+      "ram": 58.6
+    },
+    "timestamp": "2026-05-08T13:59:44.675154",
+    "expira": "2026-05-10T13:59:44.675160",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "b361d118-a9b",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 19.8,
+      "ram": 58.6
+    },
+    "timestamp": "2026-05-08T13:59:49.684570",
+    "expira": "2026-05-10T13:59:49.684575",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "128f3213-77e",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 31.3,
+      "ram": 58.9
+    },
+    "timestamp": "2026-05-08T13:59:54.690918",
+    "expira": "2026-05-10T13:59:54.690924",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "33f2848e-ee7",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 52.3,
+      "ram": 59.4
+    },
+    "timestamp": "2026-05-08T13:59:59.698621",
+    "expira": "2026-05-10T13:59:59.698627",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "dfc8d202-e53",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 22.6,
+      "ram": 59.6
+    },
+    "timestamp": "2026-05-08T14:00:04.704959",
+    "expira": "2026-05-10T14:00:04.704965",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "fa971403-24c",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 29.4,
+      "ram": 59.5
+    },
+    "timestamp": "2026-05-08T14:00:09.714644",
+    "expira": "2026-05-10T14:00:09.714650",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "8049f30b-edd",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 34.1,
+      "ram": 59.7
+    },
+    "timestamp": "2026-05-08T14:00:14.721457",
+    "expira": "2026-05-10T14:00:14.721462",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "77b1dda6-cb6",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 23.7,
+      "ram": 59.8
+    },
+    "timestamp": "2026-05-08T14:00:19.821725",
+    "expira": "2026-05-10T14:00:19.821731",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "a247848a-2e2",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 22.7,
+      "ram": 59.5
+    },
+    "timestamp": "2026-05-08T14:00:24.828755",
+    "expira": "2026-05-10T14:00:24.828761",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "1ffacd24-ca0",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 72.8,
+      "ram": 58.7
+    },
+    "timestamp": "2026-05-08T14:00:29.835296",
+    "expira": "2026-05-10T14:00:29.835303",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "43cdd38c-00e",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 31.1,
+      "ram": 59.0
+    },
+    "timestamp": "2026-05-08T14:00:34.858015",
+    "expira": "2026-05-10T14:00:34.858025",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "bab734de-86f",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 35.1,
+      "ram": 58.9
+    },
+    "timestamp": "2026-05-08T14:00:39.872329",
+    "expira": "2026-05-10T14:00:39.872339",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "a99298e5-6f1",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 41.2,
+      "ram": 59.3
+    },
+    "timestamp": "2026-05-08T14:00:44.885728",
+    "expira": "2026-05-10T14:00:44.885733",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "a8277c7a-409",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 72.6,
+      "ram": 59.6
+    },
+    "timestamp": "2026-05-08T14:00:49.893882",
+    "expira": "2026-05-10T14:00:49.893887",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "670afec1-4a0",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 44.2,
+      "ram": 59.2
+    },
+    "timestamp": "2026-05-08T14:00:54.902873",
+    "expira": "2026-05-10T14:00:54.902880",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "8025ebd3-895",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 74.4,
+      "ram": 59.0
+    },
+    "timestamp": "2026-05-08T14:00:59.912550",
+    "expira": "2026-05-10T14:00:59.912556",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "3b06aa5b-305",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 88.5,
+      "ram": 59.6
+    },
+    "timestamp": "2026-05-08T14:01:05.109353",
+    "expira": "2026-05-10T14:01:05.109361",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "0f8431c0-b78",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 32.1,
+      "ram": 59.5
+    },
+    "timestamp": "2026-05-08T14:01:10.139497",
+    "expira": "2026-05-10T14:01:10.139503",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "28d7174d-c62",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 23.7,
+      "ram": 59.2
+    },
+    "timestamp": "2026-05-08T14:01:15.148551",
+    "expira": "2026-05-10T14:01:15.148556",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "722b102b-560",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 23.0,
+      "ram": 59.3
+    },
+    "timestamp": "2026-05-08T14:01:20.155223",
+    "expira": "2026-05-10T14:01:20.155228",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "42cdcfd8-090",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 20.8,
+      "ram": 59.2
+    },
+    "timestamp": "2026-05-08T14:01:25.167241",
+    "expira": "2026-05-10T14:01:25.167249",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "2b5e0338-d0f",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 31.7,
+      "ram": 59.2
+    },
+    "timestamp": "2026-05-08T14:01:30.176629",
+    "expira": "2026-05-10T14:01:30.176634",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "5e771737-99c",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 27.3,
+      "ram": 59.2
+    },
+    "timestamp": "2026-05-08T14:01:35.187603",
+    "expira": "2026-05-10T14:01:35.187608",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "f154b1b4-d63",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 34.6,
+      "ram": 59.4
+    },
+    "timestamp": "2026-05-08T14:01:40.196509",
+    "expira": "2026-05-10T14:01:40.196517",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "eed6be0b-e8c",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 48.3,
+      "ram": 59.5
+    },
+    "timestamp": "2026-05-08T14:01:45.203889",
+    "expira": "2026-05-10T14:01:45.203894",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "8f9071e8-fa3",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 23.0,
+      "ram": 59.6
+    },
+    "timestamp": "2026-05-08T14:01:50.216146",
+    "expira": "2026-05-10T14:01:50.216157",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "376c67c8-513",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 25.8,
+      "ram": 59.4
+    },
+    "timestamp": "2026-05-08T14:01:55.225599",
+    "expira": "2026-05-10T14:01:55.225604",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "a29f363b-216",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 19.4,
+      "ram": 59.3
+    },
+    "timestamp": "2026-05-08T14:02:00.234219",
+    "expira": "2026-05-10T14:02:00.234224",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "76017072-341",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 40.6,
+      "ram": 59.5
+    },
+    "timestamp": "2026-05-08T14:02:05.243852",
+    "expira": "2026-05-10T14:02:05.243857",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "bd194f71-887",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 60.5,
+      "ram": 60.2
+    },
+    "timestamp": "2026-05-08T14:02:10.253440",
+    "expira": "2026-05-10T14:02:10.253445",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "817cb701-9d9",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 67.8,
+      "ram": 60.4
+    },
+    "timestamp": "2026-05-08T14:02:15.261533",
+    "expira": "2026-05-10T14:02:15.261545",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "5f2a5483-6e9",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 29.2,
+      "ram": 60.2
+    },
+    "timestamp": "2026-05-08T14:02:20.286491",
+    "expira": "2026-05-10T14:02:20.286496",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "8d09bfb5-807",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 84.2,
+      "ram": 60.1
+    },
+    "timestamp": "2026-05-08T14:02:25.337297",
+    "expira": "2026-05-10T14:02:25.337302",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "ad4a6e4a-157",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 33.2,
+      "ram": 59.9
+    },
+    "timestamp": "2026-05-08T14:02:30.348794",
+    "expira": "2026-05-10T14:02:30.348798",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "4107acae-6ce",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 52.9,
+      "ram": 59.5
+    },
+    "timestamp": "2026-05-08T14:02:35.358102",
+    "expira": "2026-05-10T14:02:35.358107",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "c8b11668-891",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 38.6,
+      "ram": 59.9
+    },
+    "timestamp": "2026-05-08T14:02:40.370603",
+    "expira": "2026-05-10T14:02:40.370609",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "a20a6320-f5d",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 41.3,
+      "ram": 60.4
+    },
+    "timestamp": "2026-05-08T14:02:45.378972",
+    "expira": "2026-05-10T14:02:45.378978",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "34944f1b-186",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 31.7,
+      "ram": 59.7
+    },
+    "timestamp": "2026-05-08T14:02:50.386481",
+    "expira": "2026-05-10T14:02:50.386486",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "9478484f-c5d",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 52.1,
+      "ram": 59.1
+    },
+    "timestamp": "2026-05-08T14:02:55.393948",
+    "expira": "2026-05-10T14:02:55.394607",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "e26db363-244",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 19.0,
+      "ram": 59.2
+    },
+    "timestamp": "2026-05-08T14:03:00.402828",
+    "expira": "2026-05-10T14:03:00.402833",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "e43a68c5-783",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 61.0,
+      "ram": 60.1
+    },
+    "timestamp": "2026-05-08T14:03:05.416541",
+    "expira": "2026-05-10T14:03:05.416547",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "e68083aa-54e",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "HEARTBEAT",
+    "contenido": "OK",
+    "datos": {
+      "cpu": 100.0,
+      "ram": 61.2
+    },
+    "timestamp": "2026-05-08T14:03:10.542380",
+    "expira": "2026-05-10T14:03:10.542386",
+    "leido": false,
+    "leido_por": []
+  },
+  {
+    "id": "92b75e17-c2c",
+    "origen": "VIGILANTE",
+    "destinatario": "CEREBRO",
+    "tipo": "ALERTA",
+    "contenido": "Fallo crítico en el Vigilante: 'charmap' codec can't encode characters in position 0-1: character maps to <undefined>",
+    "datos": {},
+    "timestamp": "2026-05-08T14:03:10.574533",
+    "expira": "2026-05-10T14:03:10.574540",
+    "leido": false,
+    "leido_por": []
+  }
+]

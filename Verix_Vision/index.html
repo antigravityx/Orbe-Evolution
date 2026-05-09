@@ -14,12 +14,21 @@
         <div class="window-controls">
           <button id="btn-pin" class="control-btn" title="Fijar Ventana">📌</button>
           <button id="btn-minimize" class="control-btn" title="Minimizar">_</button>
+          <button id="btn-maximize" class="control-btn" title="Maximizar">□</button>
           <button id="btn-close" class="control-btn close-btn" title="Cerrar">X</button>
         </div>
       </header>
       
       <main>
-        <!-- Nuevo Panel de Telemetría -->
+        <!-- Sistema de Pestañas -->
+        <div class="tabs-control">
+          <button class="tab-btn active" data-tab="dreams">Sueños</button>
+          <button class="tab-btn" data-tab="systems">Sistemas</button>
+          <button class="tab-btn" data-tab="battalion">Batallón</button>
+          <button class="tab-btn tab-terminal" data-tab="terminal">⌨ Terminal</button>
+        </div>
+
+        <!-- Panel de Telemetría (Visible en todas las pestañas o específico?) -->
         <div id="dashboard-panel" class="dashboard-grid">
           <div class="telemetry-card">
             <div class="ring-container">
@@ -41,6 +50,16 @@
             </div>
             <div class="telemetry-label">RAM</div>
           </div>
+          <div class="telemetry-card">
+            <div class="ring-container">
+              <svg viewBox="0 0 100 100">
+                <circle class="ring-bg" cx="50" cy="50" r="45"></circle>
+                <circle class="ring-fg disk-ring" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="283"></circle>
+              </svg>
+              <div class="ring-text" id="disk-text">0%</div>
+            </div>
+            <div class="telemetry-label">DISCO</div>
+          </div>
           <div class="telemetry-card health-card">
             <div class="ring-container">
               <svg viewBox="0 0 100 100">
@@ -49,18 +68,18 @@
               </svg>
               <div class="ring-text glow-text" id="health-text">0%</div>
             </div>
-            <div class="telemetry-label">Salud Orbe</div>
-            <div class="telemetry-sub" id="soldiers-text">Activos: 0</div>
+            <div class="telemetry-label">Salud</div>
           </div>
         </div>
 
-        <div class="section-header">
-          <h2 class="section-title">Senado de los Sueños</h2>
-          <div class="action-buttons">
-            <button id="btn-toggle-form" class="cyber-button">Redactar Sueño</button>
-            <button id="btn-refresh" class="cyber-button" style="padding: 6px 12px; font-size: 0.75rem;">↻</button>
+        <div id="tab-dreams" class="tab-content active">
+          <div class="section-header">
+            <h2 class="section-title">Senado de los Sueños</h2>
+            <div class="action-buttons">
+              <button id="btn-toggle-form" class="cyber-button">Redactar Sueño</button>
+              <button id="btn-refresh" class="cyber-button" style="padding: 6px 12px; font-size: 0.75rem;">↻</button>
+            </div>
           </div>
-        </div>
 
         <div id="dream-form-container" class="dream-form collapsed">
           <input type="text" id="input-asunto" placeholder="Asunto del sueño..." class="cyber-input" />
@@ -74,11 +93,66 @@
             <p>Conectando con el Senado de los Sueños...</p>
           </div>
         </div>
-      </main>
+      </div>
 
-      <footer>
-        <p class="status-text" id="status">Orbe en estado de vigilia.</p>
-      </footer>
+      <div id="tab-systems" class="tab-content">
+        <h2 class="section-title">Infraestructura Orbe</h2>
+        <div class="systems-grid">
+          <div class="system-card">
+            <h3>Cerebro Rust</h3>
+            <p id="brain-status">Estado: Sincronizando...</p>
+            <div class="status-indicator online"></div>
+          </div>
+          <div class="system-card">
+            <h3>Memoria Madre</h3>
+            <p id="memory-status">Estado: Encriptado SHA-256</p>
+          </div>
+        </div>
+      </div>
+
+      </div>
+
+      <div id="tab-battalion" class="tab-content">
+        <h2 class="section-title">Estado del Batallón</h2>
+        <div id="soldiers-list" class="soldiers-grid">
+          <!-- Se cargará dinámicamente -->
+          <p class="loading">Desplegando unidades...</p>
+        </div>
+      </div>
+
+      <!-- ══════ ORBE-CONSOLE ══════ -->
+      <div id="tab-terminal" class="tab-content">
+        <div class="console-header">
+          <span class="console-title">⬡ ORBE-CONSOLE <span class="console-version">v1.0</span></span>
+          <div class="console-actions">
+            <button id="btn-console-clear" class="console-action-btn" title="Limpiar pantalla">⌫ CLR</button>
+            <button id="btn-console-help" class="console-action-btn" title="Ayuda">? HELP</button>
+          </div>
+        </div>
+        <div id="console-output" class="console-output">
+          <div class="console-line console-welcome">
+            <span class="console-prompt-sym">&#9670;</span>
+            Bienvenido a la Orbe-Console. Escribe <strong>orbe --help</strong> para ver comandos.
+          </div>
+        </div>
+        <div class="console-input-row">
+          <span class="console-prompt-label">r1ch0n@orbe:~$</span>
+          <input
+            type="text"
+            id="console-input"
+            class="console-input"
+            placeholder="escribe un comando..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="btn-console-run" class="console-run-btn">▶ RUN</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p class="status-text" id="status">Orbe en estado de vigilia.</p>
+    </footer>
     </div>
     
     <script type="module" src="/src/main.ts"></script>

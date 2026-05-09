@@ -10,17 +10,19 @@ interface Dream {
   realidad?: boolean;
 }
 
+// Elementos de UI
 const dreamsList = document.getElementById("dreams-list");
 const statusText = document.getElementById("status");
 const btnRefresh = document.getElementById("btn-refresh");
 
-// Elementos del Dashboard
 const cpuText = document.getElementById("cpu-text");
 const ramText = document.getElementById("ram-text");
+const diskText = document.getElementById("disk-text");
 const healthText = document.getElementById("health-text");
-const soldiersText = document.getElementById("soldiers-text");
+
 const cpuRing = document.querySelector(".cpu-ring") as SVGCircleElement;
 const ramRing = document.querySelector(".ram-ring") as SVGCircleElement;
+const diskRing = document.querySelector(".disk-ring") as SVGCircleElement;
 const healthRing = document.querySelector(".health-ring") as SVGCircleElement;
 
 function setRingProgress(ring: SVGCircleElement, percent: number) {
@@ -40,10 +42,13 @@ async function updateTelemetry() {
     if (cpuText) cpuText.textContent = `${data.cpu.toFixed(0)}%`;
     setRingProgress(cpuRing, data.cpu);
     
-    const ramUsedGB = (data.ram_used / 1e9).toFixed(1);
-    const ramTotalGB = (data.ram_total / 1e9).toFixed(1);
-    if (ramText) ramText.textContent = `${ramUsedGB} / ${ramTotalGB}G`;
-    setRingProgress(ramRing, (data.ram_used / data.ram_total) * 100);
+    const ramPct = (data.ram_used / data.ram_total) * 100;
+    if (ramText) ramText.textContent = `${(data.ram_used / 1e9).toFixed(1)}G`;
+    setRingProgress(ramRing, ramPct);
+
+    const diskPct = (data.disk_used / data.disk_total) * 100;
+    if (diskText) diskText.textContent = `${diskPct.toFixed(0)}%`;
+    setRingProgress(diskRing, diskPct);
   } catch(e) {
     console.error("Telemetry error", e);
   }
@@ -57,71 +62,55 @@ async function updateOrbeHealth() {
     if (healthText) healthText.textContent = `${data.score_salud}%`;
     setRingProgress(healthRing, data.score_salud);
     
-    if (soldiersText) soldiersText.textContent = `Soldados: ${data.soldados_activos}/${data.soldados_activos + data.soldados_falla}`;
-    
-    // Cambiar color basado en la salud
+    // Actualizar lista de soldados si estamos en la pestaña Batallón
+    const soldiersList = document.getElementById("soldiers-list");
+    if (soldiersList && document.getElementById("tab-battalion")?.classList.contains("active")) {
+      soldiersList.innerHTML = "";
+      
+      const soldados = data.soldados;
+      Object.keys(soldados).forEach(key => {
+        const s = soldados[key];
+        const row = document.createElement("div");
+        row.className = `soldier-row ${s.critico ? 'critical' : ''}`;
+        row.innerHTML = `
+          <div class="soldier-info">
+            <span class="soldier-name">${key}</span>
+            <span class="soldier-role">${s.rol}</span>
+          </div>
+          <span class="soldier-status ${s.estado.toLowerCase()}">${s.estado.toUpperCase()}</span>
+        `;
+        soldiersList.appendChild(row);
+      });
+    }
+
     if (healthRing) {
-      if (data.score_salud >= 85) healthRing.style.stroke = "var(--accent-cyan)";
+      if (data.score_salud >= 85) healthRing.style.stroke = "#00f0ff";
       else if (data.score_salud >= 50) healthRing.style.stroke = "orange";
-      else healthRing.style.stroke = "var(--accent-magenta)";
+      else healthRing.style.stroke = "#ff003c";
     }
   } catch(e) {
     console.error("Orbe health error", e);
   }
 }
 
-async function marcarRealidad(id: string) {
-  try {
-    statusText!.textContent = "Sincronizando realidad...";
-    await invoke("marcar_realidad", { id });
-    loadDreams();
-  } catch (e) {
-    alert("Error al marcar realidad: " + e);
-    loadDreams();
-  }
-}
-
 async function loadDreams() {
   if (!dreamsList || !statusText) return;
-  
   try {
-    statusText.textContent = "Sincronizando con el Orbe...";
-    
-    // Llamar al comando de Rust
     const jsonStr: string = await invoke("leer_suenos");
     let dreams: Dream[] = JSON.parse(jsonStr);
-    
     dreamsList.innerHTML = "";
     
-    if (dreams.length === 0) {
-      dreamsList.innerHTML = `<div class="dream-card loading"><p>El Orbe no tiene sueños registrados aún.</p></div>`;
-      statusText.textContent = "Orbe en reposo.";
-      return;
-    }
-
-    // Ordenar: Realidades al final, sueños nuevos arriba
-    dreams.sort((a, b) => {
-      if (a.realidad === b.realidad) return 0;
-      return a.realidad ? 1 : -1;
-    });
+    dreams.sort((a, b) => (a.realidad === b.realidad ? 0 : a.realidad ? 1 : -1));
     
     dreams.forEach(dream => {
       const card = document.createElement("div");
       card.className = `dream-card ${dream.realidad ? 'reality' : (dream.aprobado ? 'approved' : '')}`;
-      
-      let badge = '';
-      if (dream.realidad) {
-        badge = '🌍 REALIDAD';
-      } else if (dream.aprobado) {
-        badge = '✨ REVELADO';
-      } else {
-        badge = '💭 EN COLCHÓN';
-      }
+      const badge = dream.realidad ? '🌍 REALIDAD' : (dream.aprobado ? '✨ REVELADO' : '💭 EN COLCHÓN');
       
       card.innerHTML = `
         <div class="dream-header">
           <div class="dream-id">${dream.id} - ${badge}</div>
-          ${!dream.realidad ? `<button class="btn-make-reality" data-id="${dream.id}" title="Hacer Realidad">⚡</button>` : ''}
+          ${!dream.realidad ? `<button class="btn-make-reality" data-id="${dream.id}">⚡</button>` : ''}
         </div>
         <div class="dream-title">${dream.asunto}</div>
         <div class="dream-desc">${dream.descripcion}</div>
@@ -130,116 +119,220 @@ async function loadDreams() {
       dreamsList.appendChild(card);
     });
 
-    // Agregar eventos a los nuevos botones
     document.querySelectorAll(".btn-make-reality").forEach(btn => {
-      btn.addEventListener("click", (e) => {
+      btn.addEventListener("click", async (e) => {
         const id = (e.currentTarget as HTMLElement).dataset.id;
-        if (id) marcarRealidad(id);
+        if (id) {
+          await invoke("marcar_realidad", { id });
+          loadDreams();
+        }
       });
     });
-    
     statusText.textContent = `Vigilia. ${dreams.length} sueños encontrados.`;
   } catch (error) {
     console.error("Error cargando sueños:", error);
-    dreamsList.innerHTML = `
-      <div class="dream-card" style="border-left-color: red;">
-        <p style="color: red;">Error crítico al leer los sueños del Orbe.</p>
-        <p style="font-size: 0.8rem; margin-top: 10px;">${error}</p>
-      </div>
-    `;
     statusText.textContent = "Error de conexión.";
   }
 }
 
-// Botones de Ventana
+// Ventana y Atajos
 const btnMinimize = document.getElementById("btn-minimize");
+const btnMaximize = document.getElementById("btn-maximize");
 const btnClose = document.getElementById("btn-close");
 const btnPin = document.getElementById("btn-pin");
-
-if (btnMinimize) {
-  btnMinimize.addEventListener("click", () => getCurrentWindow().minimize());
-}
-
-if (btnClose) {
-  btnClose.addEventListener("click", () => getCurrentWindow().close());
-}
-
 let isPinned = false;
-if (btnPin) {
-  btnPin.addEventListener("click", async () => {
-    isPinned = !isPinned;
-    await getCurrentWindow().setAlwaysOnTop(isPinned);
-    if (isPinned) {
-      btnPin.classList.add("active");
-    } else {
-      btnPin.classList.remove("active");
-    }
-  });
-}
+btnPin?.addEventListener("click", async () => {
+  isPinned = !isPinned;
+  await getCurrentWindow().setAlwaysOnTop(isPinned);
+  btnPin.classList.toggle("active", isPinned);
+});
 
-// Redacción de Sueños
+btnMinimize?.addEventListener("click", () => invoke("minimizar_ventana"));
+btnMaximize?.addEventListener("click", async () => {
+  const win = getCurrentWindow();
+  const isMaximized = await win.isMaximized();
+  if (isMaximized) await win.unmaximize();
+  else await win.maximize();
+});
+btnClose?.addEventListener("click", () => invoke("cerrar_ventana"));
+
+window.addEventListener("keydown", async (e) => {
+  // Atajos de Sistema / UI
+  if (e.altKey && e.key.toLowerCase() === "z") {
+    invoke("minimizar_ventana");
+  }
+  if (e.altKey && e.key.toLowerCase() === "x") {
+    invoke("cerrar_ventana");
+  }
+  if (e.altKey && e.key.toLowerCase() === "m") {
+    const win = getCurrentWindow();
+    const isMaximized = await win.isMaximized();
+    if (isMaximized) await win.unmaximize();
+    else await win.maximize();
+  }
+  // Atajos tipo Adobe
+  if (e.ctrlKey && e.key.toLowerCase() === "c") {
+    console.log("[Hipocampo] Registrado: Copiar texto");
+    // El comportamiento nativo del navegador se encargará de copiar al portapapeles
+  }
+  if (e.ctrlKey && e.key.toLowerCase() === "v") {
+    console.log("[Hipocampo] Registrado: Pegar texto");
+  }
+  if (e.ctrlKey && e.key.toLowerCase() === "s") {
+    e.preventDefault();
+    console.log("[Hipocampo] Registrado: Guardar estado local");
+  }
+});
+
+// Sistema de Pestañas
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const tab = (btn as HTMLElement).dataset.tab;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+    
+    btn.classList.add("active");
+    document.getElementById(`tab-${tab}`)?.classList.add("active");
+    
+    if (tab === "dreams") loadDreams();
+    if (tab === "battalion") updateOrbeHealth();
+  });
+});
+
+// Formulario de Sueños
 const btnToggleForm = document.getElementById("btn-toggle-form");
 const formContainer = document.getElementById("dream-form-container");
-const inputAsunto = document.getElementById("input-asunto") as HTMLInputElement;
-const inputDesc = document.getElementById("input-desc") as HTMLTextAreaElement;
 const btnSubmitDream = document.getElementById("btn-submit-dream");
 
-if (btnToggleForm && formContainer) {
-  btnToggleForm.addEventListener("click", () => {
-    formContainer.classList.toggle("collapsed");
-    if (!formContainer.classList.contains("collapsed")) {
-      inputAsunto?.focus();
+btnToggleForm?.addEventListener("click", () => {
+  formContainer?.classList.toggle("collapsed");
+});
+
+btnSubmitDream?.addEventListener("click", async () => {
+  const asunto = (document.getElementById("input-asunto") as HTMLInputElement).value;
+  const desc = (document.getElementById("input-desc") as HTMLTextAreaElement).value;
+  
+  if (asunto && desc) {
+    await invoke("registrar_sueno", { asunto, descripcion: desc });
+    formContainer?.classList.add("collapsed");
+    loadDreams();
+  }
+});
+
+btnRefresh?.addEventListener("click", loadDreams);
+
+// ════════════════════════════════════════
+//   ORBE-CONSOLE
+// ════════════════════════════════════════
+const consoleOutput   = document.getElementById("console-output") as HTMLDivElement;
+const consoleInput    = document.getElementById("console-input") as HTMLInputElement;
+const btnConsoleRun   = document.getElementById("btn-console-run");
+const btnConsoleClear = document.getElementById("btn-console-clear");
+const btnConsoleHelp  = document.getElementById("btn-console-help");
+
+let cmdHistory: string[] = [];
+let historyIndex = -1;
+
+function appendConsoleLine(text: string, type: "cmd" | "out" | "err" | "sys" = "out") {
+  if (!consoleOutput) return;
+  const lines = text.split("\n");
+  lines.forEach(line => {
+    const div = document.createElement("div");
+    div.className = `console-line console-${type}`;
+    if (type === "cmd") {
+      div.innerHTML = `<span class="console-prompt-label">r1ch0n@orbe:~$</span> <span>${escapeHtml(line)}</span>`;
+    } else {
+      div.textContent = line;
     }
+    consoleOutput.appendChild(div);
   });
+  consoleOutput.scrollTop = consoleOutput.scrollHeight;
 }
 
-if (btnSubmitDream && inputAsunto && inputDesc) {
-  btnSubmitDream.addEventListener("click", async () => {
-    const asunto = inputAsunto.value.trim();
-    const desc = inputDesc.value.trim();
-    
-    if (!asunto || !desc) {
-      alert("Debes escribir un asunto y una historia.");
-      return;
-    }
-    
-    try {
-      btnSubmitDream.textContent = "Sincronizando...";
-      await invoke("registrar_sueno", { asunto: asunto, descripcion: desc });
-      
-      // Limpiar formulario y recargar
-      inputAsunto.value = "";
-      inputDesc.value = "";
-      formContainer?.classList.add("collapsed");
-      btnSubmitDream.textContent = "Registrar en el Orbe";
-      
-      loadDreams();
-    } catch (e) {
-      alert("Error guardando el sueño: " + e);
-      btnSubmitDream.textContent = "Registrar en el Orbe";
-    }
-  });
+function escapeHtml(str: string) {
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
-if (btnRefresh) {
-  btnRefresh.addEventListener("click", () => {
-    dreamsList!.innerHTML = `<div class="dream-card loading"><p>Sincronizando...</p></div>`;
-    setTimeout(loadDreams, 500); // Pequeño delay visual
-  });
+async function runConsoleCommand(cmd: string) {
+  const trimmed = cmd.trim();
+  if (!trimmed) return;
+
+  // Historial
+  cmdHistory.unshift(trimmed);
+  if (cmdHistory.length > 100) cmdHistory.pop();
+  historyIndex = -1;
+
+  appendConsoleLine(trimmed, "cmd");
+
+  try {
+    const result: string = await invoke("ejecutar_comando", { comando: trimmed });
+    if (result === "CLEAR_TERMINAL") {
+      if (consoleOutput) consoleOutput.innerHTML = "";
+      appendConsoleLine("Pantalla limpiada.", "sys");
+    } else if (result.trim()) {
+      appendConsoleLine(result, "out");
+    }
+  } catch (err: any) {
+    appendConsoleLine(`ERROR: ${err}`, "err");
+  }
 }
 
-// Cargar al inicio
+btnConsoleRun?.addEventListener("click", async () => {
+  const cmd = consoleInput?.value ?? "";
+  consoleInput.value = "";
+  await runConsoleCommand(cmd);
+});
+
+consoleInput?.addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    const cmd = consoleInput.value;
+    consoleInput.value = "";
+    await runConsoleCommand(cmd);
+  }
+  // Historial con flechas
+  if (e.key === "ArrowUp") {
+    e.preventDefault();
+    if (historyIndex < cmdHistory.length - 1) {
+      historyIndex++;
+      consoleInput.value = cmdHistory[historyIndex];
+    }
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    if (historyIndex > 0) {
+      historyIndex--;
+      consoleInput.value = cmdHistory[historyIndex];
+    } else {
+      historyIndex = -1;
+      consoleInput.value = "";
+    }
+  }
+});
+
+btnConsoleClear?.addEventListener("click", () => {
+  if (consoleOutput) consoleOutput.innerHTML = "";
+  appendConsoleLine("Orbe-Console lista.", "sys");
+});
+
+btnConsoleHelp?.addEventListener("click", async () => {
+  await runConsoleCommand("orbe --help");
+});
+
+// Auto-focus al cambiar a la pestaña terminal
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const tab = (btn as HTMLElement).dataset.tab;
+    if (tab === "terminal") {
+      setTimeout(() => consoleInput?.focus(), 100);
+    }
+  });
+});
+
+// Inicio
 window.addEventListener("DOMContentLoaded", () => {
   loadDreams();
   updateTelemetry();
   updateOrbeHealth();
-  
-  // Auto-refresh de sueños
-  setInterval(loadDreams, 30000);
-  
-  // Telemetría rápida (1s)
   setInterval(updateTelemetry, 1000);
-  
-  // Salud del orbe (5s)
   setInterval(updateOrbeHealth, 5000);
 });

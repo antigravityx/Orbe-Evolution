@@ -32,12 +32,28 @@ from datetime import datetime, timedelta
 ORBE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 # ─── RUTAS ────────────────────────────────────────────────────────────────────
-SANTUARIO   = r"c:\Users\Usuario\Desktop\Orbe_Santuario"
-BUS_PATH    = os.path.join(SANTUARIO, "4_Registros_Del_Orbe", "bus_mensajes.json")
-LOG_PATH    = os.path.join(SANTUARIO, "4_Registros_Del_Orbe", "bus_mensajes.log")
-EXPIRACION_HORAS = 48   # Mensajes se descartan tras 48h
+SANTUARIO_PRIMARIO = r"c:\Users\Usuario\Desktop\Orbe_Santuario"
+SANTUARIO_FALLBACK = os.path.join(ORBE_ROOT, "santuario_local")
 
-os.makedirs(os.path.dirname(BUS_PATH), exist_ok=True)
+def obtener_ruta_bus():
+    path_primario = os.path.join(SANTUARIO_PRIMARIO, "4_Registros_Del_Orbe")
+    try:
+        if not os.path.exists(path_primario):
+            os.makedirs(path_primario, exist_ok=True)
+        # Probar escritura
+        test_file = os.path.join(path_primario, ".write_test")
+        with open(test_file, "w") as f:
+            f.write("test")
+        os.remove(test_file)
+        return path_primario
+    except:
+        os.makedirs(SANTUARIO_FALLBACK, exist_ok=True)
+        return SANTUARIO_FALLBACK
+
+ACTUAL_SANTUARIO = obtener_ruta_bus()
+BUS_PATH    = os.path.join(ACTUAL_SANTUARIO, "bus_mensajes.json")
+LOG_PATH    = os.path.join(ACTUAL_SANTUARIO, "bus_mensajes.log")
+EXPIRACION_HORAS = 48   # Mensajes se descartan tras 48h
 
 
 # ─── CLASE BUS ────────────────────────────────────────────────────────────────

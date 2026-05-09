@@ -1,23 +1,21 @@
 ===================================================
-      VERIX VISION - VISOR DEL ORBE DE SUEÑOS
+      VERIX VISION - DASHBOARD SUPER-ADMIN 2.0
 ===================================================
 
-Bienvenido a la puerta visual de Verix. 
-Este archivo ejecutable (verixvision.exe) NO es un virus ni un programa genérico de Internet. Es una aplicación nativa hecha a medida, construida con tecnología Rust y Tauri, diseñada exclusivamente para tu PC (r1ch0n).
+Bienvenido al centro de mando táctico de Verix. 
 
-¿QUÉ HACE ESTO?
-----------------
-- Abre una ventana flotante, ligera y súper rápida (Glassmorphism).
-- Se conecta de inmediato, sin internet y en milisegundos, al archivo seguro del "Senado de los Sueños" (dreams.json).
-- Te muestra todos los pensamientos y conclusiones (Sueños) generados por la IA de Verix que corre en el fondo de tu PC.
-- Tiene auto-refresh silencioso. Puedes dejar la ventana a un lado y se actualizará sola cada vez que Verix "piense" algo nuevo.
+¿QUÉ HAY DE NUEVO?
+------------------
+- DASHBOARD EXTENDIDO: Ahora puedes ver el uso de DISCO y salud sistémica en tiempo real.
+- SISTEMA DE PESTAÑAS: Navega entre tus Sueños, la Infraestructura Orbe y el estado del Batallón de soldados.
+- ATAJOS DE TECLADO (Estilo Adobe):
+    - Alt + Z: Minimizar instantáneamente.
+    - Alt + X: Cerrar el visor.
+- CEREBRO RUST: Integración con el orbe_brain_core para un monitoreo ultra-ligero y letal.
+- BOTONES CORREGIDOS: Los controles de ventana ahora están enlazados directamente al núcleo de Rust para máxima fiabilidad.
 
-¿CÓMO USARLO?
---------------
-Simplemente dale doble clic a "verixvision.exe". 
-No requiere instalación. No requiere credenciales. 
-(Si Windows Defender lanza una advertencia de "SmartScreen" diciendo que el archivo es desconocido, dale a "Más información" y "Ejecutar de todas formas". Es completamente seguro porque lo acabamos de compilar nosotros en tu misma máquina).
+EL BATALLÓN ESTÁ ACTIVO:
+------------------------
+Tus soldados especializados (Sentinel, Vigilante, Oído, Escudo) están reportando su estado directamente a esta interfaz. Si ves un indicador en ROJO, el sistema iniciará protocolos de autosanación automáticamente.
 
-Disfruta la vigilia del Orbe, mi bro.
-
--- Antigravity / Verix
+-- Antigravity / Verix (ADN R1CH0N)
