@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda — El Sombrerero Náufrago</title>
+    <meta name="description" content="Adquiere la edición premium de El Sombrerero Náufrago. Comienza tu viaje hoy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --gold-glow: rgba(197, 160, 89, 0.3);
+            --bg-dark: #0a0a0a;
+            --card-dark: #121212;
+            --border-soft: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .tienda-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* ─── PRODUCT VISUAL ─── */
+        .product-gallery {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-book-preview {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #1a1a1a, #050505);
+            border-radius: 4px 12px 12px 4px;
+            box-shadow: 20px 20px 60px rgba(0,0,0,0.8), 0 0 40px var(--gold-glow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+        }
+
+        .book-texture {
+            position: absolute;
+            inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/leather.png');
+            opacity: 0.1;
+        }
+
+        .book-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .book-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        /* ─── CHECKOUT FORM ─── */
+        .checkout-area {
+            background: var(--card-dark);
+            border: 1px solid var(--border-soft);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .store-header { margin-bottom: 30px; }
+        .store-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 8px; }
+        .store-subtitle { font-size: 0.9rem; color: #888; line-height: 1.6; }
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin: 24px 0;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .price-tag span { font-size: 0.9rem; font-weight: 400; color: #666; }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .payment-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-soft);
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+        }
+
+        .payment-btn:hover { background: rgba(255,255,255,0.06); border-color: var(--gold); color: #fff; }
+        .payment-btn.active { background: rgba(197, 160, 89, 0.1); border-color: var(--gold); color: #fff; }
+
+        .payment-icon { font-size: 1.5rem; }
+        .payment-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        .checkout-fields { display: flex; flex-direction: column; gap: 16px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .cyber-input {
+            background: #000;
+            border: 1px solid var(--border-soft);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .cyber-input:focus { border-color: var(--gold); }
+
+        .btn-confirm {
+            width: 100%;
+            padding: 18px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 30px var(--gold-glow); }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--gold); }
+
+        @media (max-width: 900px) {
+            .tienda-container { grid-template-columns: 1fr; padding: 80px 24px; }
+            .product-gallery { order: 2; }
+            .checkout-area { order: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="main-nav" class="scrolled">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">SN</a>
+            <ul class="nav-links">
+                <li><a href="index.html#mundo">Volver al Viaje</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="tienda-container">
+        <!-- VISUAL DEL LIBRO -->
+        <div class="product-gallery">
+            <div class="main-book-preview">
+                <div class="book-texture"></div>
+                <div class="book-content">
+                    <div class="book-label">Edición Premium</div>
+                    <h1 class="book-title">El Sombrerero<br>Náufrago</h1>
+                    <p class="book-author">Eustakio Alguien</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE COMPRA -->
+        <div class="checkout-area">
+            <div class="store-header">
+                <h2 class="store-title">Adquirir el Viaje</h2>
+                <p class="store-subtitle">Elige tu método preferido. Recibirás acceso inmediato a la cápsula digital del alma y la edición completa de la obra.</p>
+            </div>
+
+            <div class="price-tag">
+                $24.99 <span>USD</span>
+            </div>
+
+            <div class="payment-options">
+                <div class="payment-btn active" id="pay-paypal">
+                    <span class="payment-icon">💳</span>
+                    <span class="payment-label">PayPal / Card</span>
+                </div>
+                <div class="payment-btn" id="pay-crypto">
+                    <span class="payment-icon">₿</span>
+                    <span class="payment-label">Crypto (Soon)</span>
+                </div>
+            </div>
+
+            <div class="checkout-fields" id="paypal-button-container">
+                <!-- Aquí se inyectarán los botones de PayPal -->
+            </div>
+
+
+            <a href="index.html" class="back-link">← Cancelar y volver al mundo</a>
+        </div>
+    </div>
+
+    <!-- ─── PAYPAL SDK ─── -->
+    <!-- Sustituye 'test' por tu CLIENT_ID real de PayPal Developer Portal -->
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+
+    <script>
+        // Configuración de los Smart Buttons
+        paypal.Buttons({
+            // Estilo de los botones
+            style: {
+                layout: 'vertical',
+                color:  'gold',
+                shape:  'rect',
+                label:  'paypal'
+            },
+
+            // 1. Crear la orden
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '24.99' // El precio de la Edición Premium
+                        },
+                        description: 'Cápsula Digital: El Sombrerero Náufrago (Premium)'
+                    }]
+                });
+            },
+
+            // 2. Ejecutar el pago
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    const btn = document.getElementById('btn-pay-confirm');
+                    btn.textContent = 'SELLANDO VÍNCULO...';
+                    
+                    // Notificar a nuestro Soldado de Pagos (Webhook Local/Servidor)
+                    // Nota: Cambia esta URL por tu dominio real una vez desplegado
+                    fetch('http://localhost:5050/api/webhook/pagos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            status: 'completed',
+                            orderID: data.orderID,
+                            payerID: data.payerID,
+                            customer_email: details.payer.email_address,
+                            amount: '24.99'
+                        })
+                    })
+                    .then(response => {
+                        alert('∴ Vínculo sellado con éxito, ' + details.payer.name.given_name + '. Revisa tu email para la cápsula del alma.');
+                        window.location.href = "index.html"; // O una página de éxito
+                    });
+                });
+            },
+
+            onCancel: function (data) {
+                alert("El viaje ha sido pausado. El horizonte te espera cuando estés listo.");
+            }
+
+        }).render('#paypal-button-container'); // Renderizamos los botones dentro del contenedor limpio
+    </script>
+
+</body>
+</html>

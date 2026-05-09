@@ -147,55 +147,83 @@ btnPin?.addEventListener("click", async () => {
   btnPin.classList.toggle("active", isPinned);
 });
 
-btnMinimize?.addEventListener("click", () => invoke("minimizar_ventana"));
+btnMinimize?.addEventListener("click", async () => {
+  console.log("[Verix] Minimizando ventana...");
+  await getCurrentWindow().minimize();
+});
 btnMaximize?.addEventListener("click", async () => {
+  console.log("[Verix] Maximizando/Restaurando ventana...");
   const win = getCurrentWindow();
-  const isMaximized = await win.isMaximized();
-  if (isMaximized) await win.unmaximize();
+  if (await win.isMaximized()) await win.unmaximize();
   else await win.maximize();
 });
-btnClose?.addEventListener("click", () => invoke("cerrar_ventana"));
+btnClose?.addEventListener("click", async () => {
+  console.log("[Verix] Cerrando sesión...");
+  await getCurrentWindow().close();
+});
 
 window.addEventListener("keydown", async (e) => {
-  // Atajos de Sistema / UI
+  // Evitar atajos si se está escribiendo en el terminal
+  if (document.activeElement?.id === 'console-input') return;
+
+  // Atajos de Sistema / UI (Estilo Adobe)
   if (e.altKey && e.key.toLowerCase() === "z") {
-    invoke("minimizar_ventana");
+    e.preventDefault();
+    await getCurrentWindow().minimize();
   }
   if (e.altKey && e.key.toLowerCase() === "x") {
-    invoke("cerrar_ventana");
+    e.preventDefault();
+    await getCurrentWindow().close();
   }
   if (e.altKey && e.key.toLowerCase() === "m") {
+    e.preventDefault();
     const win = getCurrentWindow();
     const isMaximized = await win.isMaximized();
     if (isMaximized) await win.unmaximize();
     else await win.maximize();
   }
-  // Atajos tipo Adobe
-  if (e.ctrlKey && e.key.toLowerCase() === "c") {
-    console.log("[Hipocampo] Registrado: Copiar texto");
-    // El comportamiento nativo del navegador se encargará de copiar al portapapeles
-  }
-  if (e.ctrlKey && e.key.toLowerCase() === "v") {
-    console.log("[Hipocampo] Registrado: Pegar texto");
-  }
-  if (e.ctrlKey && e.key.toLowerCase() === "s") {
+
+  // Atajos personalizados para la App de Sueños
+  if (e.ctrlKey && e.key.toLowerCase() === "n") {
     e.preventDefault();
-    console.log("[Hipocampo] Registrado: Guardar estado local");
+    const formContainer = document.getElementById("dream-form-container");
+    formContainer?.classList.toggle("collapsed");
+    document.getElementById("input-asunto")?.focus();
+    console.log("[Orbe] Atajo: Nuevo Sueño");
+  }
+
+  if (e.ctrlKey && e.key.toLowerCase() === "c") {
+    // Si no hay texto seleccionado, copiar el ID del último sueño
+    if (!window.getSelection()?.toString()) {
+      const firstDream = document.querySelector(".dream-card .dream-id")?.textContent;
+      if (firstDream) {
+        navigator.clipboard.writeText(firstDream);
+        console.log("[Orbe] Copiado ID de sueño:", firstDream);
+      }
+    }
+  }
+
+  if (e.ctrlKey && e.key.toLowerCase() === "v") {
+    // Pegar contenido en el formulario si está abierto
+    const formContainer = document.getElementById("dream-form-container");
+    if (formContainer && !formContainer.classList.contains("collapsed")) {
+       console.log("[Orbe] Atajo: Pegar en Sueños");
+    }
   }
 });
 
-// Sistema de Pestañas
-document.querySelectorAll(".tab-btn").forEach(btn => {
+// Sistema de Páginas (Sidebar)
+document.querySelectorAll(".nav-item").forEach(btn => {
   btn.addEventListener("click", () => {
-    const tab = (btn as HTMLElement).dataset.tab;
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+    const page = (btn as HTMLElement).dataset.page;
+    document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(c => c.classList.remove("active"));
     
     btn.classList.add("active");
-    document.getElementById(`tab-${tab}`)?.classList.add("active");
+    document.getElementById(`page-${page}`)?.classList.add("active");
     
-    if (tab === "dreams") loadDreams();
-    if (tab === "battalion") updateOrbeHealth();
+    if (page === "dreams") loadDreams();
+    if (page === "battalion") updateOrbeHealth();
   });
 });
 

@@ -47,3 +47,13 @@ Este documento contiene las órdenes directas para los soldados especializados d
 - Destino: `src-tauri/target/release/bundle/nsis/`
 - Copiado a `C:\Users\Usuario\Desktop\Verix_Vision_App\Instalador_Verix_Vision_v2.exe`
 
+## [TICKET #006] - PASARELA SOMBRERERO (FINANZAS)
+**Asignado a:** `batallon/soldado_pagos.py` + `tienda.html`
+**Estado:** EN DESARROLLO (INTERFAZ LISTA)
+**Objetivo:**
+- Recibir Webhooks de Hostinger/PayPal en el puerto 5050.
+- Registrar ventas en `dreams.json` en tiempo real.
+- Liberar el contenido digital (Cápsula del Alma) tras el pago exitoso.
+- Log de auditoría en `batallon/logs_pagos.txt`.
+
+

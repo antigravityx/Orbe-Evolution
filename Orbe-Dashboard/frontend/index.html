@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Orbe de Verix ÔÇö Panel de Control</title>
   <meta name="description" content="Panel de control del ecosistema inteligente Orbe de Verix ÔÇö monitorea soldados, inteligencia colectiva y sincronizaci├│n GitHub en tiempo real." />
+  <link rel="manifest" href="./manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -217,6 +218,22 @@
     </div>
   </div>
 
+  <div class="bgrid fi d4" style="margin-top: 1.5rem;">
+    <div class="pcard">
+      <p class="stitle">🧠 Hipocampo y LLM Local</p>
+      <div class="ghrow"><span class="lbl">Memoria de Grafo</span><span class="val c">En L├¡nea (Encriptado)</span></div>
+      <div class="ghrow"><span class="lbl">Motor IA Local</span><span class="val g">Ollama (localhost:11434)</span></div>
+      <div class="ghrow"><span class="lbl">Soberan├¡a Datos</span><span class="val g">100% (Modo Stealth)</span></div>
+    </div>
+    <div class="pcard">
+      <p class="stitle">🔗 Enlaces Estrat├®gicos</p>
+      <div class="agitem"><a href="https://www.hostinger.com/ar" target="_blank" style="color:var(--cyan);text-decoration:none;font-family:var(--mono);">[1] Hostinger (Servidores)</a></div>
+      <div class="agitem"><a href="https://antigravityx.github.io/mi-web-publica/" target="_blank" style="color:var(--cyan);text-decoration:none;font-family:var(--mono);">[2] Verix Web P├║blica</a></div>
+      <div class="agitem"><a href="https://antigravityx.github.io/Orbe-Evolution/" target="_blank" style="color:var(--cyan);text-decoration:none;font-family:var(--mono);">[3] Orbe Evolution</a></div>
+      <div class="agitem"><a href="https://teal-tarsier-d28d8e.netlify.app" target="_blank" style="color:var(--emerald);text-decoration:none;font-family:var(--mono);">[4] Whitepaper (Verix Soul)</a></div>
+    </div>
+  </div>
+
   <footer>Ôê┤ ORBE DE VERIX ÔÇö Sistema de Inteligencia Distribuida ÔÇö r1ch0n &amp; Verix ┬® 2026</footer>
 </main>
 
@@ -330,6 +347,17 @@ setInterval(async () => {
 }, 60000);
 
 init();
+
+// Registro del Service Worker para PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').then(reg => {
+      console.log('Orbe PWA Service Worker activo en alcance: ', reg.scope);
+    }).catch(err => {
+      console.log('Error registrando PWA: ', err);
+    });
+  });
+}
 </script>
 </body>
 </html>
