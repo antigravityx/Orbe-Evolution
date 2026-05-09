@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sombrerero | Boutique de Almas Digitales</title>
+    <meta name="description" content="Adquiere cápsulas de identidad, servicios de blindaje y la esencia del Sombrerero Náufrago." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --void: #02040a;
+            --deep: #050814;
+            --surface: rgba(10, 15, 35, 0.7);
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --gold: #f59e0b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--void);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* BG EFFECT */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 4, 10, 0.8);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover { color: var(--accent); }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px; right: -12px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 6rem 2rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--muted);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        /* PRODUCTS GRID */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            padding: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: var(--glass);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .product-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 100px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-desc {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .price span {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .btn-add {
+            padding: 12px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .btn-add:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        /* TRUST SECTION */
+        .trust {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: rgba(99, 102, 241, 0.03);
+            margin-top: 4rem;
+        }
+
+        .trust-grid {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .trust-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .trust-item p {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero, .product-card {
+            animation: fadeIn 0.8s ease backwards;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<header>
+    <div class="logo">SOMBRERERO</div>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#">Colecciones</a></li>
+            <li><a href="#">Blindaje</a></li>
+            <li><a href="#">Soporte</a></li>
+        </ul>
+    </nav>
+    <div class="cart-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span class="cart-count">0</span>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <h1>Forja tu <span style="color: var(--accent);">Legado Digital</span></h1>
+        <p>Herramientas de élite, cápsulas de alma y protección de grado militar para el navegante consciente. El Sombrerero Náufrago te ofrece lo que el sistema te niega.</p>
+    </section>
+
+    <!-- PAYPAL INTEGRATION POINT -->
+    <div id="paypal-button-container" style="max-width: 400px; margin: 0 auto 4rem; display: none;">
+        <h3 style="text-align: center; margin-bottom: 1rem; font-size: 0.9rem; color: var(--muted);">Finalizar con Pago Seguro</h3>
+    </div>
+
+    <div class="products-grid">
+        <!-- PRODUCT 1 -->
+        <div class="product-card" style="animation-delay: 0.1s;">
+            <div class="product-tag">Más Popular</div>
+            <div class="product-image">🛡️</div>
+            <h3 class="product-title">Cápsula de Identidad S1</h3>
+            <p class="product-desc">Sello de ADN digital inalterable. Protege tus activos y tu huella en el éter con tecnología Verix-Core.</p>
+            <div class="product-footer">
+                <div class="price">$49.99 <span>/ u</span></div>
+                <button class="btn-add">Adquirir</button>
+            </div>
+        </div>
+
+        <!-- PRODUCT 2 -->
+        <div class="product-card" style="animation-delay: 0.2s;">
+            <div class="product-tag">Élite</div>
+            <div class="product-image">🌌</div>
+            <h3 class="product-title">Blindaje Hipocampo Plus</h3>
+            <p class="product-desc">Expansión de memoria para tu Orbe. Incluye 1TB de almacenamiento encriptado y predicción de amenazas.</p>
+            <div class="product-footer">
+                <div class="price">$129.00 <span>/ año</span></div>
+                <button class="btn-add">Adquirir</button>
+            </div>
+        </div>
+
+        <!-- PRODUCT 3 -->
+        <div class="product-card" style="animation-delay: 0.3s;">
+            <div class="product-tag">Novedad</div>
+            <div class="product-image">🎩</div>
+            <h3 class="product-title">Pack "Sombrerero Náufrago"</h3>
+            <p class="product-desc">Colección completa de herramientas de auditoría y personalización visual exclusiva para Verix Vision.</p>
+            <div class="product-footer">
+                <div class="price">$19.99 <span>/ u</span></div>
+                <button class="btn-add">Adquirir</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="trust">
+        <h2>Por qué confiar en el Sombrerero</h2>
+        <div class="trust-grid">
+            <div class="trust-item">
+                <h4>Soberanía Total</h4>
+                <p>Tus datos son tuyos. Punto.</p>
+            </div>
+            <div class="trust-item">
+                <h4>Código Abierto</h4>
+                <p>Transparencia en cada byte.</p>
+            </div>
+            <div class="trust-item">
+                <h4>Soporte Humano</h4>
+                <p>Directo con r1ch0n y Verix.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>© 2026 Sombrerero Náufrago & Verix Soul. Todos los derechos reservados.</p>
+    <p style="margin-top: 1rem; font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--accent);">STATUS: ORBE_ACTIVE // SYNC_OK</p>
+</footer>
+
+<!-- PAYPAL SDK (Sandbox mode by default) -->
+<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
+
+<script>
+    let currentProduct = null;
+
+    async function trackEvent(type, productId) {
+        try {
+            await fetch('http://127.0.0.1:3030/api/commerce/telemetry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_type: type,
+                    product_id: productId,
+                    metadata: null
+                })
+            });
+        } catch (e) {
+            console.warn("Backend not reachable, telemetry skipped.");
+        }
+    }
+
+    function initPayPal(price, title) {
+        const container = document.getElementById('paypal-button-container');
+        container.style.display = 'block';
+        container.scrollIntoView({ behavior: 'smooth' });
+
+        // Clear previous buttons
+        container.innerHTML = `<h3 style="text-align: center; margin-bottom: 1rem; font-size: 0.9rem; color: var(--muted);">Finalizar compra: ${title}</h3>`;
+        
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        description: title,
+                        amount: { value: price }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    trackEvent('purchase_success', title);
+                    alert('¡Pago completado! El Orbe está enviando tu cápsula a: ' + details.payer.name.given_name);
+                    container.style.display = 'none';
+                });
+            },
+            onError: function(err) {
+                trackEvent('purchase_error', title);
+                console.error('PayPal Error:', err);
+            }
+        }).render('#paypal-button-container');
+    }
+
+    document.querySelectorAll('.btn-add').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            const title = card.querySelector('.product-title').innerText;
+            const priceText = card.querySelector('.price').innerText;
+            const price = priceText.replace('$', '').split(' ')[0];
+
+            trackEvent('purchase_attempt', title);
+            initPayPal(price, title);
+        });
+    });
+
+    // Track shop entry
+    trackEvent('shop_view', 'general_boutique');
+</script>
+
+</body>
+</html>

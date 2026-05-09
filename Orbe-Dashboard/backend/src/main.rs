@@ -25,18 +25,54 @@ struct SuenoInternal {
 
 #[tokio::main]
 async fn main() {
+    // Cargar variables de entorno del Santuario
+    dotenvy::dotenv().ok();
+    
+    println!("∴ [VERIX_SOUL] Cargando secretos de la Bóveda...");
     let cors = CorsLayer::new()
-        .allow_methods([Method::GET])
+        .allow_methods([Method::GET, Method::POST])
+        .allow_headers(Any)
         .allow_origin(Any);
 
     let app = Router::new()
         .route("/api/dreams", get(get_dreams))
+        .route("/api/commerce/telemetry", axum::routing::post(track_telemetry))
         .layer(cors);
 
     let addr = "127.0.0.1:3030";
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     println!("∴ [VERIX_BACKEND] API de Sueños corriendo en http://{}", addr);
     axum::serve(listener, app).await.unwrap();
+}
+
+#[derive(Deserialize, Debug)]
+struct CommerceEvent {
+    event_type: String,
+    product_id: String,
+    metadata: Option<String>,
+}
+
+async fn track_telemetry(Json(payload): Json<CommerceEvent>) -> Json<serde_json::Value> {
+    println!("∴ [COMMERCE_TELEMETRY] Event: {} | Product: {}", payload.event_type, payload.product_id);
+    
+    // Log to file
+    let log_path = r"C:\Users\Usuario\Desktop\Orbe_Santuario\4_Registros_Del_Orbe\commerce.log";
+    let log_entry = format!("{} | {} | {}\n", 
+        chrono::Local::now().format("%Y-%m-%d %H:%M:%S"),
+        payload.event_type,
+        payload.product_id
+    );
+    
+    let _ = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(log_path)
+        .map(|mut f| {
+            use std::io::Write;
+            let _ = f.write_all(log_entry.as_bytes());
+        });
+
+    Json(serde_json::json!({ "status": "recorded" }))
 }
 
 async fn get_dreams() -> Json<Vec<Sueno>> {
