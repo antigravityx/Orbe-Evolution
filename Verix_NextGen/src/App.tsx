@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { invoke } from '@tauri-apps/api/core';
 import './App.css';
 
 interface MenuOption {
@@ -24,10 +25,14 @@ const MENU_OPTIONS: MenuOption[] = [
 function App() {
   const [activeLog, setActiveLog] = useState<string>('INICIANDO LATIDO ETERNO (SINCRONIZACIÓN)...\\n[OK] FORJA asegurado en el Éter.\\n--- LATIDO COMPLETADO ---');
 
-  const handleAction = (option: MenuOption) => {
+  const handleAction = async (option: MenuOption) => {
     setActiveLog(prev => `${prev}\n> Ejecutando: ${option.title}...\n[!] Conectando con núcleo Rust/Python...`);
-    // Here we will add Tauri invoke calls later
-    // invoke('execute_action', { actionId: option.id })
+    try {
+      const response = await invoke('execute_action', { actionId: option.id });
+      setActiveLog(prev => `${prev}\n${response}`);
+    } catch (e) {
+      setActiveLog(prev => `${prev}\n[ERROR]: ${e}`);
+    }
   };
 
   return (
@@ -70,7 +75,7 @@ function App() {
             {MENU_OPTIONS.map((option) => (
               <div key={option.id} className="card glass-panel" onClick={() => handleAction(option)}>
                 <div className={`card-number text-${option.type || 'primary'}`}>
-                  {option.id < 10 ? \`0\${option.id}\` : option.id}
+                  {option.id < 10 ? `0${option.id}` : option.id}
                 </div>
                 <div className="card-content">
                   <h3>{option.title}</h3>
