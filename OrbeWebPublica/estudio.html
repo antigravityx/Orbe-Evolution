@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verix DAW | Beat Studio Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --void: #02040a;
+            --deep: #050814;
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.4);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.4);
+            --text: #f8fafc;
+            --muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.03);
+            --active: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--void);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* BG */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            background: rgba(2, 4, 10, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        button, select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover, select:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
+        button:active { transform: scale(0.95); }
+        
+        .btn-record { border-color: rgba(239, 68, 68, 0.3); }
+        .btn-record:hover { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); }
+        .btn-record.recording { background: var(--danger); color: white; box-shadow: 0 0 15px var(--danger-glow); animation: blink 1s infinite; }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .studio-container {
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+        .controls-top {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .btn-play {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .btn-play:hover { transform: scale(1.1); }
+        .btn-play.playing { background: var(--active); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 150px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* SEQUENCER */
+        .sequencer {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .track-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .track-header {
+            width: 140px;
+            min-width: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .track-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .track-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .track-actions button {
+            padding: 2px 6px;
+            font-size: 0.6rem;
+            border-radius: 4px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            gap: 6px;
+            flex: 1;
+        }
+
+        .step {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .step:hover { background: rgba(255,255,255,0.1); }
+        .step.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+        .step.current { border-color: #fff; transform: scale(1.1); z-index: 10; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        
+        /* Modificadores de color por instrumento */
+        .row-0 .step.active { background: #ef4444; border-color: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.4); } /* Kick */
+        .row-1 .step.active { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 0 10px rgba(245,158,11,0.4); } /* Snare */
+        .row-2 .step.active { background: #10b981; border-color: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.4); } /* Hihat */
+        .row-3 .step.active { background: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 10px rgba(59,130,246,0.4); } /* 808/Bass */
+        .row-4 .step.active { background: #8b5cf6; border-color: #8b5cf6; box-shadow: 0 0 10px rgba(139,92,246,0.4); } /* Synth */
+        .row-5 .step.active { background: #ec4899; border-color: #ec4899; box-shadow: 0 0 10px rgba(236,72,153,0.4); } /* Custom 1 */
+
+        .visualizer {
+            width: 100%;
+            height: 120px;
+            margin-top: 2rem;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        canvas { width: 100%; height: 100%; }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            font-family: 'JetBrains Mono';
+            font-size: 0.7rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+        }
+        
+        /* Modal for status */
+        #status-modal {
+            position: fixed; top: 20px; right: 20px;
+            background: var(--accent); color: white;
+            padding: 1rem 2rem; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateX(150%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000; font-weight: 600;
+        }
+        #status-modal.show { transform: translateX(0); }
+    </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div id="status-modal">Estado</div>
+
+<header>
+    <div class="logo">VERIX DAW <span style="font-size: 0.6em; color: var(--active);">PRO</span></div>
+    <div class="toolbar">
+        <select id="kit-select">
+            <option value="classic">Kit: Clásico</option>
+            <option value="trap">Kit: Trap Edition</option>
+            <option value="drill">Kit: UK Drill</option>
+        </select>
+        <button id="btn-save">💾 Guardar</button>
+        <button id="btn-load">📂 Cargar</button>
+        <input type="file" id="file-load" accept=".verixproject" style="display: none;">
+        <div style="width: 1px; height: 20px; background: var(--border); margin: 0 10px;"></div>
+        <button id="btn-mic" class="btn-record">🎙️ Grabar Voz</button>
+        <button id="btn-master-rec" class="btn-record">🔴 Grabar Master (Canción)</button>
+    </div>
+</header>
+
+<main>
+    <div class="studio-container">
+        <div class="controls-top">
+            <button class="btn-play" id="play-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <div class="control-group">
+                <div class="control-label">Tempo (BPM)</div>
+                <input type="range" id="bpm-slider" min="60" max="200" value="140">
+                <span id="bpm-display" style="font-family: 'JetBrains Mono'; font-size: 0.8rem;">140</span>
+            </div>
+            <div class="control-group">
+                <div class="control-label">Pasos / Longitud</div>
+                <select id="steps-select" style="width: 100px;">
+                    <option value="16" selected>16 Pasos</option>
+                    <option value="32">32 Pasos</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="sequencer" id="sequencer">
+            <!-- Tracks generadas por JS -->
+        </div>
+
+        <div class="visualizer">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+</main>
+
+<footer>
+    © 2026 VERIX AUDIO CORE // SOBERANÍA SONORA // MÁXIMA RESOLUCIÓN
+</footer>
+
+<script>
+    // --- CORE AUDIO ENGINE ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = new AudioContext();
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    
+    // Master Node -> Destination AND Recording Destination
+    const masterGain = audioCtx.createGain();
+    masterGain.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    
+    // Recording Setup
+    let mediaDest = audioCtx.createMediaStreamDestination();
+    masterGain.connect(mediaDest);
+    let masterRecorder;
+    let masterChunks = [];
+    let isMasterRecording = false;
+
+    const tracksConfig = [
+        { name: 'KICK', type: 'synth' },
+        { name: 'SNARE', type: 'synth' },
+        { name: 'HIHAT', type: 'synth' },
+        { name: '808 BASS', type: 'synth' },
+        { name: 'SOUL SYNTH', type: 'synth' },
+        { name: 'CUSTOM 1', type: 'sample' }
+    ];
+    
+    let steps = 16;
+    let bpm = 140;
+    let currentKit = 'classic'; // classic, trap, drill
+    
+    // Matriz de datos [track][step]
+    let data = tracksConfig.map(() => Array(64).fill(false)); // Reservamos hasta 64 pasos
+    
+    // Custom Buffers para samples subidos o grabados
+    let customBuffers = { 5: null }; 
+
+    // UI Elements
+    const sequencer = document.getElementById('sequencer');
+    const playBtn = document.getElementById('play-btn');
+    const bpmSlider = document.getElementById('bpm-slider');
+    const bpmDisplay = document.getElementById('bpm-display');
+    const kitSelect = document.getElementById('kit-select');
+    const stepsSelect = document.getElementById('steps-select');
+
+    let isPlaying = false;
+    let currentStep = 0;
+    let nextStepTime = 0;
+    const scheduleAheadTime = 0.1;
+
+    // --- NOTIFICACIONES ---
+    function showStatus(text) {
+        const modal = document.getElementById('status-modal');
+        modal.innerText = text;
+        modal.classList.add('show');
+        setTimeout(() => modal.classList.remove('show'), 3000);
+    }
+
+    // --- GENERACIÓN DE UI ---
+    function buildGrid() {
+        sequencer.innerHTML = '';
+        tracksConfig.forEach((track, i) => {
+            const row = document.createElement('div');
+            row.className = `track-row row-${i}`;
+            
+            const header = document.createElement('div');
+            header.className = 'track-header';
+            
+            const name = document.createElement('div');
+            name.className = 'track-name';
+            name.innerText = track.name;
+            header.appendChild(name);
+            
+            if(track.type === 'sample') {
+                const actions = document.createElement('div');
+                actions.className = 'track-actions';
+                
+                const uploadBtn = document.createElement('button');
+                uploadBtn.innerText = '📁 Cargar .wav';
+                const fileIn = document.createElement('input');
+                fileIn.type = 'file'; fileIn.accept = 'audio/*'; fileIn.style.display = 'none';
+                uploadBtn.onclick = () => fileIn.click();
+                
+                fileIn.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if(!file) return;
+                    const reader = new FileReader();
+                    reader.onload = async (ev) => {
+                        const buffer = await audioCtx.decodeAudioData(ev.target.result);
+                        customBuffers[i] = buffer;
+                        showStatus(`Sample cargado en ${track.name}`);
+                    };
+                    reader.readAsArrayBuffer(file);
+                };
+                
+                actions.appendChild(uploadBtn);
+                actions.appendChild(fileIn);
+                header.appendChild(actions);
+            }
+            
+            const stepsContainer = document.createElement('div');
+            stepsContainer.className = 'steps';
+            stepsContainer.style.gridTemplateColumns = `repeat(${steps}, 1fr)`;
+            
+            for(let s=0; s<steps; s++) {
+                const step = document.createElement('div');
+                step.className = 'step';
+                if(data[i][s]) step.classList.add('active');
+                
+                step.onclick = () => {
+                    data[i][s] = !data[i][s];
+                    step.classList.toggle('active');
+                };
+                stepsContainer.appendChild(step);
+            }
+            
+            row.appendChild(header);
+            row.appendChild(stepsContainer);
+            sequencer.appendChild(row);
+        });
+    }
+
+    // --- MOTOR DE SÍNTESIS WEB AUDIO API ---
+    function playSound(trackIndex, time) {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        
+        // Custom Sample playback
+        if(tracksConfig[trackIndex].type === 'sample' && customBuffers[trackIndex]) {
+            const source = audioCtx.createBufferSource();
+            source.buffer = customBuffers[trackIndex];
+            const gain = audioCtx.createGain();
+            source.connect(gain);
+            gain.connect(masterGain);
+            source.start(time);
+            return;
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(masterGain);
+
+        // KICK
+        if(trackIndex === 0) { 
+            let freq = currentKit === 'trap' ? 120 : currentKit === 'drill' ? 140 : 150;
+            let decay = currentKit === 'trap' ? 0.8 : 0.4;
+            osc.frequency.setValueAtTime(freq, time);
+            osc.frequency.exponentialRampToValueAtTime(0.01, time + decay);
+            gain.gain.setValueAtTime(1, time);
+            gain.gain.exponentialRampToValueAtTime(0.01, time + decay);
+            osc.start(time); osc.stop(time + decay);
+        } 
+        // SNARE
+        else if(trackIndex === 1) { 
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(currentKit === 'drill' ? 250 : 200, time);
+            gain.gain.setValueAtTime(0.5, time);
+            gain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+            
+            // Noise burst for snare
+            const noise = audioCtx.createBufferSource();
+            const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < buffer.length; i++) output[i] = Math.random() * 2 - 1;
+            noise.buffer = buffer;
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = 'highpass';
+            noiseFilter.frequency.value = 1000;
+            noise.connect(noiseFilter).connect(gain);
+            noise.start(time);
+            
+            osc.start(time); osc.stop(time + 0.2);
+        } 
+        // HIHAT
+        else if(trackIndex === 2) { 
+            const noise = audioCtx.createBufferSource();
+            const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.1, audioCtx.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < buffer.length; i++) output[i] = Math.random() * 2 - 1;
+            noise.buffer = buffer;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = currentKit === 'drill' ? 12000 : 8000;
+            const hhGain = audioCtx.createGain();
+            let decay = currentKit === 'drill' ? 0.05 : 0.1; // Drill hats are shorter
+            hhGain.gain.setValueAtTime(0.4, time);
+            hhGain.gain.exponentialRampToValueAtTime(0.01, time + decay);
+            noise.connect(filter).connect(hhGain).connect(masterGain);
+            noise.start(time);
+        } 
+        // 808 BASS
+        else if(trackIndex === 3) { 
+            osc.type = 'sine';
+            let freq = 50; // Sub freq
+            if (currentKit === 'trap') {
+                osc.type = 'triangle';
+                // 808 Glide attack
+                osc.frequency.setValueAtTime(freq * 2, time);
+                osc.frequency.exponentialRampToValueAtTime(freq, time + 0.1);
+            } else if (currentKit === 'drill') {
+                // Drill 808 slides - exaggerated
+                osc.frequency.setValueAtTime(freq, time);
+                osc.frequency.linearRampToValueAtTime(freq * 1.5, time + 0.3);
+            } else {
+                osc.frequency.setValueAtTime(freq, time);
+            }
+            
+            // Distortion for 808
+            const dist = audioCtx.createWaveShaper();
+            dist.curve = makeDistortionCurve(currentKit === 'drill' ? 50 : 20);
+            dist.oversample = '4x';
+            
+            gain.gain.setValueAtTime(0.7, time);
+            let sustain = currentKit === 'drill' ? 0.8 : 1.2;
+            gain.gain.exponentialRampToValueAtTime(0.01, time + sustain);
+            
+            osc.disconnect();
+            osc.connect(dist).connect(gain);
+            osc.start(time); osc.stop(time + sustain);
+        }
+        // SOUL SYNTH
+        else if(trackIndex === 4) { 
+            osc.type = currentKit === 'trap' ? 'square' : 'sawtooth';
+            // Darker chords for Trap/Drill
+            let f1 = currentKit === 'trap' ? 196 : 220;
+            osc.frequency.setValueAtTime(f1, time);
+            
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(currentKit === 'drill' ? 800 : 2000, time);
+            
+            gain.gain.setValueAtTime(0.2, time);
+            gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
+            
+            osc.disconnect();
+            osc.connect(filter).connect(gain);
+            osc.start(time); osc.stop(time + 0.5);
+        }
+    }
+
+    function makeDistortionCurve(amount) {
+        let k = typeof amount === 'number' ? amount : 50,
+            n_samples = 44100, curve = new Float32Array(n_samples),
+            deg = Math.PI / 180, i = 0, x;
+        for ( ; i < n_samples; ++i ) {
+            x = i * 2 / n_samples - 1;
+            curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+        }
+        return curve;
+    }
+
+    // --- SEQUENCER LOGIC ---
+    function scheduler() {
+        while (nextStepTime < audioCtx.currentTime + scheduleAheadTime) {
+            scheduleStep(currentStep, nextStepTime);
+            nextStep();
+        }
+        if(isPlaying) setTimeout(scheduler, 25);
+    }
+
+    function scheduleStep(step, time) {
+        data.forEach((trackData, i) => {
+            if(trackData[step]) playSound(i, time);
+        });
+        
+        // Sync UI - use requestAnimationFrame to sync with drawing
+        requestAnimationFrame(() => {
+            const allSteps = document.querySelectorAll('.step');
+            allSteps.forEach(s => s.classList.remove('current'));
+            
+            // Highlight column
+            const container = document.getElementById('sequencer');
+            const rows = container.children;
+            for(let r=0; r<rows.length; r++){
+                const stepEl = rows[r].querySelector(`.steps`).children[step];
+                if(stepEl) stepEl.classList.add('current');
+            }
+        });
+    }
+
+    function nextStep() {
+        // Calculate step duration based on 16th notes
+        const secondsPerBeat = 60.0 / bpm;
+        const secondsPerStep = secondsPerBeat / 4; 
+        nextStepTime += secondsPerStep;
+        currentStep = (currentStep + 1) % steps;
+    }
+
+    playBtn.onclick = () => {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        isPlaying = !isPlaying;
+        playBtn.classList.toggle('playing');
+        
+        if(isPlaying) {
+            playBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>';
+            nextStepTime = audioCtx.currentTime;
+            scheduler();
+        } else {
+            playBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+            currentStep = 0; // Reset
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('current'));
+        }
+    };
+
+    bpmSlider.oninput = (e) => {
+        bpm = e.target.value;
+        bpmDisplay.innerText = bpm;
+    };
+
+    kitSelect.onchange = (e) => {
+        currentKit = e.target.value;
+        showStatus(`Kit cargado: ${e.target.options[e.target.selectedIndex].text}`);
+    };
+
+    stepsSelect.onchange = (e) => {
+        const oldSteps = steps;
+        steps = parseInt(e.target.value);
+        buildGrid();
+        showStatus(`Longitud cambiada a ${steps} pasos`);
+    };
+
+    // --- VISUALIZER ---
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    function draw() {
+        requestAnimationFrame(draw);
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(dataArray);
+
+        ctx.fillStyle = 'rgba(2, 4, 10, 0.4)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 2.5;
+        let x = 0;
+        for(let i = 0; i < bufferLength; i++) {
+            const barHeight = dataArray[i] / 2;
+            let hue = isMasterRecording ? 0 : 260; // Red if recording, purple if not
+            ctx.fillStyle = `hsl(${hue + (i/2)}, 80%, 60%)`;
+            ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+            x += barWidth + 1;
+        }
+    }
+    // Resize canvas
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+    draw();
+
+
+    // --- MASTER RECORDING (10 MINUTES+) ---
+    const btnMasterRec = document.getElementById('btn-master-rec');
+    btnMasterRec.onclick = () => {
+        if(!isMasterRecording) {
+            // Iniciar Grabación
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            
+            masterChunks = [];
+            // Use webm or ogg depending on browser
+            let options = { mimeType: 'audio/webm' };
+            if(!MediaRecorder.isTypeSupported('audio/webm')) {
+                options = { mimeType: 'audio/ogg' };
+            }
+            
+            try {
+                masterRecorder = new MediaRecorder(mediaDest.stream, options);
+            } catch(e) {
+                masterRecorder = new MediaRecorder(mediaDest.stream);
+            }
+
+            masterRecorder.ondataavailable = e => {
+                if(e.data.size > 0) masterChunks.push(e.data);
+            };
+
+            masterRecorder.onstop = () => {
+                const blob = new Blob(masterChunks, { 'type' : masterRecorder.mimeType });
+                const audioURL = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = audioURL;
+                a.download = `Verix_Master_${new Date().getTime()}.${masterRecorder.mimeType.split('/')[1].split(';')[0]}`;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(audioURL);
+                }, 100);
+                showStatus("Master Exportado con Éxito");
+            };
+
+            masterRecorder.start();
+            isMasterRecording = true;
+            btnMasterRec.classList.add('recording');
+            btnMasterRec.innerText = '⏹️ Detener Exportación';
+            showStatus("Grabación Master Iniciada...");
+        } else {
+            // Detener Grabación
+            masterRecorder.stop();
+            isMasterRecording = false;
+            btnMasterRec.classList.remove('recording');
+            btnMasterRec.innerText = '🔴 Grabar Master (Canción)';
+        }
+    };
+
+
+    // --- MIC RECORDING ---
+    const btnMic = document.getElementById('btn-mic');
+    let micRecorder;
+    let micChunks = [];
+    let isMicRecording = false;
+
+    btnMic.onclick = async () => {
+        if(!isMicRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                micChunks = [];
+                micRecorder = new MediaRecorder(stream);
+                
+                micRecorder.ondataavailable = e => {
+                    if(e.data.size > 0) micChunks.push(e.data);
+                };
+                
+                micRecorder.onstop = async () => {
+                    const blob = new Blob(micChunks, { type: micRecorder.mimeType });
+                    const arrayBuffer = await blob.arrayBuffer();
+                    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                    
+                    // Asignar al Custom 1 (Pista 5)
+                    customBuffers[5] = audioBuffer;
+                    showStatus("¡Voz grabada y mapeada en CUSTOM 1!");
+                    
+                    // Limpiar stream
+                    stream.getTracks().forEach(t => t.stop());
+                };
+                
+                micRecorder.start();
+                isMicRecording = true;
+                btnMic.classList.add('recording');
+                btnMic.innerText = '⏹️ Detener Grabación';
+                showStatus("Grabando Micrófono... Habla ahora.");
+            } catch(err) {
+                showStatus("Error al acceder al micrófono: " + err);
+            }
+        } else {
+            micRecorder.stop();
+            isMicRecording = false;
+            btnMic.classList.remove('recording');
+            btnMic.innerText = '🎙️ Grabar Voz';
+        }
+    };
+
+    // --- PROJECT SAVE / LOAD ---
+    document.getElementById('btn-save').onclick = () => {
+        // Serializamos solo la parte activa de la matriz según `steps`
+        const activeData = data.map(track => track.slice(0, steps));
+        const project = {
+            version: '1.0',
+            bpm: bpm,
+            steps: steps,
+            kit: currentKit,
+            data: activeData
+        };
+        const blob = new Blob([JSON.stringify(project)], {type: "application/json"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Beat_${new Date().getTime()}.verixproject`;
+        a.click();
+        showStatus("Proyecto Guardado");
+    };
+
+    document.getElementById('btn-load').onclick = () => {
+        document.getElementById('file-load').click();
+    };
+
+    document.getElementById('file-load').onchange = (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const project = JSON.parse(ev.target.result);
+                bpm = project.bpm || 140;
+                bpmSlider.value = bpm;
+                bpmDisplay.innerText = bpm;
+                
+                currentKit = project.kit || 'classic';
+                kitSelect.value = currentKit;
+                
+                steps = project.steps || 16;
+                stepsSelect.value = steps;
+                
+                // Limpiar data e inyectar el guardado
+                data = tracksConfig.map(() => Array(64).fill(false));
+                if(project.data) {
+                    for(let i=0; i<project.data.length; i++) {
+                        for(let j=0; j<project.data[i].length; j++) {
+                            data[i][j] = project.data[i][j];
+                        }
+                    }
+                }
+                
+                buildGrid();
+                showStatus("Proyecto Cargado con Éxito");
+            } catch(err) {
+                showStatus("Error al cargar el proyecto");
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    // Inicialización
+    buildGrid();
+
+</script>
+</body>
+</html>
