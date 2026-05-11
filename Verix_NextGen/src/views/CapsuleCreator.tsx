@@ -7,18 +7,19 @@ interface Props {
 
 export function CapsuleCreator({ onBack, onLog }: Props) {
   const [filePath, setFilePath] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleCreate = async () => {
-    if (!filePath) {
-      onLog("[ERROR] Debes proporcionar una ruta válida.");
+    if (!filePath || !password) {
+      onLog("[ERROR] Debes proporcionar una ruta válida y una contraseña.");
       return;
     }
-    onLog(`> Iniciando forja de cápsula para: ${filePath}...`);
+    onLog(`> Iniciando forja nativa de cápsula en Rust para: ${filePath}...`);
     try {
       const res = await fetch(`http://localhost:3000/api/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ actionId: 1, payload: filePath })
+        body: JSON.stringify({ actionId: 1, payload: filePath, password: password })
       });
       const data = await res.json();
       onLog(data.message);
@@ -55,8 +56,23 @@ export function CapsuleCreator({ onBack, onLog }: Props) {
               fontFamily: 'var(--font-mono)'
             }}
           />
+          <label style={{ color: 'var(--text-primary)', fontSize: '0.9rem' }}>Contraseña de Encriptación (AES-256):</label>
+          <input 
+            type="password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Introduce una contraseña segura..."
+            style={{
+              padding: '12px',
+              background: 'rgba(0,0,0,0.5)',
+              border: '1px solid var(--border-color)',
+              color: 'var(--text-primary)',
+              borderRadius: '8px',
+              fontFamily: 'var(--font-mono)'
+            }}
+          />
           <button className="cyber-button" onClick={handleCreate} style={{ marginTop: '10px' }}>
-            [ Forjar Cápsula ]
+            [ Forjar Cápsula (Rust) ]
           </button>
         </div>
       </div>

@@ -7,10 +7,13 @@ use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer};
 
+mod core_crypto;
+
 #[derive(Deserialize)]
 struct ActionRequest {
     actionId: u32,
     payload: Option<String>,
+    password: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -20,11 +23,22 @@ struct ActionResponse {
 
 async fn handle_action(Json(payload): Json<ActionRequest>) -> Json<ActionResponse> {
     if payload.actionId == 1 {
-        // Ejecutar script de Python para crear cápsula
         let target = payload.payload.unwrap_or_default();
-        let message = format!("[RUST NATIVO]: Llamando al orbe_verix_soul.py para encapsular: {}\n[OK] Simulación de cápsula forjada con éxito en el Santuario.", target);
-        // Aquí iría el código real std::process::Command::new("python")...
-        return Json(ActionResponse { message });
+        let pass = payload.password.unwrap_or_default();
+        if target.is_empty() || pass.is_empty() {
+            return Json(ActionResponse { message: "[ERROR]: Ruta o contraseña vacías.".to_string() });
+        }
+
+        match core_crypto::create_capsule(&target, &pass) {
+            Ok(ruta_capsula) => {
+                let message = format!("[RUST NATIVO]: ¡Cápsula forjada con puro código Rust en tiempo récord!\n[OK] Sellado en: {}", ruta_capsula);
+                return Json(ActionResponse { message });
+            }
+            Err(e) => {
+                let message = format!("[ERROR RUST]: Fallo en forja de cápsula: {}", e);
+                return Json(ActionResponse { message });
+            }
+        }
     }
 
     let message = format!(
