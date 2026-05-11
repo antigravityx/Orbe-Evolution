@@ -4,6 +4,7 @@ import {
   CapsuleCreator, CapsuleInvoker, GitManager, CapsuleManager,
   CryptoPanel, NidoDev, SanctuaryNavigator, SleepMode, CerebroOrbe
 } from './views/AllViews';
+import { BackupSoulView } from './views/BackupSoulView';
 
 const MENU_OPTIONS = [
   { id: 1, icon: '⬡', title: 'Crear Cápsula', description: 'Sella archivos con AES-256-CFB nativo' },
@@ -15,7 +16,8 @@ const MENU_OPTIONS = [
   { id: 7, icon: '⬡', title: 'Navegador Santuario', description: 'Explora la estructura del Orbe' },
   { id: 8, icon: '⬡', title: 'Modo Sueño', description: 'Estado y ciclo de energía del Orbe' },
   { id: 9, icon: '⬡', title: 'Cerebro Orbe', description: 'Misiones, vigilancia y agenda' },
-  { id: 10, icon: '⬡', title: 'Salir del Orbe', description: 'Cierra la conexión' },
+  { id: 10, icon: '⬡', title: 'Copia de Seguridad & Almas', description: 'Backup total y estado de Verix & r1ch0n' },
+  { id: 11, icon: '⬡', title: 'Salir del Orbe', description: 'Cierra la conexión' },
 ];
 
 const ASCII_LOGO = `   *           .
@@ -52,7 +54,7 @@ function App() {
   const addLog = (msg: string) => setLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${msg}`]);
 
   const handleMenuClick = (id: number) => {
-    if (id === 10) { addLog('[ORBE] Sesión cerrada. Hasta la próxima, Arquitecto.'); return; }
+    if (id === 11) { addLog('[ORBE] Sesión cerrada. Hasta la próxima, Arquitecto.'); return; }
     setActiveView(id);
     addLog(`> Accediendo a: ${MENU_OPTIONS[id - 1].title}`);
   };
@@ -69,6 +71,7 @@ function App() {
       case 7: return <SanctuaryNavigator {...props} />;
       case 8: return <SleepMode {...props} />;
       case 9: return <CerebroOrbe {...props} />;
+      case 10: return <BackupSoulView onLog={addLog} />;
       default: return <HomeView />;
     }
   };

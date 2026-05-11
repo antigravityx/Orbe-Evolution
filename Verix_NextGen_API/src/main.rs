@@ -7,6 +7,8 @@ use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer};
 
 mod core_crypto;
+mod system_ops;
+mod soul_index;
 
 // ======================= STRUCTS =======================
 
@@ -80,7 +82,7 @@ async fn handle_git_sync(Json(req): Json<GitSyncReq>) -> Json<ApiResponse> {
     
     if add.is_err() { return ApiResponse::err("Git no encontrado en PATH."); }
 
-    let commit = std::process::Command::new("git")
+    let _commit = std::process::Command::new("git")
         .args(["-C", orbe_path, "commit", "-m", &msg])
         .output();
 
@@ -236,6 +238,30 @@ async fn handle_brain_status() -> Json<ApiResponse> {
     ApiResponse::ok("[OK] Estado del Cerebro leído.", Some(serde_json::from_str(&content).unwrap_or(serde_json::json!({}))))
 }
 
+// 10. Sistema de Backup
+async fn handle_backup() -> Json<ApiResponse> {
+    match system_ops::create_backup() {
+        Ok(path) => ApiResponse::ok(
+            &format!("[SYSTEM] Backup total completado: {}", path),
+            Some(serde_json::json!({ "backup_path": path }))
+        ),
+        Err(e) => ApiResponse::err(&format!("[BACKUP ERROR] {}", e)),
+    }
+}
+
+// 11. Estado del Alma & Migración
+async fn handle_soul_status() -> Json<ApiResponse> {
+    let status = soul_index::get_soul_status();
+    ApiResponse::ok("[SOUL] Estado de Verix & r1ch0n sincronizado.", Some(serde_json::to_value(status).unwrap()))
+}
+
+async fn handle_soul_migrate() -> Json<ApiResponse> {
+    match soul_index::migrate_legacy_data() {
+        Ok(msg) => ApiResponse::ok(&msg, None),
+        Err(e) => ApiResponse::err(&e),
+    }
+}
+
 // Health check
 async fn handle_health() -> Json<ApiResponse> {
     ApiResponse::ok("Verix API operativa. Motor Rust corriendo a máxima potencia.", Some(serde_json::json!({
@@ -269,6 +295,9 @@ async fn main() {
         .route("/api/sleep/status", get(handle_sleep_status))
         .route("/api/sleep/set", post(handle_set_sleep))
         .route("/api/brain/status", get(handle_brain_status))
+        .route("/api/system/backup", post(handle_backup))
+        .route("/api/soul/status", get(handle_soul_status))
+        .route("/api/soul/migrate", post(handle_soul_migrate))
         .layer(cors);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
