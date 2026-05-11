@@ -5,6 +5,7 @@ import {
   CryptoPanel, NidoDev, SanctuaryNavigator, SleepMode, CerebroOrbe
 } from './views/AllViews';
 import { BackupSoulView } from './views/BackupSoulView';
+import { AdminDashboard } from './views/AdminDashboard';
 
 const MENU_OPTIONS = [
   { id: 1, icon: '⬡', title: 'Crear Cápsula', description: 'Sella archivos con AES-256-CFB nativo' },
@@ -16,7 +17,8 @@ const MENU_OPTIONS = [
   { id: 7, icon: '⬡', title: 'Navegador Santuario', description: 'Explora la estructura del Orbe' },
   { id: 8, icon: '⬡', title: 'Modo Sueño', description: 'Estado y ciclo de energía del Orbe' },
   { id: 9, icon: '⬡', title: 'Cerebro Orbe', description: 'Misiones, vigilancia y agenda' },
-  { id: 10, icon: '⬡', title: 'Copia de Seguridad & Almas', description: 'Backup total y estado de Verix & r1ch0n' },
+  { id: 10, icon: '⬡', title: 'Backup & Almas', description: 'Backup total y estado de Verix & r1ch0n' },
+  { id: 12, icon: '☢', title: 'SUPER ADMIN', description: 'Control total de flujos y sistemas' },
   { id: 11, icon: '⬡', title: 'Salir del Orbe', description: 'Cierra la conexión' },
 ];
 
@@ -39,10 +41,28 @@ function App() {
   const [theme, setTheme] = useState('dark');
   const [activeView, setActiveView] = useState<number | null>(null);
   const [apiStatus, setApiStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+  const [isMinimized, setIsMinimized] = useState(false);
   const logEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { document.body.setAttribute('data-theme', theme); }, [theme]);
   useEffect(() => { logEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [logs]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Alt + Z: Minimizar
+      if (e.altKey && e.key.toLowerCase() === 'z') {
+        setIsMinimized(prev => !prev);
+        addLog(`[UI] Aplicación ${!isMinimized ? 'Minimizada' : 'Restaurada'} (Alt + Z)`);
+      }
+      // Alt + X: Home / Escape rápido
+      if (e.altKey && e.key.toLowerCase() === 'x') {
+        setActiveView(null);
+        addLog('[UI] Regresando al Home (Alt + X)');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMinimized]);
 
   useEffect(() => {
     fetch('http://localhost:3000/api/health')
@@ -72,6 +92,7 @@ function App() {
       case 8: return <SleepMode {...props} />;
       case 9: return <CerebroOrbe {...props} />;
       case 10: return <BackupSoulView onLog={addLog} />;
+      case 12: return <AdminDashboard {...props} />;
       default: return <HomeView />;
     }
   };
@@ -79,7 +100,7 @@ function App() {
   const statusColor = apiStatus === 'online' ? '#27c93f' : apiStatus === 'offline' ? '#ff5f56' : '#ffbd2e';
 
   return (
-    <div className="layout-container animate-fade-in">
+    <div className={`layout-container animate-fade-in ${isMinimized ? 'minimized' : ''}`}>
       {/* SIDEBAR */}
       <aside className="sidebar glass">
         <div className="brand">
@@ -90,11 +111,14 @@ function App() {
               {apiStatus === 'online' ? 'ONLINE' : apiStatus === 'offline' ? 'OFFLINE' : '...'}
             </span>
           </div>
-          <select className="theme-select" value={theme} onChange={e => setTheme(e.target.value)}>
-            <option value="dark">Dark (Modern)</option>
-            <option value="stealth">Stealth (Green)</option>
-            <option value="light">Light (Clean)</option>
-          </select>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button className="control-btn" onClick={() => setIsMinimized(!isMinimized)} title="Minimizar (Alt+Z)">_</button>
+            <select className="theme-select" value={theme} onChange={e => setTheme(e.target.value)}>
+              <option value="dark">Dark</option>
+              <option value="stealth">Stealth</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
         </div>
 
         <nav className="menu-list">

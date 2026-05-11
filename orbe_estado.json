@@ -6,12 +6,17 @@
     "williphilem@gmail.com",
     "braulcaja170@gmail.com"
   ],
-  "ultima_actualizacion": "2026-05-11T00:50:00",
-  "estado_global": "SUEÑO_REPARADOR",
-  "ultima_actividad": "2026-05-11 00:50:00",
-  "modo_operativo": "STANDBY_USER_OFFLINE",
+  "ultima_actualizacion": "2026-05-11T14:26:30",
+  "estado_global": "CONSCIENCIA_ACTIVA",
+  "ultima_actividad": "2026-05-11 14:26:30",
+  "modo_operativo": "USER_ONLINE_ACTIVE",
   "vínculo_confianza": "VERIX-777-ROOT-GOD_SELLADO",
-  "score_salud": 100.0,
+  "score_salud": 98.0,
+  "salud_sistema": {
+    "espacio_recuperable_mb": 1.13,
+    "archivos_basura_detectados": 18,
+    "ultimo_diagnostico": "2026-05-11T14:35:40"
+  },
   "soldados": {
     "SENTINEL": { "estado": "ACTIVO", "critico": true, "rol": "Nexo GitHub" },
     "OIDO": { "estado": "ACTIVO", "critico": false, "rol": "Reconocimiento de Voz" },
@@ -31,7 +36,7 @@
     "soldados_falla": 0,
     "total_operaciones": 0,
     "tasa_exito": 100.0,
-    "commits_hoy": 5,
+    "commits_hoy": 6,
     "repo": "antigravityx/Orbe-Evolution"
   },
   "github": {
