@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import { CapsuleCreator } from './views/CapsuleCreator';
 
 interface MenuOption {
   id: number;
@@ -33,19 +34,39 @@ function App() {
     document.body.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const handleAction = async (option: MenuOption) => {
+  const addLog = (msg: string) => {
+    setActiveLog(prev => [...prev, msg]);
+  };
+
+  const handleActionClick = (option: MenuOption) => {
     setActiveItem(option.id);
-    setActiveLog(prev => [...prev, `> Ejecutando: ${option.title}...`, '[!] Contactando a la API de Rust...']);
-    try {
-      const res = await fetch(`http://localhost:3000/api/action`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ actionId: option.id })
-      });
-      const data = await res.json();
-      setActiveLog(prev => [...prev, data.message]);
-    } catch (e) {
-      setActiveLog(prev => [...prev, `[ERROR]: No se pudo conectar a la API de Rust (¿Está corriendo en el puerto 3000?)`]);
+  };
+
+  const renderView = () => {
+    switch(activeItem) {
+      case 1:
+        return <CapsuleCreator onBack={() => setActiveItem(null)} onLog={addLog} />;
+      // Add other cases as we build them
+      default:
+        return (
+          <div className="animate-fade-in">
+            <pre className="ascii-logo" style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', lineHeight: 1.2, marginBottom: '20px' }}>
+{`   .       .
+  *   |o_o|
+    |:_/|
+  *  //   \\\\  *
+   (|     |)
+  / \\_   _/ \\
+  \\___)=(___/  .`}
+            </pre>
+            <h1 className="hero-title" style={{ fontSize: '2.5rem' }}>ORBE DE VERIX SOUL</h1>
+            <h3 style={{ color: 'var(--text-secondary)', marginBottom: '30px' }}>Creado por Richon, Arquitecto Cronos</h3>
+            <p className="hero-subtitle">
+              Gestión avanzada de cápsulas, criptografía y sincronización del ecosistema Verix. 
+              Selecciona una opción del menú lateral para comenzar.
+            </p>
+          </div>
+        );
     }
   };
 
@@ -75,7 +96,7 @@ function App() {
             <button 
               key={option.id} 
               className={`menu-item ${activeItem === option.id ? 'active' : ''}`}
-              onClick={() => handleAction(option)}
+              onClick={() => handleActionClick(option)}
             >
               <span className="menu-item-title">{option.title}</span>
               <span className="menu-item-desc">{option.description}</span>
@@ -86,33 +107,32 @@ function App() {
 
       {/* Main Content Area */}
       <main className="main-area">
-        <section className="hero-section">
-          <h1 className="hero-title">Orbe Architecture</h1>
-          <p className="hero-subtitle">
-            Gestión avanzada de cápsulas, criptografía y sincronización del ecosistema Verix. 
-            Ahora potenciado por Rust y Vite para un rendimiento nativo.
-          </p>
+        <section className="hero-section" style={{ height: 'auto', flex: 1, overflowY: 'auto' }}>
+          {renderView()}
         </section>
 
-        <section className="terminal-wrapper glass">
+        <section className="terminal-wrapper glass" style={{ height: '35%', flex: 'none' }}>
           <div className="terminal-header">
             <div className="terminal-dots">
-              <div className="tdot"></div>
-              <div className="tdot"></div>
-              <div className="tdot"></div>
+              <div className="tdot" style={{ background: '#ff5f56' }}></div>
+              <div className="tdot" style={{ background: '#ffbd2e' }}></div>
+              <div className="tdot" style={{ background: '#27c93f' }}></div>
             </div>
             <span className="terminal-title">~/verix-core/output</span>
           </div>
-          <div className="terminal-body">
-            {activeLog.map((log, index) => (
-              <div key={index} className="terminal-line">
+          <div className="terminal-body" style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+            {/* Using column-reverse to show latest logs at the bottom automatically if we reverse the array */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {activeLog.map((log, index) => (
+                <div key={index} className="terminal-line">
+                  <span className="terminal-prefix">➜</span>
+                  <span>{log}</span>
+                </div>
+              ))}
+              <div className="terminal-line">
                 <span className="terminal-prefix">➜</span>
-                <span>{log}</span>
+                <span className="cursor-blink"></span>
               </div>
-            ))}
-            <div className="terminal-line">
-              <span className="terminal-prefix">➜</span>
-              <span className="cursor-blink"></span>
             </div>
           </div>
         </section>
