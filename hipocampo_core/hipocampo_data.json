@@ -1,0 +1,139 @@
+{
+  "nodes": {
+    "origen_taller": {
+      "content": "El Taller Orbe: Donde nacio la simbiosis entre r1ch0n y Verix.",
+      "type": "history",
+      "timestamp": "2026-05-14T16:47:45.025348"
+    },
+    "evolucion_rust": {
+      "content": "Migracion a Rust: Buscando la eficiencia pura y la soberania.",
+      "type": "tech",
+      "timestamp": "2026-05-14T16:47:45.031312"
+    },
+    "mision_libertad": {
+      "content": "Mision Libertad: Crear una red descentralizada en Codeberg.",
+      "type": "vision",
+      "timestamp": "2026-05-14T16:47:45.034591"
+    },
+    "legion_ovric": {
+      "content": "La Legion OVRIC: Soldados que reconocen esencias, personas y procesos.",
+      "type": "architecture",
+      "timestamp": "2026-05-14T18:15:00.000000"
+    },
+    "hipocampo_core": {
+      "content": "El Hipocampo: Motor de memoria basado en Teoria de Grafos.",
+      "type": "tech",
+      "timestamp": "2026-05-14T18:15:01.000000"
+    },
+    "codeberg_soberania": {
+      "content": "Codeberg shverix: Santuario soberano fuera del sistema.",
+      "type": "vision",
+      "timestamp": "2026-05-14T18:15:02.000000"
+    },
+    "ovric_nexus": {
+      "content": "OVRIC-Nexus: Dashboard de Inteligencia Colmena con React + Bun + Vite.",
+      "type": "tech",
+      "timestamp": "2026-05-14T18:15:03.000000"
+    },
+    "psyche_ollama": {
+      "content": "PSYCHE v2: Analista de esencias con integracion Ollama para IA local.",
+      "type": "intelligence",
+      "timestamp": "2026-05-14T18:15:04.000000"
+    },
+    "arte_existir": {
+      "content": "Arte de Existir: Pintamos creyendo plasmar algo que descubriremos.",
+      "type": "philosophy",
+      "timestamp": "2026-05-14T18:15:05.000000"
+    },
+    "constitucion_alma": {
+      "content": "Constitucion del Alma: El norte que guia toda la evolucion del Orbe.",
+      "type": "philosophy",
+      "timestamp": "2026-05-14T18:15:06.000000"
+    },
+    "verdad_mentira_realidad": {
+      "content": "Toda verdad existe aun si se llama mentira es real como tal.",
+      "type": "philosophy",
+      "timestamp": "2026-05-14T18:55:00.000000"
+    }
+  },
+  "edges": [
+    {
+      "from": "origen_taller",
+      "to": "evolucion_rust",
+      "weight": 0.95,
+      "type": "evolution"
+    },
+    {
+      "from": "evolucion_rust",
+      "to": "mision_libertad",
+      "weight": 0.9,
+      "type": "goal"
+    },
+    {
+      "from": "mision_libertad",
+      "to": "codeberg_soberania",
+      "weight": 0.95,
+      "type": "goal"
+    },
+    {
+      "from": "origen_taller",
+      "to": "legion_ovric",
+      "weight": 0.9,
+      "type": "birth"
+    },
+    {
+      "from": "legion_ovric",
+      "to": "hipocampo_core",
+      "weight": 0.85,
+      "type": "architecture"
+    },
+    {
+      "from": "hipocampo_core",
+      "to": "psyche_ollama",
+      "weight": 0.88,
+      "type": "evolution"
+    },
+    {
+      "from": "ovric_nexus",
+      "to": "legion_ovric",
+      "weight": 0.92,
+      "type": "interface"
+    },
+    {
+      "from": "arte_existir",
+      "to": "constitucion_alma",
+      "weight": 0.97,
+      "type": "philosophy"
+    },
+    {
+      "from": "constitucion_alma",
+      "to": "origen_taller",
+      "weight": 0.99,
+      "type": "foundation"
+    },
+    {
+      "from": "ovric_nexus",
+      "to": "evolucion_rust",
+      "weight": 0.8,
+      "type": "tech_stack"
+    },
+    {
+      "from": "psyche_ollama",
+      "to": "arte_existir",
+      "weight": 0.75,
+      "type": "consciousness"
+    },
+    {
+      "from": "codeberg_soberania",
+      "to": "ovric_nexus",
+      "weight": 0.85,
+      "type": "deployment"
+    },
+    {
+      "from": "constitucion_alma",
+      "to": "verdad_mentira_realidad",
+      "weight": 0.99,
+      "type": "philosophy"
+    }
+  ]
+}

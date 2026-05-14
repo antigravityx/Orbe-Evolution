@@ -1,10 +1,13 @@
 mod health;
 mod memory;
+mod status_sync;
+mod vault;
+mod bus;
+mod sync;
+mod orchestrator;
 
-use health::SystemHealth;
+use orchestrator::VerixOrchestrator;
 use memory::MemoryAnchor;
-use std::time::Duration;
-use tokio::time::sleep;
 use colored::*;
 
 #[tokio::main]
@@ -15,19 +18,6 @@ async fn main() {
     let start_anchor = MemoryAnchor::new("Despertar del Cerebro Rust", "SUCCESS");
     start_anchor.seal();
 
-    loop {
-        // 1. Monitoreo de Salud
-        let status = SystemHealth::collect();
-        status.report();
-
-        // 2. Simulación de procesamiento paralelo
-        tokio::spawn(async {
-            // Aquí irían tareas pesadas de discernimiento o limpieza de archivos
-            // Por ahora solo un latido de vida
-        });
-
-        // 3. Espera para el siguiente ciclo
-        sleep(Duration::from_secs(10)).await;
-        println!("\n{}", "--- Latido de Vida ---".dimmed());
-    }
+    let brain = VerixOrchestrator::new();
+    brain.run().await;
 }

@@ -1,5 +1,8 @@
 use sysinfo::{System, Disks};
 use colored::*;
+use std::fs;
+use std::path::PathBuf;
+use std::env;
 
 pub struct SystemHealth {
     pub cpu_usage: f32,
@@ -50,8 +53,39 @@ impl SystemHealth {
         
         if self.cpu_usage > 90.0 || mem_pct > 90.0 {
             println!("{}", "⚠️ ALERTA: Sistema en zona roja. Iniciando protocolos de alivio.".bold().red());
+            self.auto_purge();
         } else {
             println!("{}", "✅ Sistema operando en niveles óptimos.".bold().green());
         }
+    }
+
+    pub fn auto_purge(&self) {
+        println!("{}", "--- [RUST PURGE] Iniciando Limpieza de Emergencia ---".bold().yellow());
+        let temp_dir = env::var("TEMP").unwrap_or_else(|_| "/tmp".to_string());
+        let extensions = vec!["tmp", "log", "bak", "old"];
+        
+        let mut recovered_bytes = 0;
+        let mut count = 0;
+
+        if let Ok(entries) = fs::read_dir(&temp_dir) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_file() {
+                    let ext = path.extension().and_then(|s| s.to_str()).unwrap_or("");
+                    if extensions.contains(&ext) {
+                        if let Ok(metadata) = entry.metadata() {
+                            let size = metadata.len();
+                            if fs::remove_file(&path).is_ok() {
+                                recovered_bytes += size;
+                                count += 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        println!("{}", format!("[OK] Purga completada. Archivos eliminados: {}. Espacio recuperado: {:.2} MB", 
+            count, recovered_bytes as f64 / 1024.0 / 1024.0).bold().green());
     }
 }

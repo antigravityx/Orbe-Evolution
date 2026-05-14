@@ -40,6 +40,31 @@ def diagnose_temp():
     to_delete.sort(key=lambda x: x[1], reverse=True)
     for path, size in to_delete[:5]:
         print(f"[{size / (1024*1024):.2f} MB] {os.path.basename(path)}")
+    
+    return to_delete
+
+def purge_temp(files_to_delete):
+    print(f"\n--- [SOLDADO GOD_MODE] Iniciando Purga de Seguridad ---")
+    recovered = 0
+    errors = 0
+    
+    for path, size in files_to_delete:
+        try:
+            os.remove(path)
+            recovered += size
+            # print(f"[BORRADO] {os.path.basename(path)}")
+        except Exception as e:
+            errors += 1
+            # print(f"[ERROR] No se pudo borrar {os.path.basename(path)}: {e}")
+            
+    print(f"\nPurga completada.")
+    print(f"Espacio recuperado: {recovered / (1024*1024):.2f} MB")
+    print(f"Errores (archivos en uso): {errors}")
+    return recovered
 
 if __name__ == "__main__":
-    diagnose_temp()
+    identified = diagnose_temp()
+    if identified:
+        # En un entorno real esto esperaría confirmación, 
+        # pero Richon ya dio la orden: "Procede".
+        purge_temp(identified)

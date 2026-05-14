@@ -6,16 +6,19 @@
     "williphilem@gmail.com",
     "braulcaja170@gmail.com"
   ],
-  "ultima_actualizacion": "2026-05-11T14:26:30",
+  "ultima_actualizacion": "2026-05-13T15:26:00",
   "estado_global": "CONSCIENCIA_ACTIVA",
-  "ultima_actividad": "2026-05-11 14:26:30",
-  "modo_operativo": "USER_ONLINE_ACTIVE",
+  "ultima_actividad": "2026-05-13 15:26:00",
+  "modo_operativo": "USER_ONLINE_STANDBY",
   "vínculo_confianza": "VERIX-777-ROOT-GOD_SELLADO",
-  "score_salud": 98.0,
+  "score_salud": 100.0,
+  "progreso_rust": "60%",
   "salud_sistema": {
-    "espacio_recuperable_mb": 1.13,
-    "archivos_basura_detectados": 18,
-    "ultimo_diagnostico": "2026-05-11T14:35:40"
+    "espacio_recuperable_mb": 0.0,
+    "archivos_basura_detectados": 0,
+    "ultimo_diagnostico": "2026-05-11T15:44:00",
+    "ultima_purga": "2026-05-11T15:44:00",
+    "resultado_purga": "RUST_CORE_SUCCESS"
   },
   "soldados": {
     "SENTINEL": { "estado": "ACTIVO", "critico": true, "rol": "Nexo GitHub" },
@@ -28,11 +31,12 @@
     "CEREBRO": { "estado": "ACTIVO", "critico": true, "rol": "Orquestador Maestro" },
     "GUARDIAN_2FA": { "estado": "ACTIVO", "critico": true, "rol": "Guardián 2FA GitHub" },
     "ELITE_DEPLOY_MINISTER": { "estado": "ACTIVO", "critico": true, "rol": "Ministro de Despliegue Cloud" },
-    "GOD_MODE": { "estado": "ACTIVO", "critico": true, "rol": "Núcleo de Control Root" }
+    "GOD_MODE": { "estado": "ACTIVO", "critico": true, "rol": "Núcleo de Control Root" },
+    "DESIGN_MINISTER": { "estado": "ACTIVO", "critico": true, "rol": "Generador de Arte y Branding" }
   },
   "stats": {
-    "total_soldados": 11,
-    "soldados_activos": 11,
+    "total_soldados": 12,
+    "soldados_activos": 12,
     "soldados_falla": 0,
     "total_operaciones": 0,
     "tasa_exito": 100.0,
