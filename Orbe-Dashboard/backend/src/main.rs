@@ -29,6 +29,25 @@ struct SuenoInternal {
     descripcion: String,
 }
 
+#[derive(Deserialize, Debug)]
+struct RepoConfig {
+    base_dir: String,
+    proyectos: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct RepoItem {
+    id: String,
+    name: String,
+    path: String,
+}
+
+#[derive(Deserialize)]
+struct RepoActionReq {
+    path: String,
+    action: String,
+}
+
 #[tokio::main]
 async fn main() {
     // Cargar variables de entorno del Santuario
@@ -53,6 +72,9 @@ async fn main() {
         .route("/api/legion/status", get(get_legion_status))
         .route("/api/system/health", get(get_system_health))
         .route("/api/actions/execute", post(execute_action))
+        // Repositorios / Santuario
+        .route("/api/repos", get(get_repos))
+        .route("/api/repos/action", post(execute_repo_action))
         .layer(cors);
 
     let addr = "127.0.0.1:3030";
@@ -300,8 +322,158 @@ async fn track_telemetry(Json(payload): Json<CommerceEvent>) -> Json<serde_json:
 }
 
 // ══════════════════════════════════════════════════
-// 🌌 SENADO DE SUEÑOS
+// 🌌 SENADO DE SUEÑOS & SANTUARIO
 // ══════════════════════════════════════════════════
+
+async fn get_repos() -> Json<serde_json::Value> {
+    let config_path = r"C:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\config.json";
+    if let Ok(data) = fs::read_to_string(config_path) {
+        if let Ok(config) = serde_json::from_str::<RepoConfig>(&data) {
+            let mut repos = Vec::new();
+            for (i, p) in config.proyectos.iter().enumerate() {
+                let path = format!("{}\\{}", config.base_dir, p);
+                let name = p.split('\\').last().unwrap_or(p).to_string();
+                repos.push(RepoItem {
+                    id: format!("repo_{}", i),
+                    name,
+                    path,
+                });
+            }
+            return Json(serde_json::json!({
+                "status": "success",
+                "repos": repos
+            }));
+        }
+    }
+    Json(serde_json::json!({ "status": "error", "message": "No se pudo leer la configuracion de repositorios" }))
+}
+
+async fn execute_repo_action(Json(payload): Json<RepoActionReq>) -> Json<serde_json::Value> {
+    println!("📦 [SANTUARIO] Accion: {} en {}", payload.action, payload.path);
+    let mut success = false;
+    let mut message = String::new();
+
+    match payload.action.as_str() {
+        "status" => {
+            if let Ok(out) = Command::new("git").arg("status").current_dir(&payload.path).output() {
+                success = out.status.success();
+                message = String::from_utf8_lossy(&out.stdout).to_string();
+                if !out.status.success() {
+                    message += &String::from_utf8_lossy(&out.stderr).to_string();
+                }
+            } else {
+                message = "Error ejecutando git status".to_string();
+            }
+        },
+        "pull" => {
+            if let Ok(out) = Command::new("git").arg("pull").current_dir(&payload.path).output() {
+                success = out.status.success();
+                message = String::from_utf8_lossy(&out.stdout).to_string();
+                if !out.status.success() {
+                    message += &String::from_utf8_lossy(&out.stderr).to_string();
+                }
+            } else {
+                message = "Error ejecutando git pull".to_string();
+            }
+        },
+        "push" => {
+            let _ = Command::new("git").args(&["add", "."]).current_dir(&payload.path).output();
+            let _ = Command::new("git").args(&["commit", "-m", "Auto-commit desde OVRIC Santuario"]).current_dir(&payload.path).output();
+            if let Ok(out) = Command::new("git").arg("push").current_dir(&payload.path).output() {
+                success = out.status.success();
+                message = String::from_utf8_lossy(&out.stdout).to_string();
+                message += &String::from_utf8_lossy(&out.stderr).to_string();
+                if message.trim().is_empty() { message = "Push ejecutado con éxito.".to_string(); }
+            } else {
+                message = "Error ejecutando git push".to_string();
+            }
+        },
+        "sync_codeberg" => {
+            let cb_user = std::env::var("CODEBERG_USER").unwrap_or_else(|_| "shverix".to_string());
+            let cb_token = std::env::var("CODEBERG_TOKEN").unwrap_or_default();
+            let repo_name = payload.path.split(|c| c == '\\' || c == '/').last().unwrap_or("repo");
+            
+            // Intentar añadir el remote (si falla porque ya existe, lo ignoramos)
+            let _ = Command::new("git")
+                .args(&["remote", "add", "codeberg", &format!("https://codeberg.org/{}/{}.git", cb_user, repo_name)])
+                .current_dir(&payload.path)
+                .output();
+            
+            let remote_url = format!("https://{}:{}@codeberg.org/{}/{}.git", cb_user, cb_token, cb_user, repo_name);
+            
+            if let Ok(out) = Command::new("git")
+                .args(&["push", "--force", &remote_url, "main"])
+                .current_dir(&payload.path)
+                .output() {
+                success = out.status.success();
+                message = String::from_utf8_lossy(&out.stdout).to_string();
+                message += &String::from_utf8_lossy(&out.stderr).to_string();
+                if success { message = "Sincronizacion con Codeberg exitosa (GOD MODE).".to_string(); }
+            } else {
+                message = "Error sincronizando con Codeberg".to_string();
+            }
+        },
+        "preview" => {
+            let repo_name = payload.path.split(|c| c == '\\' || c == '/').last().unwrap_or("repo");
+            let gh_user = std::env::var("GITHUB_USER").unwrap_or_else(|_| "antigravityx".to_string());
+            let url = format!("https://{}.github.io/{}", gh_user, repo_name);
+            if let Ok(_) = Command::new("cmd").args(&["/C", "start", &url]).spawn() {
+                success = true;
+                message = format!("Abriendo vista previa en: {}", url);
+            } else {
+                message = "Error abriendo vista previa".to_string();
+            }
+        },
+        "deploy_hostinger" => {
+            if payload.path.contains("sombrereronaufrago") {
+                let output = Command::new("python")
+                    .arg(r"c:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\GESTION_R1CH0N\sombrereronaufrago\deploy_naufrago.py")
+                    .current_dir(&payload.path)
+                    .output();
+                match output {
+                    Ok(out) => {
+                        success = out.status.success();
+                        message = String::from_utf8_lossy(&out.stdout).to_string();
+                        message += &String::from_utf8_lossy(&out.stderr).to_string();
+                    },
+                    Err(e) => {
+                        message = format!("Error ejecutando deploy python: {}", e);
+                    }
+                }
+            } else {
+                message = "Este proyecto no tiene configurado deploy automatico a Hostinger.".to_string();
+            }
+        },
+        "code" => {
+            let config_path = "../../ovric_config.json";
+            let editor_cmd = if let Ok(data) = fs::read_to_string(config_path) {
+                if let Ok(v) = serde_json::from_str::<serde_json::Value>(&data) {
+                    match v.get("editor").and_then(|e| e.as_str()) {
+                        Some("cursor") => "cursor",
+                        Some("sublime") => "subl",
+                        Some("notepad") => "notepad++",
+                        _ => "code",
+                    }
+                } else { "code" }
+            } else { "code" };
+
+            if let Ok(_) = Command::new("cmd").args(&["/C", editor_cmd, "."]).current_dir(&payload.path).spawn() {
+                success = true;
+                message = format!("Abriendo en {}...", editor_cmd);
+            } else {
+                message = format!("Error abriendo editor: {}", editor_cmd);
+            }
+        },
+        _ => {
+            message = "Acción de repositorio desconocida".to_string();
+        }
+    }
+
+    Json(serde_json::json!({
+        "status": if success { "success" } else { "error" },
+        "message": message
+    }))
+}
 
 #[derive(Deserialize, Debug)]
 struct ActionRequest {
