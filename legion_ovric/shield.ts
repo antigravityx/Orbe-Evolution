@@ -44,18 +44,27 @@ class ShieldLegionnaire {
   }
 
   private async reportToHipocampo(data: string) {
-    // Simulacion de reporte al Hipocampo
     try {
-      const event = {
-        id: `scan_${Date.now()}`,
-        content: `Escaneo de SHIELD: ${data.split('\n')[1] || "Sin datos"}`,
-        type: "system_scan"
+      const payload = {
+        id: `shield_scan_${Date.now()}`,
+        content: `SHIELD Scan: ${data.split('\n').filter(l => l.trim()).slice(1).join(' | ')}`,
+        type: "system_scan",
+        connect_to: "shield-01",
+        weight: 0.8
       };
       
-      console.log(`🧠 Enviando reporte al Hipocampo...`);
-      // fetch("http://127.0.0.1:3030/api/hipocampo/register", ...)
+      console.log(`🧠 Reportando hallazgos al Hipocampo...`);
+      const res = await fetch("http://127.0.0.1:3030/api/hipocampo/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      
+      if (res.ok) {
+        console.log("✅ Memoria sincronizada.");
+      }
     } catch (err) {
-      console.error("❌ Error en la conexion neuronal.");
+      console.error("❌ Fallo en el reporte neuronal:", err);
     }
   }
 }

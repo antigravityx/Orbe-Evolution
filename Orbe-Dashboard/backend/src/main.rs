@@ -9,6 +9,10 @@ use std::fs;
 use std::process::Command;
 use sysinfo::System;
 
+mod core_crypto;
+mod capsule_virtualizer;
+
+
 // ══════════════════════════════════════════════════
 // ⌬ OVRIC BACKEND — INTELIGENCIA COLMENA API
 // ══════════════════════════════════════════════════
@@ -48,6 +52,31 @@ struct RepoActionReq {
     action: String,
 }
 
+#[derive(Deserialize)]
+struct CreateCapsuleReq {
+    path: String,
+    password: String,
+}
+
+#[derive(Deserialize)]
+struct InvokeCapsuleReq {
+    path: String,
+    password: String,
+}
+
+#[derive(Serialize)]
+struct BatchSyncResult {
+    repo: String,
+    success: bool,
+    message: String,
+}
+
+#[derive(Deserialize)]
+struct DataQueryReq {
+    query: String,
+}
+
+
 #[tokio::main]
 async fn main() {
     // Cargar variables de entorno del Santuario
@@ -75,7 +104,17 @@ async fn main() {
         // Repositorios / Santuario
         .route("/api/repos", get(get_repos))
         .route("/api/repos/action", post(execute_repo_action))
+        // Bóveda / Cápsulas
+        .route("/api/capsules", get(get_capsules))
+        .route("/api/capsules/create", post(create_capsule_handler))
+        .route("/api/capsules/invoke", post(invoke_capsule_handler))
+        // Legion Expansion
+        .route("/api/legion/batch-sync", post(batch_sync_handler))
+        .route("/api/system/control", post(system_control_handler))
+        .route("/api/virtual/execute", post(virtual_execute_handler))
+        .route("/api/data/query", post(execute_data_query))
         .layer(cors);
+
 
     let addr = "127.0.0.1:3030";
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
@@ -86,7 +125,9 @@ async fn main() {
     println!("  ├─ /api/legion/status     → Estado de la Legion");
     println!("  ├─ /api/system/health     → Métricas del Sistema");
     println!("  ├─ /api/commerce/telemetry→ Telemetría Comercial");
-    println!("  └─ /api/actions/execute   → Motor de Ejecución");
+    println!("  ├─ /api/actions/execute   → Motor de Ejecución");
+    println!("  └─ /api/capsules          → Gestión de la Bóveda");
+
     axum::serve(listener, app).await.unwrap();
 }
 
@@ -452,6 +493,7 @@ async fn execute_repo_action(Json(payload): Json<RepoActionReq>) -> Json<serde_j
                         Some("cursor") => "cursor",
                         Some("sublime") => "subl",
                         Some("notepad") => "notepad++",
+                        Some("antigravity") => "code", // Por ahora Antigravity usa el núcleo de VS Code o el editor configurado
                         _ => "code",
                     }
                 } else { "code" }
@@ -601,3 +643,173 @@ async fn get_dreams() -> Json<Vec<Sueno>> {
 
     Json(all_dreams)
 }
+
+// ══════════════════════════════════════════════════
+// 📦 BÓVEDA — Gestión de Cápsulas
+// ══════════════════════════════════════════════════
+
+async fn get_capsules() -> Json<serde_json::Value> {
+    let dest = r"C:\Users\Usuario\Desktop\Orbe_Santuario\1_Almas_Encapsuladas";
+    let mut capsules = Vec::new();
+    if let Ok(entries) = fs::read_dir(dest) {
+        for entry in entries.flatten() {
+            if let Ok(meta) = entry.metadata() {
+                if meta.is_file() && entry.path().extension().map_or(false, |e| e == "capsula") {
+                    capsules.push(serde_json::json!({
+                        "name": entry.file_name().to_string_lossy(),
+                        "path": entry.path().to_string_lossy(),
+                        "size": meta.len(),
+                        "created": chrono::DateTime::<chrono::Local>::from(meta.created().unwrap_or(std::time::SystemTime::now())).to_rfc3339()
+                    }));
+                }
+            }
+        }
+    }
+    Json(serde_json::json!({ "status": "success", "capsules": capsules }))
+}
+
+async fn create_capsule_handler(Json(payload): Json<CreateCapsuleReq>) -> Json<serde_json::Value> {
+    match core_crypto::create_capsule(&payload.path, &payload.password) {
+        Ok(path) => Json(serde_json::json!({ "status": "success", "message": format!("Cápsula creada: {}", path) })),
+        Err(e) => Json(serde_json::json!({ "status": "error", "message": e })),
+    }
+}
+
+async fn invoke_capsule_handler(Json(payload): Json<InvokeCapsuleReq>) -> Json<serde_json::Value> {
+    match core_crypto::invoke_capsule(&payload.path, &payload.password) {
+        Ok(path) => Json(serde_json::json!({ "status": "success", "message": format!("Alma liberada en: {}", path) })),
+        Err(e) => Json(serde_json::json!({ "status": "error", "message": e })),
+    }
+}
+
+// ══════════════════════════════════════════════════
+// 🚀 EXPANSION — Handlers de Aceleración
+// ══════════════════════════════════════════════════
+
+async fn batch_sync_handler() -> Json<serde_json::Value> {
+    println!("⚡ [LEGION] Iniciando Sincronización Masiva...");
+    let config_path = r"C:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\config.json";
+    
+    if let Ok(data) = fs::read_to_string(config_path) {
+        if let Ok(config) = serde_json::from_str::<RepoConfig>(&data) {
+            let mut tasks = Vec::new();
+            
+            for p in config.proyectos {
+                let base_dir = config.base_dir.clone();
+                let repo_path = format!("{}\\{}", base_dir, p);
+                
+                let task = tokio::spawn(async move {
+                    println!("  ├─ Sincronizando: {}", repo_path);
+                    let mut success = false;
+                    let mut msg = String::new();
+                    
+                    // Pull
+                    if let Ok(out) = Command::new("git").arg("pull").current_dir(&repo_path).output() {
+                        success = out.status.success();
+                        msg = String::from_utf8_lossy(&out.stdout).to_string();
+                    } else {
+                        msg = "Error ejecutando git pull".to_string();
+                    }
+                    
+                    BatchSyncResult { repo: repo_path, success, message: msg }
+                });
+                tasks.push(task);
+            }
+            
+            let mut results = Vec::new();
+            for task in tasks {
+                if let Ok(res) = task.await {
+                    results.push(res);
+                }
+            }
+            
+            return Json(serde_json::json!({
+                "status": "success",
+                "results": results
+            }));
+        }
+    }
+    
+    Json(serde_json::json!({ "status": "error", "message": "No se pudo leer la configuración para batch-sync" }))
+}
+
+async fn system_control_handler(Json(payload): Json<SystemControlReq>) -> Json<serde_json::Value> {
+    println!("🛡️ [SYSTEM_CONTROL] Soldado: {} | Acción: {}", payload.soldier, payload.action);
+    
+    let mut success = false;
+    let mut message = String::new();
+    
+    match payload.action.as_str() {
+        "start" => {
+            let path = match payload.soldier.as_str() {
+                "SHIELD" => Some(r"C:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\legion_ovric\shield.ts"),
+                "PSYCHE" => Some(r"C:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\legion_ovric\psyche.py"),
+                "SENTINEL-V" => Some(r"C:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\legion_ovric\sentinel_v.ts"),
+                _ => None
+            };
+            
+            if let Some(p) = path {
+                let cmd = if p.ends_with(".ts") { "bun" } else { "python" };
+                if let Ok(_) = Command::new("cmd").args(&["/C", "start", cmd, p]).spawn() {
+                    success = true;
+                    message = format!("Soldado {} desplegado con éxito.", payload.soldier);
+                } else {
+                    message = format!("Error al desplegar soldado {}.", payload.soldier);
+                }
+            } else {
+                message = "Soldado desconocido.".to_string();
+            }
+        },
+        "stop" => {
+            // Simplificado: matar proceso por nombre
+            let target = match payload.soldier.as_str() {
+                "SHIELD" => "bun.exe",
+                "PSYCHE" => "python.exe",
+                _ => ""
+            };
+            if !target.is_empty() {
+                let _ = Command::new("taskkill").args(&["/F", "/IM", target]).output();
+                success = true;
+                message = format!("Misión finalizada para {}.", payload.soldier);
+            }
+        },
+        _ => message = "Acción no permitida.".to_string()
+    }
+    
+    Json(serde_json::json!({ "status": if success { "success" } else { "error" }, "message": message }))
+}
+
+async fn virtual_execute_handler(Json(payload): Json<capsule_virtualizer::VirtualExecReq>) -> Json<serde_json::Value> {
+    let res = capsule_virtualizer::execute_in_sandbox(payload);
+    Json(serde_json::json!(res))
+}
+
+async fn execute_data_query(Json(payload): Json<DataQueryReq>) -> Json<serde_json::Value> {
+    println!("📊 [DATA_NEXUS] Ejecutando consulta BigQuery: {}", payload.query);
+    
+    let output = Command::new("python")
+        .arg(r"c:\Users\Usuario\Desktop\Taller_Orbe_Verix\orbe\legion_ovric\google_cloud_soldier.py")
+        .arg("--query")
+        .arg(&payload.query)
+        .output();
+
+    match output {
+        Ok(out) => {
+            let success = out.status.success();
+            let stdout = String::from_utf8_lossy(&out.stdout).to_string();
+            let stderr = String::from_utf8_lossy(&out.stderr).to_string();
+            
+            if success {
+                if let Ok(results) = serde_json::from_str::<serde_json::Value>(&stdout) {
+                    Json(serde_json::json!({ "status": "success", "results": results }))
+                } else {
+                    Json(serde_json::json!({ "status": "error", "message": "Respuesta no procesable", "raw": stdout }))
+                }
+            } else {
+                Json(serde_json::json!({ "status": "error", "message": format!("Fallo en Soldado: {}", stderr) }))
+            }
+        },
+        Err(e) => Json(serde_json::json!({ "status": "error", "message": format!("Fallo de invocación: {}", e) })),
+    }
+}
+
